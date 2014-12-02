@@ -21,34 +21,44 @@ safe_dis = inPara.safe_dis;
 mpc_dt = inPara.mpc_dt;
 
 %% agents move 
-for agentIndex = 1%:length(agents)
+for agentIndex = 1:length(agents)
     agent = agents(agentIndex);
     
     %% human moves
     if strcmp(agent.type,'human')         
         h_next_actions = getNextActionWithFixedHeading(agent.currentPos...
             ,h_tar_wp,agent.currentV,0); % last argument is for zero deg_dev
-        % Take action
+        
         if k == 1
             tmp_agent_traj = agent.currentPos;
+            obv_traj = agent.currentPos(1:2);
         else
             tmp_agent_traj = agent.traj;
         end
         
         % generate observations
         % I thought sometimes the recording of data within 1 second may be
-        % less that the sample rate number. So I desgined the followign
+        % less that the sample rate number. So I designed the following
         % code. However, as in endCheck I have already required that the
-        % human is considered to be at a target as long as it is within one
+        % human be considered to be at a target as long as it is within one
         % step range. So in reality the sample number can always equal
         % samp_rate.
-        cur_pos = agent.currentPos(1:2);        
+        cur_pos = agent.currentPos(1:2);  
+        % compute human heading
+        if k == 1
+            % we assume that human heading at the beginning is known.
+            cur_hd = agent.currentPos(3)+h_next_actions(3);
+        else
+            cur_hd = agent.currentPos(3);
+        end
+        
         agent = takeNextAction(agent,h_next_actions);
         next_pos = agent.currentPos(1:2);
         t = uint16(norm(cur_pos-next_pos,2)/agent.currentV); % calculate the time for human to move to his next position
         samp_num = double(t*samp_rate*mpc_dt); % get the number of observations of human position
         for ii = 1:samp_num
-            obv_traj = [obv_traj,cur_pos+(next_pos-cur_pos)*ii/samp_num]; % observed human position, later should add noise
+             % observed human position
+            obv_traj = [obv_traj,cur_pos+(next_pos-cur_pos)*ii/samp_num];
         end
         
         % update human position
@@ -60,6 +70,9 @@ for agentIndex = 1%:length(agents)
         %% estimate human position
         % later should use Donghan's module
         est_state([1,3],k) = obv_traj(:,(k-1)*samp_rate+1); 
+        h = agents(1);
+        hd = cur_hd;
+        est_state([2,4],k) = h.currentV*[cos(hd);sin(hd)];
         
         %%  predict human future path
         % may need to seperately deal with k == 1
@@ -73,8 +86,8 @@ for agentIndex = 1%:length(agents)
         outPara_pp = pathPlanner(agent,inPara_pp);
         fut_x = outPara_pp.fut_x;
         fut_u = outPara_pp.fut_u;
-        agent.currentPos = fut_x(1:2,2);
-        agent.currentV = fut_x(3,2);
+        agent.currentPos = fut_x(1:2,2); % robot moves
+        agent.currentV = fut_x(3,2); % robot updates its speed
         plan_state(:,:,k) = fut_x;
         
         if k == 1

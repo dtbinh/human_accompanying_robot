@@ -38,7 +38,7 @@ step_size = 1;
 % manually pick the way pts for simulated human
 % way_pts = [tar_pos(:,1:2),[190,190;90,110]*scale,tar_pos(:,3:4),[210,190;190,190]*scale,tar_pos(:,5)];
 way_pts = getWayPts(tar_pos,scale,'h');
-
+h_v = [3,2,1
 %%%
 
 campus = field([xMin xMin+xLength/step_size yMin yMin+yLength/step_size],tar_pos);
