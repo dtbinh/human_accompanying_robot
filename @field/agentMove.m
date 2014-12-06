@@ -19,6 +19,7 @@ pre_type = inPara.pre_type;
 samp_rate = inPara.samp_rate;
 safe_dis = inPara.safe_dis;
 mpc_dt = inPara.mpc_dt;
+safe_marg = inPara.safe_marg;
 
 %% agents move 
 for agentIndex = 1:length(agents)
@@ -82,13 +83,14 @@ for agentIndex = 1:length(agents)
                
         %% robot path planning
         inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
-            'safe_dis',safe_dis,'mpc_dt',mpc_dt);
+            'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',h.currentV,...
+            'obs_info',campus.obs_info,'safe_marg',safe_marg);
         outPara_pp = pathPlanner(agent,inPara_pp);
-        fut_x = outPara_pp.fut_x;
-        fut_u = outPara_pp.fut_u;
-        agent.currentPos = fut_x(1:2,2); % robot moves
-        agent.currentV = fut_x(3,2); % robot updates its speed
-        plan_state(:,:,k) = fut_x;
+        opt_x = outPara_pp.opt_x;
+        opt_u = outPara_pp.opt_u;
+        agent.currentPos = opt_x(1:2,2); % robot moves
+        agent.currentV = opt_x(3,2); % robot updates its speed
+        plan_state(:,:,k) = opt_x;
         
         if k == 1
             tmp_agent_traj = agent.currentPos;

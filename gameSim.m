@@ -11,45 +11,47 @@ set(0,'DefaultFigureWindowStyle','docked');
 %%% define agents %%%
 % Human agent 1
 h = agent('human');
-h.currentPos = [30;10;0]*scale;%[290;30;0];%[3.5;15.5;pi/2]; % [x y heading]
+h.currentPos = [30;10;0]*scale;%[290;30;0]; % [x y heading]
 % h.maxV = 1.5;
-h.currentV = 1.5;
-% h.dPsi = pi/2;
-% h.maxDPsi = pi;
+h.currentV = 2;
+h.maxA = 3;
 
 % Robot agent 1
 r = agent('robot');
-r.currentPos = [30;20;0]*scale;%[310;30;0]; %[23.5;0.5;0]; % [x y heading]
+r.currentPos = [30;20;0]*scale;%[310;30;0]; %[23.5;0.5;0];
 r.currentV = 1.5;
 r.maxA = 0.5;
-% r.dPsi = pi/2;
-% r.maxDPsi = pi/4;
 
 %%% Set field %%%
 xLength = 300*scale; 
 yLength = 300*scale; 
 xMin = 0;
 yMin = 0;
-% tar_pos = [90,225,210,250,20;60,50,130,230,260]*scale; % target positions
 
 %%% set way points
 tar_pos = [90,230,210,250,20;60,30,130,230,260]*scale; % target positions
 step_size = 1;
 % manually pick the way pts for simulated human
-% way_pts = [tar_pos(:,1:2),[190,190;90,110]*scale,tar_pos(:,3:4),[210,190;190,190]*scale,tar_pos(:,5)];
-way_pts = getWayPts(tar_pos,scale,'h');
-
+inPara_gwp = struct('tar_pos',tar_pos,'scale',scale,'type','h');
+h_way_pts = getWayPts(inPara_gwp);
+% apply different human speed between different way points.
+% h_v = [2,3,1,1,1,1,1,1,1,1,3,1.5,2,3,2,1.5,4];
+% h_acl = -h.maxA+2*h.maxA*rand(1,300);
 %%%
+
+% define vertices of obstacles. Here use round obstacles
+c_set = [100,65,0,220*scale;33,100,65,40*scale];
+r_set = [20,20,20,10*scale];
+theta_set = {{pi/2:pi/8:3*pi/2;pi:pi/8:2*pi;-pi/2:pi/8:pi/2;0:pi/8:2*pi}};
+inPara_gwp = struct('c_set',c_set,'r_set',r_set,'theta_set',theta_set,'type','obs');
+obs_pos = getWayPts(inPara_gwp);
+% obs_pos(2) = {[200,300,300,200;90,90,110,110]*scale};
+% obs_pos(3) = {[210,210,190,190;200,300,300,200]*scale};
+% obs_pos(4) = {[0,100,100,0;190,190,210,210]*scale};
 
 campus = field([xMin xMin+xLength/step_size yMin yMin+yLength/step_size],tar_pos);
 campus.agentNum = 2;
-
-obs_pos = cell(4,1); % vetices of obstacles
-obs_pos(1) = {getWayPts(tar_pos,scale,'obs')};
-obs_pos(2) = {[200,300,300,200;90,90,110,110]*scale};
-obs_pos(3) = {[210,210,190,190;200,300,300,200]*scale};
-obs_pos(4) = {[0,100,100,0;190,190,210,210]*scale};
-
+campus.obs_info = [c_set;r_set]; % gives the center and radius of each obstacle
 %% Simulation
 % simulation parameters
 kf = 800; % simulation length (/s)
@@ -58,6 +60,7 @@ hor = 5; % MPC horizon (s)
 pre_type = 'extpol'; % 'IMM' specify the method for predicting human motion
 samp_rate = 20; % sampling rate (/Hz)
 safe_dis = 3; %safe distance between human and robot
+safe_marg = 2; % safety margin between human the the obstacle
 mpc_dt = 1; % sampling time for model discretization used in MPC
 
 % initialize variables
@@ -68,14 +71,25 @@ pre_traj = zeros(2,hor+1,kf); % current and predicted future human trajectory
 plan_state = zeros(3,hor+1,kf); % robot's current and planned future state [x,y,v]
 r_state = zeros(3,kf); % robot's actual state [x,y,v]
 r_input = zeros(2,kf); % robot's actual control input [psi,a]
-wp_cnt = 1; % counter for waypoints
-h_tar_wp = way_pts(:,wp_cnt); % the way point that the human is heading for
+wp_cnt = 1; % the waypoint that the human is heading for
+h_tar_wp = h_way_pts(:,wp_cnt); % the way point that the human is heading for
 
 for k = 1:kf
+    display(k)
+    
+    %% change human speed
+    %{
+    tmp_v = agents(1).currentV+h_acl(k)*mpc_dt;
+    if tmp_v <= 0
+        tmp_v = 0;
+    else
+        agents(1).currentV = tmp_v;
+    end
+    %}
+    
     %% waypoint check
     % check if the human needs to choose the next way point
-    display(k)
-    inPara_ec = struct('h',agents(1),'way_pts',way_pts,'wp_cnt',wp_cnt,'mpc_dt',mpc_dt);
+    inPara_ec = struct('h',agents(1),'h_way_pts',h_way_pts,'wp_cnt',wp_cnt,'mpc_dt',mpc_dt);
     [outPara_ec] = endCheck(inPara_ec);
 
     game_end = outPara_ec.game_end;
@@ -88,7 +102,8 @@ for k = 1:kf
     
     if arr_wp_flag == 1
         wp_cnt = wp_cnt+1;
-        h_tar_wp = way_pts(:,wp_cnt);
+        h_tar_wp = h_way_pts(:,wp_cnt);
+%         agents(1).currentV = h_v(wp_cnt);
     end
     
     %% both agents move
@@ -97,7 +112,7 @@ for k = 1:kf
         'obv_traj',obv_traj,'est_state',est_state,...
         'pre_traj',pre_traj,'plan_state',plan_state,'r_state',r_state,'r_input',r_input,...
         'k',k,'hor',hor,'pre_type',pre_type,'samp_rate',samp_rate,...
-        'safe_dis',safe_dis,'mpc_dt',mpc_dt);
+        'safe_dis',safe_dis,'mpc_dt',mpc_dt,'safe_marg',safe_marg);
     [outPara_ams] = agentMove(campus,inPara_ams);
     agents = outPara_ams.agents;
     obv_traj = outPara_ams.obv_traj; 
@@ -168,16 +183,16 @@ end
 %{
 % save data
 folder_path = ('.\sim_res');
-file_name = fullfile (folder_path,'obv_traj.mat');
+file_name = fullfile (folder_path,'obv_traj_chg_acl.mat');
 save (file_name,'obv_traj');
 
 % save plot
 folder_path = ('.\sim_res');
-file_name = fullfile (folder_path,'agent_traj.fig');
+file_name = fullfile (folder_path,'agent_traj_chg_acl.fig');
 h = gcf;
 saveas (h,file_name);
 % convert .fig to .pdf
-file_name = fullfile (folder_path,'agent_traj');
+file_name = fullfile (folder_path,'agent_traj_chg_acl');
 h = gcf;
 fig2Pdf(file_name,300,h);
 %}

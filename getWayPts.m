@@ -1,5 +1,8 @@
-function way_pts = getWayPts(tar_pos,scale,type)
+function way_pts = getWayPts(inPara)
+type = inPara.type;
 if (strcmp(type,'h'))
+    tar_pos = inPara.tar_pos;
+    scale = inPara.scale;
     % human way points
     % generate way points for human trajectory around the round obstacle
     center = [220;40]; %center of circle
@@ -17,18 +20,26 @@ if (strcmp(type,'h'))
     
 elseif (strcmp(type,'obs'))
     % obstacle way points
-    % generate way points for the round obstacle
-    center = [220;40]; %center of circle
-    r = 10; %radius
-    theta = 0:pi/8:2*pi;
-    cor = zeros(2,length(theta)); %coordinates
-    for ii = 1:length(theta)
-        cor(1,ii) = center(1)+r*cos(theta(ii));
-        cor(2,ii) = center(2)+r*sin(theta(ii));
+    c_set = inPara.c_set;
+    r_set = inPara.r_set;
+    theta_set = inPara.theta_set;
+    
+    obs_wp = cell(size(c_set,2),1);
+    % generate way points for round obstacles
+    figure
+    for ii = 1:size(obs_wp,1)
+        theta = theta_set{ii};
+        cor = zeros(2,length(theta)); %coordinates
+        for jj = 1:length(theta)
+            cor(1,jj) = c_set(1,ii)+r_set(ii)*cos(theta(jj));
+            cor(2,jj) = c_set(2,ii)+r_set(ii)*sin(theta(jj));
+        end
+        
+%         hold on
+%         fill(cor(1,:),cor(2,:),'r');
+
+        obs_wp(ii) = {cor};
     end
-%     figure
-%     hold on
-%     fill(cor(1,:),cor(2,:),'r');
-    way_pts = cor*scale;
+    way_pts = obs_wp; 
 end
 end

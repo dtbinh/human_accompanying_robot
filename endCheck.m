@@ -3,7 +3,7 @@ function [outPara] = endCheck(inPara)
 % Game over if human has gone to all the way points
 % get input arguments
     h = inPara.h;    
-    way_pts = inPara.way_pts;
+    way_pts = inPara.h_way_pts;
     wp_cnt = inPara.wp_cnt;
     dt = inPara.mpc_dt;
     

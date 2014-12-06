@@ -7,6 +7,7 @@ classdef field
         targetPos; % specify target position, [x; y;]
         agentNum;
         endpoints; % endpoints of field, [xMin xMax yMin yMax]
+        obs_info; % information of obstacles
     end
    
     methods
