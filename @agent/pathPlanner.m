@@ -22,65 +22,22 @@ while(hor > 0)
     % constraints on future states
     inPara_cg = struct('hor',hor,'x',x,'u',u,'h_v',h_v,'mpc_dt',mpc_dt,...
         'safe_dis',safe_dis,'safe_marg',safe_marg,'x_h',x_h,'obs_info',obs_info,...
-        'non_intersect_flag',0,'obj',0,'constr',constr);
+        'non_intersect_flag',1,'obj',0,'constr',constr);
     [obj,constr] = genConstr(inPara_cg); % generate constraints. contain a parameter that decides whether using the non-intersection constraints
     
     % solve MPC
     opt = sdpsettings('solver','ipopt','usex0',1,'debug',1);
     sol = optimize(constr,obj,opt);
     
-    % if MPC is solved, then check if non-intersection constraint is
-    % violated. If so, add such constraint and redo the MPC. If can be
-    % solved, then use this result; otherwise, decrease the horizon and
-    % solve MPC again.
     if sol.problem == 0
         opt_x = value(x); % current and future states
         opt_u = value(u); % future input
-        % check if violating the non-intersection constraint
-        vio_flag = 0; % flag for violating the constraints. 1 means violation
-        for ii = 1:hor
-            [a,b,c] = getLine(opt_x(1:2,ii+1),opt_x(1:2,ii));
-            for jj = 1:size(obs_info,2)
-                x0 = obs_info(1,jj); y0 = obs_info(2,jj);
-                r = obs_info(3,jj);
-                tmp = (x0^2-r^2)*a^2+(y0^2-r^2)*b^2+c^2+2*a*b*x0*y0+2*a*c*x0+2*b*c*y0;
-                if tmp < 0
-                    vio_flag = 1; 
-                    break
-                end
-            end
-            if vio_flag == 1
-                break
-            end
-        end
-        if vio_flag == 1
-            % initial condition
-            constr = [x(:,1) == [agent.currentPos(1:2);agent.currentV]];
-            % constraints on future states
-            inPara_cg = struct('hor',hor,'x',x,'u',u,'h_v',h_v,'mpc_dt',mpc_dt,...
-                'safe_dis',safe_dis,'safe_marg',safe_marg,'x_h',x_h,'obs_info',obs_info,...
-                'non_intersect_flag',1,'obj',0,'constr',constr);
-            [obj,constr] = genConstr(inPara_cg);
-            % solve MPC
-            opt = sdpsettings('solver','ipopt','usex0',1,'debug',1);
-            sol = optimize(constr,obj,opt);
-            if sol.problem == 0
-                opt_x = value(x); % current and future states
-                opt_u = value(u); % future input
-            else
-                display('Fail to solve MPC')
-                sol.info
-                yalmiperror(sol.problem)
-                hor = hor - 1;
-            end
-        elseif vio_flag == 0
-            break;
-        end
+        break
     else
         display('Fail to solve MPC')
         sol.info
         yalmiperror(sol.problem)
-        break
+        hor = hor-1;
     end
 end
 outPara = struct('opt_x',opt_x,'opt_u',opt_u);
@@ -112,9 +69,12 @@ safe_dis = inPara.safe_dis;
 safe_marg = inPara.safe_marg;
 x_h = inPara.x_h;
 obs_info = inPara.obs_info;
-non_intersect_flag = inPara.non_intersect_flag;
+% non_intersect_flag = inPara.non_intersect_flag;
 obj = inPara.obj;
 constr = inPara.constr;
+
+dt = 0.05; % time interval for sampling the points on the line of the robot's path
+margin = 0.1; % margin for the robot's path line from the obstacle
 for ii = 1:hor
     obj = obj+sum((x(1:2,ii+1)-x_h(:,ii+1)).^2)+0.1*u(2,ii)^2+0.1*(x(3,ii+1)-h_v)^2;
     % constraints on robot dynamics
@@ -123,16 +83,19 @@ for ii = 1:hor
     % constraint on safe distance
     constr = [constr,sum((x(1:2,ii+1)-x_h(:,ii+1)).^2) >= safe_dis^2];
     % constraint on obstacle avoidance
-    % robot should not be inside the obstacles, i.e. both robot waypoints
-    % and the line connecting the waypoints should not intersect with the obstacle
-    [a,b,c] = getLine(x(1:2,ii+1),x(1:2,ii));
+    % robot should not be inside the obstacles, i.e. robot waypoints should
+    % not be inside the obstacle and the line connecting the waypoints 
+    % should not intersect with the obstacle
+%     [a,b,c] = getLine(x(1:2,ii+1),x(1:2,ii));
     for jj = 1:size(obs_info,2)
+        % waypoints not inside the obstacle
         constr = [constr,sum((x(1:2,ii+1)-obs_info(1:2,jj)).^2) >= (obs_info(3,jj)+safe_marg)^2];
-%         constr = [constr,dis_pl(obs_info(1:2,jj),x(1:2,ii+1),x(1:2,ii))>=obs_info(3,jj)^2];
-        if non_intersect_flag == 1
-            x0 = obs_info(1,jj); y0 = obs_info(2,jj);
-            r = obs_info(3,jj);
-            constr = [constr,(x0^2-r^2)*a^2+(y0^2-r^2)*b^2+c^2+2*a*b*x0*y0+2*a*c*x0+2*b*c*y0 >= 0.01];
+        % line not intersecting with the obstacle
+        n = floor(mpc_dt/dt);
+        x0 = obs_info(1,jj); y0 = obs_info(2,jj);
+        r = obs_info(3,jj);
+        for kk = 0:n
+            constr = [constr,sum((kk/n*x(1:2,ii+1)+(n-kk)/n*x(1:2,ii)-obs_info(1:2,jj)).^2)>=(r+margin)^2];
         end
     end    
 end
