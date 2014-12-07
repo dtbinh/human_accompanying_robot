@@ -1,6 +1,7 @@
 function outPara = pathPlanner(agent,inPara)
 % include IPOPT in YALMIP
-addpath('D:\Program Files\MATLAB\2013a_crack\IPOPT3.11.8');
+% addpath('D:\Program Files\MATLAB\2013a_crack\IPOPT3.11.8');
+addpath('D:\Chang Liu\ipopt');
 % define input arguments
 x_h = inPara.pre_traj; % predicted human trajectory
 hor = inPara.hor;
@@ -22,7 +23,7 @@ while(hor > 0)
     % constraints on future states
     inPara_cg = struct('hor',hor,'x',x,'u',u,'h_v',h_v,'mpc_dt',mpc_dt,...
         'safe_dis',safe_dis,'safe_marg',safe_marg,'x_h',x_h,'obs_info',obs_info,...
-        'non_intersect_flag',1,'obj',0,'constr',constr);
+        'non_intersect_flag',1,'obj',0,'constr',constr,'agent',agent);
     [obj,constr] = genConstr(inPara_cg); % generate constraints. contain a parameter that decides whether using the non-intersection constraints
     
     % solve MPC
@@ -72,14 +73,15 @@ obs_info = inPara.obs_info;
 % non_intersect_flag = inPara.non_intersect_flag;
 obj = inPara.obj;
 constr = inPara.constr;
+agent = inPara.agent;
 
 dt = 0.05; % time interval for sampling the points on the line of the robot's path
 margin = 0.1; % margin for the robot's path line from the obstacle
 for ii = 1:hor
-    obj = obj+sum((x(1:2,ii+1)-x_h(:,ii+1)).^2)+0.1*u(2,ii)^2+0.1*(x(3,ii+1)-h_v)^2;
+    obj = obj+sum((x(1:2,ii+1)-x_h(:,ii+1)).^2)+0.1*(x(3,ii+1)-h_v)^2;%+0.5*u(2,ii)^2
     % constraints on robot dynamics
     constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(3,ii)*[cos(u(1,ii));sin(u(1,ii))]*mpc_dt,...
-        x(3,ii+1) == x(3,ii)+u(2,ii)*mpc_dt];%,-agent.maxA<=u(2,ii)<=agent.maxA];   
+        x(3,ii+1) == x(3,ii)+u(2,ii)*mpc_dt,x(3,ii+1)>=0,-agent.maxA<=u(2,ii)<=agent.maxA];   
     % constraint on safe distance
     constr = [constr,sum((x(1:2,ii+1)-x_h(:,ii+1)).^2) >= safe_dis^2];
     % constraint on obstacle avoidance

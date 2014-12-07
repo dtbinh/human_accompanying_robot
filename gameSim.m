@@ -20,7 +20,7 @@ h.maxA = 3;
 r = agent('robot');
 r.currentPos = [30;20;0]*scale;%[310;30;0]; %[23.5;0.5;0];
 r.currentV = 1.5;
-r.maxA = 0.5;
+r.maxA = 1.5;
 
 %%% Set field %%%
 xLength = 300*scale; 
