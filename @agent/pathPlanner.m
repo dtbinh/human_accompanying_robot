@@ -42,7 +42,7 @@ while(hor > 0)
             for jj = 1:size(obs_info,2)
                 % check if the line intersects with some obstacle
                 n = floor(mpc_dt/dt);
-                x0 = obs_info(1,jj); y0 = obs_info(2,jj);
+%                 x0 = obs_info(1,jj); y0 = obs_info(2,jj);
                 r = obs_info(3,jj);
                 for kk = 0:n
                     tmp = sum((kk/n*opt_x(1:2,ii+1)+(n-kk)/n*opt_x(1:2,ii)-obs_info(1:2,jj)).^2) - (r+safe_marg2)^2;

@@ -48,4 +48,4 @@ xhat_init=[obv_traj1(1,2)/10;0 ;0 ;obv_traj1(1,3)/10;0 ;0 ;];
 
 P_init=eye(6)*5;
 mu1_init=0.5;
-mu2_init=0.5
+mu2_init=0.5;

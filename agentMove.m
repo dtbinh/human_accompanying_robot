@@ -1,9 +1,9 @@
 % 11/24/14
 % simulate the movement of each agent
-function [outPara] = agentMove(campus,inPara)
+function [outPara] = agentMove(inPara)
 %% initialization
 % get input arguments
-% campus = inPara.campus;
+campus = inPara.campus;
 agents = inPara.agents;
 % way_pts = inPara.way_pts;
 h_tar_wp = inPara.h_tar_wp;
@@ -11,8 +11,8 @@ obv_traj = inPara.obv_traj;
 est_state = inPara.est_state;
 pre_traj = inPara.pre_traj;
 plan_state = inPara.plan_state;
-r_state = inPara.r_state;
-r_input = inPara.r_input;
+% r_state = inPara.r_state;
+% r_input = inPara.r_input;
 k = inPara.k;
 hor = inPara.hor;
 pre_type = inPara.pre_type;
@@ -20,31 +20,28 @@ samp_rate = inPara.samp_rate;
 safe_dis = inPara.safe_dis;
 mpc_dt = inPara.mpc_dt;
 safe_marg = inPara.safe_marg;
+agentIndex = inPara.agentIndex;
+plan_type = inPara.plan_type;
 
 %% agents move 
-for agentIndex = 1:length(agents)
+% for agentIndex = 1:length(agents)
     agent = agents(agentIndex);
     
     %% human moves
     if strcmp(agent.type,'human')         
         h_next_actions = getNextActionWithFixedHeading(agent.currentPos...
-            ,h_tar_wp,agent.currentV,0); % last argument is for zero deg_dev
+            ,h_tar_wp,agent.currentV,0,mpc_dt); % last argument is for zero deg_dev
         
         if k == 1
             tmp_agent_traj = agent.currentPos;
-            obv_traj = agent.currentPos(1:2);
+            obv_traj = [0;agent.currentPos(1:2)];
         else
             tmp_agent_traj = agent.traj;
         end
         
         % generate observations
-        % I thought sometimes the recording of data within 1 second may be
-        % less that the sample rate number. So I designed the following
-        % code. However, as in endCheck I have already required that the
-        % human be considered to be at a target as long as it is within one
-        % step range. So in reality the sample number can always equal
-        % samp_rate.
-        cur_pos = agent.currentPos(1:2);  
+        cur_pos = agent.currentPos(1:2);
+        %{
         % compute human heading
         if k == 1
             % we assume that human heading at the beginning is known.
@@ -52,14 +49,15 @@ for agentIndex = 1:length(agents)
         else
             cur_hd = agent.currentPos(3);
         end
-        
+        %}
         agent = takeNextAction(agent,h_next_actions);
         next_pos = agent.currentPos(1:2);
         t = uint16(norm(cur_pos-next_pos,2)/agent.currentV); % calculate the time for human to move to his next position
         samp_num = double(t*samp_rate*mpc_dt); % get the number of observations of human position
         for ii = 1:samp_num
              % observed human position
-            obv_traj = [obv_traj,cur_pos+(next_pos-cur_pos)*ii/samp_num];
+             tmp_t = (k-1)*mpc_dt+ii/samp_rate;
+             obv_traj = [obv_traj,[tmp_t;cur_pos+(next_pos-cur_pos)*ii/samp_num]];
         end
         
         % update human position
@@ -67,41 +65,29 @@ for agentIndex = 1:length(agents)
         agents(agentIndex) = agent;
         
     %% robot predicts and moves
-    elseif strcmp(agent.type,'robot')     
-        %% estimate human position
-        test;
-        %{
-        load('obv_traj4_w_time.mat')% Load Tracjectory of Human
-        obv_traj1=obv_traj1';
-        outPara_gsp = getSimPara(obv_traj1);  %%% Parameter File upload
-        A = outPara_gsp.A;
-        A1 = outPara_gsp.A1;
-        C = outPara_gsp.C;
-        W1 = outPara_gsp.W1;
-        W2 = outPara_gsp.W2;
-        V1 = outPara_gsp.V1;
-        PHI = outPara_gsp.PHI;
-        xhat_init = outPara_gsp.xhat_init;
-        P_init = outPara_gsp.P_init;
-        mu1_init = outPara_gsp.mu1_init;
-        mu2_init = outPara_gsp.mu2_init;
-        
-        [est_state([1,2],k),est_state([3,4],k),pre_traj(1,:,k),pre_traj(2,:,k)]...
-            = IMM_Com_run(); %%% Run Simulink
-        %}
-        %{
-        % later should use Donghan's module
-        est_state([1,3],k) = obv_traj(:,(k-1)*samp_rate+1); 
+    elseif strcmp(agent.type,'robot')    
         h = agents(1);
-        hd = cur_hd;
-        est_state([2,4],k) = h.currentV*[cos(hd);sin(hd)];
+        %% estimate human position
+        [x_est,y_est,x_pre,y_pre] = IMM_Com_run();
+        est_state([1,2],k) = x_est(end,:)';
+        est_state([3,4],k) = y_est(end,:)';
+        % estimation with no measurement noise
+        %{ 
+            est_state([1,3],k) = obv_traj(:,(k-1)*samp_rate+1);
+            h = agents(1);
+            hd = cur_hd;
+            est_state([2,4],k) = h.currentV*[cos(hd);sin(hd)];
         %}
+        
         %%  predict human future path
-        %{
-        inPara_phj = struct('state',est_state(:,k),'hor',hor,'pre_type',pre_type,...
-            'mpc_dt',mpc_dt);
-        pre_traj(:,:,k) = predictHumanTraj(agent,inPara_phj);
-        %}     
+        if strcmp(pre_type,'IMM')
+            pre_traj(:,:,k) = [[x_est(end-1,1)';y_est(end-1,1)'],[x_pre(end,:);y_pre(end,:)]];
+        elseif strcmp(pre_type,'extpol')
+            % prediction by extrapolation
+            inPara_phj = struct('state',est_state(:,k),'hor',hor,'pre_type',pre_type,...
+                'mpc_dt',mpc_dt);
+            pre_traj(:,:,k) = predictHumanTraj(agent,inPara_phj);
+        end     
         %% robot path planning
         if strcmp(plan_type,'MPC')
             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
@@ -138,7 +124,7 @@ for agentIndex = 1:length(agents)
     else
         error('Invalid agent type for planning path')
     end
-end
+% end
 %% define output arguments
 % outPara = struct('agents',agents,'obv_traj',obv_traj,'est_state',est_state,...
 %     'pre_traj',pre_traj,'plan_state',plan_state,'r_state',fut_x(:,2),'r_input',fut_u(:,1));
@@ -147,15 +133,15 @@ outPara = struct('agents',agents,'obv_traj',obv_traj,'est_state',est_state,...
 
 end
 
-function next_act = getNextActionWithFixedHeading(a_pos,t_pos,v,deg_dev)
+function next_act = getNextActionWithFixedHeading(a_pos,t_pos,v,deg_dev,mpc_dt)
 % calculate the actions for agent to move from a_pos to target position
 % t_pos with velocity v
 vec = t_pos - a_pos(1:2);
 heading = calAngle(vec)+deg_dev;
 % next_acts = zeros(3); %[dx,dy,d_heading]. only the first action changes the agent's heading
 tmp_a_pos = a_pos;
-dx = v*cos(heading);
-dy = v*sin(heading);
+dx = v*cos(heading)*mpc_dt;
+dy = v*sin(heading)*mpc_dt;
 d_hd = heading - tmp_a_pos(3);
 next_act = [dx;dy;d_hd];
 end    

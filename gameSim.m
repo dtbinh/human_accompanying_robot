@@ -45,9 +45,6 @@ r_set = [20,20,20,10*scale];
 theta_set = {{pi/2:pi/8:3*pi/2;pi:pi/8:2*pi;-pi/2:pi/8:pi/2;0:pi/8:2*pi}};
 inPara_gwp = struct('c_set',c_set,'r_set',r_set,'theta_set',theta_set,'type','obs');
 obs_pos = getWayPts(inPara_gwp);
-% obs_pos(2) = {[200,300,300,200;90,90,110,110]*scale};
-% obs_pos(3) = {[210,210,190,190;200,300,300,200]*scale};
-% obs_pos(4) = {[0,100,100,0;190,190,210,210]*scale};
 
 campus = field([xMin xMin+xLength/step_size yMin yMin+yLength/step_size],tar_pos);
 campus.agentNum = 2;
@@ -57,14 +54,15 @@ campus.obs_info = [c_set;r_set]; % gives the center and radius of each obstacle
 kf = 800; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon (s)
-pre_type = 'extpol'; % 'IMM' specify the method for predicting human motion
+pre_type = 'IMM'; % 'IMM'. specify the method for predicting human motion
+plan_type = 'MPC'; % 'greedy'. specify the method for robot controller
 samp_rate = 20; % sampling rate (/Hz)
-safe_dis = 3; %safe distance between human and robot
+safe_dis = 1; %safe distance between human and robot
 safe_marg = 2; % safety margin between human the the obstacle
-mpc_dt = 1; % sampling time for model discretization used in MPC
+mpc_dt = 0.1; % sampling time for model discretization used in MPC
 
 % initialize variables
-obv_traj = zeros(2,0); % observed human trajectory
+obv_traj = zeros(3,0); % observed human trajectory; first row denotes the time
 est_state = zeros(4,kf); % estimated human states for every second [x,vx,y,vy];
 est_state(:,1) = [h.currentPos(1);h.currentV;h.currentPos(2);0]; % human starts with zero heading angle
 pre_traj = zeros(2,hor+1,kf); % current and predicted future human trajectory
@@ -74,7 +72,6 @@ r_input = zeros(2,kf); % robot's actual control input [psi,a]
 wp_cnt = 1; % the waypoint that the human is heading for
 h_tar_wp = h_way_pts(:,wp_cnt); % the way point that the human is heading for
 
-% imm_module;
 for k = 1:kf
     display(k)
     
@@ -109,19 +106,42 @@ for k = 1:kf
     
     %% both agents move
     % human moves to a way point and robot predicts and plans its own path
-    inPara_ams = struct('agents',agents,'h_tar_wp',h_tar_wp,...
+    % human moves
+    agentIndex = 1;
+    inPara_ams = struct('campus',campus,'agents',agents,'h_tar_wp',h_tar_wp,...
         'obv_traj',obv_traj,'est_state',est_state,...
         'pre_traj',pre_traj,'plan_state',plan_state,'r_state',r_state,'r_input',r_input,...
         'k',k,'hor',hor,'pre_type',pre_type,'samp_rate',samp_rate,...
-        'safe_dis',safe_dis,'mpc_dt',mpc_dt,'safe_marg',safe_marg);
-    [outPara_ams] = agentMove(campus,inPara_ams);
+        'safe_dis',safe_dis,'mpc_dt',mpc_dt,'safe_marg',safe_marg,...
+        'agentIndex',agentIndex,'plan_type',plan_type);
+    [outPara_ams] = agentMove(inPara_ams);
     agents = outPara_ams.agents;
     obv_traj = outPara_ams.obv_traj; 
-    est_state = outPara_ams.est_state; 
-    pre_traj = outPara_ams.pre_traj; 
+    
+    % estimate human position using IMM
+%     est_state = outPara_ams.est_state;
+%     if stecmp(pre_type,'IMM')
+%         pre_traj = outPara_ams.pre_traj;
+%     end
+    
+
+    % robot moves
+    agentIndex = 2;
+%     load('obv_traj4_w_time.mat')% Load Tracjectory of Human
+    obv_traj1=obv_traj';
+    parameter;  % parameter for IMM
+    inPara_ams = struct('campus',campus,'agents',agents,'h_tar_wp',h_tar_wp,...
+        'obv_traj',obv_traj,'est_state',est_state,...
+        'pre_traj',pre_traj,'plan_state',plan_state,'r_state',r_state,'r_input',r_input,...
+        'k',k,'hor',hor,'pre_type',pre_type,'samp_rate',samp_rate,...
+        'safe_dis',safe_dis,'mpc_dt',mpc_dt,'safe_marg',safe_marg,...
+        'agentIndex',agentIndex,'plan_type',plan_type);
+    [outPara_ams] = agentMove(inPara_ams);
+    agents = outPara_ams.agents;
+     if strcmp(pre_type,'extpol')
+        pre_traj = outPara_ams.pre_traj;
+    end
     plan_state = outPara_ams.plan_state; 
-%     r_state = outPara_ams.r_state; 
-%     r_input = outPara_ams.r_input; 
         
     %% plot trajectories
     % Plot future agent positions
