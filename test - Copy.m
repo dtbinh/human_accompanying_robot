@@ -1,4 +1,4 @@
-clc; clear;
+% clc; clear;
 load('obv_traj4_w_time.mat')% Load Tracjectory of Human
 obv_traj1=obv_traj1';
 parameter;  %%% Parameter File upload

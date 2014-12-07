@@ -74,6 +74,7 @@ r_input = zeros(2,kf); % robot's actual control input [psi,a]
 wp_cnt = 1; % the waypoint that the human is heading for
 h_tar_wp = h_way_pts(:,wp_cnt); % the way point that the human is heading for
 
+% imm_module;
 for k = 1:kf
     display(k)
     

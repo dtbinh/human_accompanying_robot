@@ -69,38 +69,72 @@ for agentIndex = 1:length(agents)
     %% robot predicts and moves
     elseif strcmp(agent.type,'robot')     
         %% estimate human position
+        test;
+        %{
+        load('obv_traj4_w_time.mat')% Load Tracjectory of Human
+        obv_traj1=obv_traj1';
+        outPara_gsp = getSimPara(obv_traj1);  %%% Parameter File upload
+        A = outPara_gsp.A;
+        A1 = outPara_gsp.A1;
+        C = outPara_gsp.C;
+        W1 = outPara_gsp.W1;
+        W2 = outPara_gsp.W2;
+        V1 = outPara_gsp.V1;
+        PHI = outPara_gsp.PHI;
+        xhat_init = outPara_gsp.xhat_init;
+        P_init = outPara_gsp.P_init;
+        mu1_init = outPara_gsp.mu1_init;
+        mu2_init = outPara_gsp.mu2_init;
+        
+        [est_state([1,2],k),est_state([3,4],k),pre_traj(1,:,k),pre_traj(2,:,k)]...
+            = IMM_Com_run(); %%% Run Simulink
+        %}
+        %{
         % later should use Donghan's module
         est_state([1,3],k) = obv_traj(:,(k-1)*samp_rate+1); 
         h = agents(1);
         hd = cur_hd;
         est_state([2,4],k) = h.currentV*[cos(hd);sin(hd)];
-        
+        %}
         %%  predict human future path
-        % may need to seperately deal with k == 1
+        %{
         inPara_phj = struct('state',est_state(:,k),'hor',hor,'pre_type',pre_type,...
             'mpc_dt',mpc_dt);
         pre_traj(:,:,k) = predictHumanTraj(agent,inPara_phj);
-               
+        %}     
         %% robot path planning
-        inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
-            'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',h.currentV,...
-            'obs_info',campus.obs_info,'safe_marg',safe_marg);
-        outPara_pp = pathPlanner(agent,inPara_pp);
-        opt_x = outPara_pp.opt_x;
-        opt_u = outPara_pp.opt_u;
-        agent.currentPos = opt_x(1:2,2); % robot moves
-        agent.currentV = opt_x(3,2); % robot updates its speed
-        plan_state(:,:,k) = opt_x;
+        if strcmp(plan_type,'MPC')
+            inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
+                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',h.currentV,...
+                'obs_info',campus.obs_info,'safe_marg',safe_marg);
+            outPara_pp = pathPlanner(agent,inPara_pp);
+            opt_x = outPara_pp.opt_x;
+            opt_u = outPara_pp.opt_u;
+            agent.currentPos = opt_x(1:2,2); % robot moves
+            agent.currentV = opt_x(3,2); % robot updates its speed
+            plan_state(:,:,k) = opt_x;
+        elseif strcmp(plan_type,'greedy')
+            inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
+                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',h.currentV,...
+                'obs_info',campus.obs_info,'safe_marg',safe_marg);
+            outPara_pp = pathPlannerGreedy(agent,inPara_pp);
+            opt_x = outPara_pp.opt_x;
+            opt_u = outPara_pp.opt_u;
+            agent.currentPos = opt_x(1:2,2); % robot moves
+            agent.currentV = opt_x(3,2); % robot updates its speed
+            plan_state(:,:,k) = opt_x;
+        end
         
         if k == 1
             tmp_agent_traj = agent.currentPos;
         else
             tmp_agent_traj = agent.traj;
         end
-
+        
         agent.traj = [tmp_agent_traj,agent.currentPos];
         agents(agentIndex) = agent;
-
+        
+            
     else
         error('Invalid agent type for planning path')
     end
