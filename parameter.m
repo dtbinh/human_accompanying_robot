@@ -42,7 +42,7 @@ process_noise = 5*10^(-3);
 
 Sv1 = meas_noise1^2;
 Sw1 = process_noise^2;
-Sw2 = process_noise^2;
+Sw2 = process_noise^2*2;
 
 W1 = Bw*Sw1*Bw';
 W2 = Bw*Sw2*Bw';

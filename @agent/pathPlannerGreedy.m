@@ -17,7 +17,7 @@ x_r = agent.currentPos(1:2);
 r_v = agent.currentV;
 maxA = agent.maxA;
 % determine robot heading and next position
-theta = calAngle(x_r-x_h);
+theta = calAngle(x_h-x_r);
 x_r_next = x_r+r_v*[cos(theta);sin(theta)];
 %{
 % safety constraint
@@ -37,8 +37,8 @@ for jj = 1:size(obs_info,2)
 %     end
 %}
 % change robot speed to match the human's next speed
-min_v = r_v - maxA*mpt_dt;
-max_v = r_v + maxA*mpt_dt;
+min_v = r_v - maxA*mpc_dt;
+max_v = r_v + maxA*mpc_dt;
 if h_v >= max_v
     r_v_next = max_v;
 elseif h_v <= min_v
@@ -46,7 +46,7 @@ elseif h_v <= min_v
 else
     r_v_next = h_v;
 end
-opt_x = [[x_r;r_v],[x_r_next;r_v_next],zeros(3,hor-1)];
+opt_x = [[x_r;r_v],[x_r_next*ones(1,hor);r_v_next,zeros(1,hor-1)]];
 opt_u = [[theta;(r_v_next-r_v)/mpc_dt],zeros(2,hor-1)];
 outPara = struct('opt_x',opt_x,'opt_u',opt_u);
 end

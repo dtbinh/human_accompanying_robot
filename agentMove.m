@@ -113,10 +113,10 @@ plan_type = inPara.plan_type;
             outPara_pp = pathPlannerGreedy(agent,inPara_pp);
             opt_x = outPara_pp.opt_x;
             opt_u = outPara_pp.opt_u;
-            agent.currentPos = opt_x(1:2,2); % robot moves
+            agent.currentPos = [opt_x(1:2,2);opt_u(1,1)]; % robot moves
             agent.currentV = opt_x(3,2); % robot updates its speed
             r_state(:,k) = opt_x(:,2);
-            r_input(:,k) = opt_u(:,2);
+            r_input(:,k) = opt_u(:,1);
             plan_state(:,:,k) = opt_x;
         end
         
