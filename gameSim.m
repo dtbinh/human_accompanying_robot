@@ -54,12 +54,12 @@ campus.obs_info = [c_set;r_set]; % gives the center and radius of each obstacle
 kf = 800; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon (s)
-pre_type = 'IMM'; % 'IMM'. specify the method for predicting human motion
-plan_type = 'MPC'; % 'greedy'. specify the method for robot controller
+pre_type = 'IMM'; % 'extpol','IMM'. specify the method for predicting human motion
+plan_type = 'MPC'; % 'MPC','greedy'. specify the method for robot controller
 samp_rate = 20; % sampling rate (/Hz)
-safe_dis = 1; %safe distance between human and robot
+safe_dis = 2; %safe distance between human and robot
 safe_marg = 2; % safety margin between human the the obstacle
-mpc_dt = 0.1; % sampling time for model discretization used in MPC
+mpc_dt = 0.5; % sampling time for model discretization used in MPC
 
 % initialize variables
 obv_traj = zeros(3,0); % observed human trajectory; first row denotes the time
@@ -140,9 +140,9 @@ for k = 1:kf
     % Plot future agent positions
     
     % plot specifications
-    color_agent = {'r','g','r'};
-    marker_agent = {'o','^','*'};
-    line_agent = {'-','-','-'};
+    color_agent = {'r','g','r','g'};
+    marker_agent = {'o','^','*','d'};
+    line_agent = {'-','-','-','-'};
     orange = [1 204/255 0];
     color_target = {'m','b',orange};
     figure;
@@ -172,7 +172,7 @@ for k = 1:kf
         set(h1,'Color',color_agent{ii});
         set(h1,'LineStyle',line_agent{ii});
         set(h1,'Marker',marker_agent{ii});
-        h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',2);
+        h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',3);
         set(h2,'MarkerFaceColor',color_agent{ii});
         set(h2,'MarkerEdgeColor',color_agent{ii});
         set(h1,'Color',color_agent{ii});
@@ -185,7 +185,12 @@ for k = 1:kf
     set(h3,'Color',color_agent{3});
     set(h3,'LineStyle',line_agent{3});
     set(h3,'Marker',marker_agent{3});
-    
+    h4 = plot(plan_state(1,:,k),plan_state(2,:,k),color_agent{4},'markers',1);
+    set(h4,'MarkerFaceColor',color_agent{4});
+    set(h4,'MarkerEdgeColor',color_agent{4});
+    set(h4,'Color',color_agent{4});
+    set(h4,'LineStyle',line_agent{4});
+    set(h4,'Marker',marker_agent{4});
     grid minor
     set(gca,'MinorGridLineStyle','-','XColor',[0.5 0.5 0.5],'YColor',[0.5 0.5 0.5])
     axis equal

@@ -41,7 +41,7 @@ plan_type = inPara.plan_type;
         
         % generate observations
         cur_pos = agent.currentPos(1:2);
-        %
+        %{
         % compute human heading
         if k == 1
             % we assume that human heading at the beginning is known.
@@ -69,16 +69,14 @@ plan_type = inPara.plan_type;
     %% robot predicts and moves
     elseif strcmp(agent.type,'robot')    
         h = agents(1);
-        cur_hd = h.currentPos(3);
         %% estimate human position
-        %
         [x_est,y_est,x_pre,y_pre] = IMM_Com_run();
         est_state([1,2],k) = x_est(end,:)';
         est_state([3,4],k) = y_est(end,:)';
-        %}
         % estimation with no measurement noise
-        % {
-            est_state([1,3],k) = obv_traj(2:3,(k-1)*samp_rate*mpc_dt+1);
+        %{ 
+            est_state([1,3],k) = obv_traj(:,(k-1)*samp_rate+1);
+            h = agents(1);
             hd = cur_hd;
             est_state([2,4],k) = h.currentV*[cos(hd);sin(hd)];
         %}
@@ -101,10 +99,10 @@ plan_type = inPara.plan_type;
             outPara_pp = pathPlanner(agent,inPara_pp);
             opt_x = outPara_pp.opt_x;
             opt_u = outPara_pp.opt_u;
-            agent.currentPos = [opt_x(1:2,2);opt_u(1,1)]; % update robot position
-            agent.currentV = opt_x(3,2); % update robot speed
+            agent.currentPos = opt_x(1:2,2); % robot moves
+            agent.currentV = opt_x(3,2); % robot updates its speed
             r_state(:,k) = opt_x(:,2);
-            r_input(:,k) = opt_u(:,1);
+            r_input(:,k) = opt_u(:,2);
             plan_state(:,:,k) = opt_x;
         elseif strcmp(plan_type,'greedy')
             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...

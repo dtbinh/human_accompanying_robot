@@ -1,7 +1,7 @@
 function outPara = pathPlanner(agent,inPara)
 % include IPOPT in YALMIP
-addpath('D:\Program Files\MATLAB\2013a_crack\IPOPT3.11.8');
-% addpath('D:\Chang Liu\ipopt');
+% addpath('D:\Program Files\MATLAB\2013a_crack\IPOPT3.11.8');
+addpath('D:\Chang Liu\ipopt');
 % define input arguments
 x_h = inPara.pre_traj; % predicted human trajectory
 hor = inPara.hor;
@@ -15,21 +15,23 @@ safe_marg = inPara.safe_marg;
 non_intersect_flag = 0; % flag for showing whether imposing the non-intersection constraint
 dt = 0.05; % time interval for sampling the points on the line of the robot's path. used for imposing non-intersection constriant
 safe_marg2 = 0.1; % margin for the robot's path line from the obstacle
+tmp_hor = hor;
+r_hd = agent.currentPos(3);
 
-while(hor > 0)
+while(tmp_hor > 0)
     % define MPC
-    x = sdpvar(3,hor+1); %[x,y,v]
-    u = sdpvar(2,hor); %[psi,a]
+    x = sdpvar(3,tmp_hor+1); %[x,y,v]
+    u = sdpvar(2,tmp_hor); %[psi,a]
     
     % impose constraints
     % initial condition
     constr = [x(:,1) == [agent.currentPos(1:2);agent.currentV]];
     % constraints on future states
-    inPara_cg = struct('hor',hor,'x',x,'u',u,'h_v',h_v,'mpc_dt',mpc_dt,...
+    inPara_cg = struct('hor',tmp_hor,'x',x,'u',u,'h_v',h_v,'mpc_dt',mpc_dt,...
         'safe_dis',safe_dis,'safe_marg',safe_marg,'x_h',x_h,'obs_info',obs_info,...
         'non_intersect_flag',non_intersect_flag,'obj',0,'constr',constr,...
-        'agent',agent,'dt',dt,'safe_marg2',safe_marg2);
-    [obj,constr] = genConstr(inPara_cg); % generate constraints. contain a parameter that decides whether using the non-intersection constraints
+        'agent',agent,'dt',dt,'safe_marg2',safe_marg2,'r_hd',r_hd);
+    [obj,constr] = genMPC(inPara_cg); % generate constraints. contain a parameter that decides whether using the non-intersection constraints
     
     % solve MPC
     opt = sdpsettings('solver','ipopt','usex0',1,'debug',1);
@@ -38,7 +40,11 @@ while(hor > 0)
     if sol.problem == 0
         opt_x = value(x); % current and future states
         opt_u = value(u); % future input
-        for ii = 1:hor
+        if tmp_hor < hor
+            opt_x = [opt_x,opt_x(:,end)*ones(1,hor-tmp_hor)]; % current and future states
+            opt_u = [opt_u,zeros(size(opt_u,1),hor-tmp_hor)]; % future input
+        end
+        for ii = 1:tmp_hor
             for jj = 1:size(obs_info,2)
                 % check if the line intersects with some obstacle
                 n = floor(mpc_dt/dt);
@@ -66,7 +72,7 @@ while(hor > 0)
         display('Fail to solve MPC')
         sol.info
         yalmiperror(sol.problem)
-        hor = hor-1;
+        tmp_hor = tmp_hor-1;
     end
 end
 outPara = struct('opt_x',opt_x,'opt_u',opt_u);
@@ -88,7 +94,7 @@ b = v1(1)-v2(1);
 c = v1(2)*v2(1)-v2(2)*v1(1);
 end
 
-function [obj,constr] = genConstr(inPara)
+function [obj,constr] = genMPC(inPara)
 hor = inPara.hor;
 x = inPara.x;
 u = inPara.u;
@@ -104,9 +110,15 @@ constr = inPara.constr;
 agent = inPara.agent;
 dt = inPara.dt;
 safe_marg2 = inPara.safe_marg2;
+r_hd = inPara.r_hd;
 
 for ii = 1:hor
-    obj = obj+sum((x(1:2,ii+1)-x_h(:,ii+1)).^2)+0.1*(x(3,ii+1)-h_v)^2;%+0.5*u(2,ii)^2
+    hr_dis = sum((x(1:2,ii+1)-x_h(:,ii+1)).^2); % square of the Euclidean distance between human and robot
+    if ii == 1
+        obj = obj+hr_dis+0.1*(x(3,ii+1)-h_v)^2;%-0.05*log(hr_dis-safe_dis)+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
+    else
+        obj = obj+hr_dis+0.1*(x(3,ii+1)-h_v)^2;%-0.05*log(hr_dis-safe_dis)+(sin(u(1,ii))-sin(u(1,ii-1)))^2;
+    end
     % constraints on robot dynamics
     constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(3,ii)*[cos(u(1,ii));sin(u(1,ii))]*mpc_dt,...
         x(3,ii+1) == x(3,ii)+u(2,ii)*mpc_dt,x(3,ii+1)>=0,-agent.maxA<=u(2,ii)<=agent.maxA];   
