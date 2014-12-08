@@ -116,15 +116,8 @@ for k = 1:kf
         'agentIndex',agentIndex,'plan_type',plan_type);
     [outPara_ams] = agentMove(inPara_ams);
     agents = outPara_ams.agents;
-    obv_traj = outPara_ams.obv_traj; 
+    obv_traj = outPara_ams.obv_traj;
     
-    % estimate human position using IMM
-%     est_state = outPara_ams.est_state;
-%     if stecmp(pre_type,'IMM')
-%         pre_traj = outPara_ams.pre_traj;
-%     end
-    
-
     % robot moves
     agentIndex = 2;
 %     load('obv_traj4_w_time.mat')% Load Tracjectory of Human
@@ -138,11 +131,11 @@ for k = 1:kf
         'agentIndex',agentIndex,'plan_type',plan_type);
     [outPara_ams] = agentMove(inPara_ams);
     agents = outPara_ams.agents;
-     if strcmp(pre_type,'extpol')
-        pre_traj = outPara_ams.pre_traj;
-    end
+    pre_traj = outPara_ams.pre_traj;
     plan_state = outPara_ams.plan_state; 
-        
+    r_state = outPara_ams.r_state;
+    r_input = outPara_ams.r_input;
+    
     %% plot trajectories
     % Plot future agent positions
     
@@ -173,20 +166,20 @@ for k = 1:kf
     % draw agent trajectory
     for ii = 1:length(agents)
         tmp_agent = agents(ii);
-        h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',3);
+        h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',1);
         set(h1,'MarkerFaceColor',color_agent{ii});
         set(h1,'MarkerEdgeColor',color_agent{ii});
         set(h1,'Color',color_agent{ii});
         set(h1,'LineStyle',line_agent{ii});
         set(h1,'Marker',marker_agent{ii});
-        h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',6);
+        h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',2);
         set(h2,'MarkerFaceColor',color_agent{ii});
         set(h2,'MarkerEdgeColor',color_agent{ii});
         set(h1,'Color',color_agent{ii});
         set(h2,'LineStyle',line_agent{ii});
         set(h2,'Marker',marker_agent{ii});
     end
-    h3 = plot(pre_traj(1,:,k),pre_traj(2,:,k),color_agent{3},'markers',3);
+    h3 = plot(pre_traj(1,:,k),pre_traj(2,:,k),color_agent{3},'markers',1);
     set(h3,'MarkerFaceColor',color_agent{3});
     set(h3,'MarkerEdgeColor',color_agent{3});
     set(h3,'Color',color_agent{3});

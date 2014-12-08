@@ -11,8 +11,8 @@ obv_traj = inPara.obv_traj;
 est_state = inPara.est_state;
 pre_traj = inPara.pre_traj;
 plan_state = inPara.plan_state;
-% r_state = inPara.r_state;
-% r_input = inPara.r_input;
+r_state = inPara.r_state;
+r_input = inPara.r_input;
 k = inPara.k;
 hor = inPara.hor;
 pre_type = inPara.pre_type;
@@ -52,8 +52,10 @@ plan_type = inPara.plan_type;
         %}
         agent = takeNextAction(agent,h_next_actions);
         next_pos = agent.currentPos(1:2);
-        t = uint16(norm(cur_pos-next_pos,2)/agent.currentV); % calculate the time for human to move to his next position
-        samp_num = double(t*samp_rate*mpc_dt); % get the number of observations of human position
+%         t = uint16(norm(cur_pos-next_pos,2)/agent.currentV); % calculate the time for human to move to his next position
+%         samp_num = double(t*samp_rate*mpc_dt); % get the number of observations of human position
+        t = norm(cur_pos-next_pos,2)/agent.currentV; % calculate the time for human to move to his next position
+        samp_num = double(uint16(t*samp_rate)); % get the number of observations of human position
         for ii = 1:samp_num
              % observed human position
              tmp_t = (k-1)*mpc_dt+ii/samp_rate;
@@ -98,6 +100,8 @@ plan_type = inPara.plan_type;
             opt_u = outPara_pp.opt_u;
             agent.currentPos = opt_x(1:2,2); % robot moves
             agent.currentV = opt_x(3,2); % robot updates its speed
+            r_state(:,k) = opt_x(:,2);
+            r_input(:,k) = opt_u(:,2);
             plan_state(:,:,k) = opt_x;
         elseif strcmp(plan_type,'greedy')
             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
@@ -108,6 +112,8 @@ plan_type = inPara.plan_type;
             opt_u = outPara_pp.opt_u;
             agent.currentPos = opt_x(1:2,2); % robot moves
             agent.currentV = opt_x(3,2); % robot updates its speed
+            r_state(:,k) = opt_x(:,2);
+            r_input(:,k) = opt_u(:,2);
             plan_state(:,:,k) = opt_x;
         end
         
@@ -129,8 +135,7 @@ plan_type = inPara.plan_type;
 % outPara = struct('agents',agents,'obv_traj',obv_traj,'est_state',est_state,...
 %     'pre_traj',pre_traj,'plan_state',plan_state,'r_state',fut_x(:,2),'r_input',fut_u(:,1));
 outPara = struct('agents',agents,'obv_traj',obv_traj,'est_state',est_state,...
-    'pre_traj',pre_traj,'plan_state',plan_state);
-
+    'pre_traj',pre_traj,'plan_state',plan_state,'r_state',r_state,'r_input',r_input);
 end
 
 function next_act = getNextActionWithFixedHeading(a_pos,t_pos,v,deg_dev,mpc_dt)
