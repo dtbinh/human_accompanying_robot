@@ -55,7 +55,7 @@ kf = 800; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon (s)
 pre_type = 'IMM'; % 'extpol','IMM'. specify the method for predicting human motion
-plan_type = 'greedy'; % 'MPC','greedy'. specify the method for robot controller
+plan_type = 'greedy0'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
 samp_rate = 20; % sampling rate (/Hz)
 safe_dis = 2; %safe distance between human and robot
 safe_marg = 2; % safety margin between human the the obstacle
@@ -150,7 +150,7 @@ for k = 1:kf
 
     % draw targets
     for jj = 1:campus.targetNum
-        h = plot(campus.targetPos(1,jj),campus.targetPos(2,jj),'MarkerSize',15);
+        h = plot(campus.targetPos(1,jj),campus.targetPos(2,jj),'MarkerSize',11);
         set(h,'Marker','p');
     end
     
@@ -199,19 +199,27 @@ for k = 1:kf
 end
 
 %% save simulation result
-%{
 % save data
+% if the data is a decimal, replace the '.' with 'p'
+str_safe_dis = strrep(num2str(safe_dis),'.','p');
+str_safe_marg = strrep(num2str(safe_marg),'.','p');
+
 folder_path = ('.\sim_res');
-file_name = fullfile (folder_path,'obv_traj_chg_acl.mat');
-save (file_name,'obv_traj');
+data_name = sprintf('agent_traj_%s_%s_%s_%s_%s.mat',...
+    pre_type,plan_type,date,str_safe_dis,str_safe_marg);
+file_name = fullfile (folder_path,data_name);
+save(file_name,'obv_traj','est_state','pre_traj','plan_state','r_state','r_input');
 
 % save plot
 folder_path = ('.\sim_res');
-file_name = fullfile (folder_path,'agent_traj_chg_acl.fig');
+fig_name = sprintf('agent_traj_%s_%s_%s_%s_%s.fig',...
+    pre_type,plan_type,date,str_safe_dis,str_safe_marg);
+file_name = fullfile (folder_path,fig_name);
 h = gcf;
 saveas (h,file_name);
+
 % convert .fig to .pdf
-file_name = fullfile (folder_path,'agent_traj_chg_acl');
-h = gcf;
-fig2Pdf(file_name,300,h);
-%}
+fig_name2 = sprintf('agent_traj_%s_%s_%s_%s_%s.pdf',...
+    pre_type,plan_type,date,str_safe_dis,str_safe_marg);
+file_name2 = fullfile (folder_path,fig_name2);
+fig2Pdf(file_name2,300,h)

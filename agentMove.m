@@ -52,8 +52,6 @@ plan_type = inPara.plan_type;
         %}
         agent = takeNextAction(agent,h_next_actions);
         next_pos = agent.currentPos(1:2);
-%         t = uint16(norm(cur_pos-next_pos,2)/agent.currentV); % calculate the time for human to move to his next position
-%         samp_num = double(t*samp_rate*mpc_dt); % get the number of observations of human position
         t = norm(cur_pos-next_pos,2)/agent.currentV; % calculate the time for human to move to his next position
         samp_num = double(uint16(t*samp_rate)); % get the number of observations of human position
         for ii = 1:samp_num
@@ -77,7 +75,7 @@ plan_type = inPara.plan_type;
         est_state([3,4],k) = y_est(end,:)';
         %}
         % estimation with no measurement noise
-        % {
+        %{
             est_state([1,3],k) = obv_traj(2:3,(k-1)*samp_rate*mpc_dt+1);
             hd = cur_hd;
             est_state([2,4],k) = h.currentV*[cos(hd);sin(hd)];
@@ -106,10 +104,11 @@ plan_type = inPara.plan_type;
             r_state(:,k) = opt_x(:,2);
             r_input(:,k) = opt_u(:,1);
             plan_state(:,:,k) = opt_x;
-        elseif strcmp(plan_type,'greedy')
+        elseif strcmp(plan_type,'greedy1') || strcmp(plan_type,'greedy0')
             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',h.currentV,...
-                'obs_info',campus.obs_info,'safe_marg',safe_marg);
+                'obs_info',campus.obs_info,'safe_marg',safe_marg,...
+                'plan_type',plan_type);
             outPara_pp = pathPlannerGreedy(agent,inPara_pp);
             opt_x = outPara_pp.opt_x;
             opt_u = outPara_pp.opt_u;

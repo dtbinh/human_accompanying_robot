@@ -1,10 +1,15 @@
 function outPara = pathPlannerGreedy(agent,inPara)
 % define input arguments
-x_h = inPara.pre_traj(:,2); % predicted human trajectory at one step ahead
+plan_type = inPara.plan_type;
+if strcmp(plan_type,'greedy1')
+    x_h = inPara.pre_traj(:,2); % predicted human trajectory at one step ahead
+elseif strcmp(plan_type,'greedy0')
+    x_h = inPara.pre_traj(:,1); % no prediction. reflex-based robot
+end
 hor = inPara.hor;
 safe_dis = inPara.safe_dis;
 mpc_dt = inPara.mpc_dt;
-h_v = inPara.h_v;
+h_v = inPara.h_v; % human current speed
 obs_info = inPara.obs_info;
 safe_marg = inPara.safe_marg;
 
@@ -19,9 +24,16 @@ maxA = agent.maxA;
 % determine robot heading and next position
 theta = calAngle(x_h-x_r);
 x_r_next = x_r+r_v*[cos(theta);sin(theta)];
-%{
+
 % safety constraint
+% determine if the next waypoint is inside the safe distance around the human
+if sqrt(sum((x_r_next(1:2) - x_h(1:2)).^2)) < safe_dis
+    % get the robot's safe travel distance
+    r_dis2 = sqrt(sum((x_r(1:2)-x_h(1:2)).^2)) - safe_dis;
+    x_r_next = r_dis2/sqrt(sum((x_r(1:2)-x_r_next(1:2)).^2))*(x_r_next-x_r)+x_r;
+end
 % determine if the waypoint is inside an obstacle
+%{
 for jj = 1:size(obs_info,2)
 %     if sum((x(1:2,ii+1)-obs_info(1:2,jj)).^2) - (obs_info(3,jj)+safe_marg)^2 < 0
         
