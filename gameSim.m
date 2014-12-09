@@ -119,6 +119,7 @@ for k = 1:kf
     obv_traj = outPara_ams.obv_traj;
     
     % robot moves
+    %
     agentIndex = 2;
 %     load('obv_traj4_w_time.mat')% Load Tracjectory of Human
     obv_traj1=obv_traj';
@@ -135,7 +136,7 @@ for k = 1:kf
     plan_state = outPara_ams.plan_state; 
     r_state = outPara_ams.r_state;
     r_input = outPara_ams.r_input;
-    
+    %}
     %% plot trajectories
     % Plot future agent positions
     
@@ -164,18 +165,18 @@ for k = 1:kf
     ylim([0,campus.endpoints(4)]);
     
     % draw agent trajectory
-    for ii = 1:length(agents)
+    for ii = 1%:length(agents)
         tmp_agent = agents(ii);
-        h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',1);
+        h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',2);
         set(h1,'MarkerFaceColor',color_agent{ii});
         set(h1,'MarkerEdgeColor',color_agent{ii});
         set(h1,'Color',color_agent{ii});
         set(h1,'LineStyle',line_agent{ii});
         set(h1,'Marker',marker_agent{ii});
-        h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',3);
+        h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',5);
         set(h2,'MarkerFaceColor',color_agent{ii});
         set(h2,'MarkerEdgeColor',color_agent{ii});
-        set(h1,'Color',color_agent{ii});
+        set(h2,'Color',color_agent{ii});
         set(h2,'LineStyle',line_agent{ii});
         set(h2,'Marker',marker_agent{ii});
     end
@@ -199,27 +200,29 @@ for k = 1:kf
 end
 
 %% save simulation result
+%
 % save data
 % if the data is a decimal, replace the '.' with 'p'
 str_safe_dis = strrep(num2str(safe_dis),'.','p');
 str_safe_marg = strrep(num2str(safe_marg),'.','p');
 
 folder_path = ('.\sim_res');
-data_name = sprintf('agent_traj_%s_%s_%s_%s_%s.mat',...
+data_name = sprintf('sim_traj_%s_%s_%s_%s_%s.mat',...
     pre_type,plan_type,date,str_safe_dis,str_safe_marg);
 file_name = fullfile (folder_path,data_name);
 save(file_name,'obv_traj','est_state','pre_traj','plan_state','r_state','r_input');
 
 % save plot
 folder_path = ('.\sim_res');
-fig_name = sprintf('agent_traj_%s_%s_%s_%s_%s.fig',...
+fig_name = sprintf('sim_traj_%s_%s_%s_%s_%s.fig',...
     pre_type,plan_type,date,str_safe_dis,str_safe_marg);
 file_name = fullfile (folder_path,fig_name);
 h = gcf;
 saveas (h,file_name);
 
 % convert .fig to .pdf
-fig_name2 = sprintf('agent_traj_%s_%s_%s_%s_%s.pdf',...
+fig_name2 = sprintf('sim_traj_%s_%s_%s_%s_%s.pdf',...
     pre_type,plan_type,date,str_safe_dis,str_safe_marg);
 file_name2 = fullfile (folder_path,fig_name2);
 fig2Pdf(file_name2,300,h)
+%}
