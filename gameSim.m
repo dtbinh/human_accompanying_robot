@@ -36,6 +36,7 @@ inPara_gwp = struct('tar_pos',tar_pos,'scale',scale,'type','h');
 h_way_pts = getWayPts(inPara_gwp);
 % apply different human speed between different way points.
 % h_v = [2,3,1,1,1,1,1,1,1,1,3,1.5,2,3,2,1.5,4];
+% apply different acceleration for human speed
 % h_acl = -h.maxA+2*h.maxA*rand(1,300);
 %%%
 
@@ -54,8 +55,8 @@ campus.obs_info = [c_set;r_set]; % gives the center and radius of each obstacle
 kf = 800; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon (s)
-pre_type = 'IMM'; % 'extpol','IMM'. specify the method for predicting human motion
-plan_type = 'greedy0'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
+pre_type = 'IMM';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion
+plan_type = 'greedy1'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
 samp_rate = 20; % sampling rate (/Hz)
 safe_dis = 2; %safe distance between human and robot
 safe_marg = 2; % safety margin between human the the obstacle
@@ -119,13 +120,13 @@ for k = 1:kf
     obv_traj = outPara_ams.obv_traj;
     
     % robot moves
-    %
+    %{
     agentIndex = 2;
-%     load('obv_traj4_w_time.mat')% Load Tracjectory of Human
+%     load('obv_traj3_w_time.mat')% Load Tracjectory of Human
     obv_traj1=obv_traj';
     parameter;  % parameter for IMM
     inPara_ams = struct('campus',campus,'agents',agents,'h_tar_wp',h_tar_wp,...
-        'obv_traj',obv_traj,'est_state',est_state,...
+        'obv_traj',obv_traj1','est_state',est_state,...
         'pre_traj',pre_traj,'plan_state',plan_state,'r_state',r_state,'r_input',r_input,...
         'k',k,'hor',hor,'pre_type',pre_type,'samp_rate',samp_rate,...
         'safe_dis',safe_dis,'mpc_dt',mpc_dt,'safe_marg',safe_marg,...
@@ -167,13 +168,13 @@ for k = 1:kf
     % draw agent trajectory
     for ii = 1%:length(agents)
         tmp_agent = agents(ii);
-        h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',2);
+        h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',1);
         set(h1,'MarkerFaceColor',color_agent{ii});
         set(h1,'MarkerEdgeColor',color_agent{ii});
         set(h1,'Color',color_agent{ii});
         set(h1,'LineStyle',line_agent{ii});
         set(h1,'Marker',marker_agent{ii});
-        h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',5);
+        h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',3);
         set(h2,'MarkerFaceColor',color_agent{ii});
         set(h2,'MarkerEdgeColor',color_agent{ii});
         set(h2,'Color',color_agent{ii});
@@ -196,11 +197,15 @@ for k = 1:kf
     set(gca,'MinorGridLineStyle','-','XColor',[0.5 0.5 0.5],'YColor',[0.5 0.5 0.5])
     axis equal
     xlim([0,xLength]);ylim([0,yLength]);
+    h = gcf;
+    if h > 70 % close plots when there are too many plots
+        close all;
+    end
     %}
 end
 
 %% save simulation result
-%
+%{
 % save data
 % if the data is a decimal, replace the '.' with 'p'
 str_safe_dis = strrep(num2str(safe_dis),'.','p');

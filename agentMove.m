@@ -34,7 +34,7 @@ plan_type = inPara.plan_type;
         
         if k == 1
             tmp_agent_traj = agent.currentPos;
-            obv_traj = [0;agent.currentPos(1:2)];
+%             obv_traj = [0;agent.currentPos(1:2)];
         else
             tmp_agent_traj = agent.traj;
         end
@@ -70,7 +70,7 @@ plan_type = inPara.plan_type;
         cur_hd = h.currentPos(3);
         %% estimate human position
         %
-        [x_est,y_est,x_pre,y_pre] = IMM_Com_run();
+        [x_est,y_est,x_pre,y_pre,x_pos_est,input,time] = IMM_Com_run();
         est_state([1,2],k) = x_est(end,:)';
         est_state([3,4],k) = y_est(end,:)';
         %}
@@ -84,14 +84,17 @@ plan_type = inPara.plan_type;
         %%  predict human future path
         % prediction by IMM
         if strcmp(pre_type,'IMM')
-            pre_traj(:,:,k) = [[x_est(end-1,1)';y_est(end-1,1)'],[x_pre(end,:);y_pre(end,:)]];
+            pre_traj(:,:,k) = [[x_est(end,1)';y_est(end,1)'],[x_pre(end,:);y_pre(end,:)]];
         % prediction by extrapolation
         elseif strcmp(pre_type,'extpol')
-            inPara_phj = struct('state',est_state(:,k),'hor',hor,'pre_type',pre_type,...
+%             inPara_phj = struct('state',est_state(:,k),'hor',hor,'pre_type',pre_type,...
+%                 'mpc_dt',mpc_dt);
+            inPara_phj = struct('state',[x_est(end,:)';y_est(end,:)'],'hor',hor,'pre_type',pre_type,...
                 'mpc_dt',mpc_dt);
             pre_traj(:,:,k) = predictHumanTraj(agent,inPara_phj);
         end     
         %% robot path planning
+        %
         if strcmp(plan_type,'MPC')
             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',h.currentV,...
@@ -106,9 +109,9 @@ plan_type = inPara.plan_type;
             plan_state(:,:,k) = opt_x;
         elseif strcmp(plan_type,'greedy1') || strcmp(plan_type,'greedy0')
             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
-                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',h.currentV,...
-                'obs_info',campus.obs_info,'safe_marg',safe_marg,...
-                'plan_type',plan_type);
+                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',...
+                [x_est(end-1,2);y_est(end-1,2)],'obs_info',campus.obs_info,...
+                'safe_marg',safe_marg,'plan_type',plan_type);
             outPara_pp = pathPlannerGreedy(agent,inPara_pp);
             opt_x = outPara_pp.opt_x;
             opt_u = outPara_pp.opt_u;
@@ -118,7 +121,7 @@ plan_type = inPara.plan_type;
             r_input(:,k) = opt_u(:,1);
             plan_state(:,:,k) = opt_x;
         end
-        
+        %}
         if k == 1
             tmp_agent_traj = agent.currentPos;
         else

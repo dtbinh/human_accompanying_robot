@@ -21,18 +21,62 @@ safe_marg2 = 0.1; % margin for the robot's path line from the obstacle
 x_r = agent.currentPos(1:2);
 r_v = agent.currentV;
 maxA = agent.maxA;
-% determine robot heading and next position
-theta = calAngle(x_h-x_r);
-x_r_next = x_r+r_v*[cos(theta);sin(theta)];
+h_hd = calAngle(h_v); % human heading
 
 % safety constraint
-% determine if the next waypoint is inside the safe distance around the human
-if sqrt(sum((x_r_next(1:2) - x_h(1:2)).^2)) < safe_dis
-    % get the robot's safe travel distance
-    r_dis2 = sqrt(sum((x_r(1:2)-x_h(1:2)).^2)) - safe_dis;
-    x_r_next = r_dis2/sqrt(sum((x_r(1:2)-x_r_next(1:2)).^2))*(x_r_next-x_r)+x_r;
+% collision avoidance with human
+rh_dis = sqrt(sum((x_r(1:2) - x_h(1:2)).^2)); % distance between robot's current and human's position
+
+if (rh_dis >= safe_dis) % if robot is outside of the collision region
+    % determine robot heading and the furthest feasible next position
+    theta = calAngle(x_h-x_r);
+    
+    x_r_feas_next = x_r+r_v*[cos(theta);sin(theta)]*mpc_dt;
+    rh_next_feas_dis = sqrt(sum((x_r_feas_next(1:2) - x_h(1:2)).^2)); % distance between robot's next and human's position
+    rr_next_feas_dis = sqrt(sum((x_r_feas_next(1:2) - x_r(1:2)).^2)); % distance between robot's current and next position
+    if (rh_next_feas_dis < safe_dis) && (rr_next_feas_dis < rh_dis)
+        % if the next waypoint is inside the safe distance around the human and not
+        % crossing the human
+        
+        % get the robot's safe travel distance
+        %     r_dis = sqrt(sum((x_r(1:2)-x_h(1:2)).^2)) - safe_dis;
+        %     x_r_feas_next = r_dis/sqrt(sum((x_r(1:2)-x_r_feas_next(1:2)).^2))*(x_r_feas_next-x_r)+x_r;
+        
+        % get robot's new heading
+        d_theta = acos((rh_dis^2+rr_next_feas_dis^2-safe_dis^2)/(2*rh_dis*rr_next_feas_dis));
+        posb_theta = theta+[1;-1]*d_theta; % possible robot heading
+        [~,tmp_idx] = min(abs(posb_theta-h_hd)); % choose the one that is closer to human's heading
+        theta = posb_theta(tmp_idx);
+        x_r_next = x_r+r_v*[cos(theta);sin(theta)]*mpc_dt;
+    elseif (rr_next_feas_dis >= rh_dis)
+        % if robot will cross human
+        d_theta = asin(safe_dis/rh_dis);
+        posb_theta = theta+[1;-1]*d_theta; % possible robot heading
+        [~,tmp_idx] = min(abs(posb_theta-h_hd)); % choose the one that is closer to human's heading
+        theta = posb_theta(tmp_idx);
+        x_r_next = x_r+r_v*[cos(theta);sin(theta)]*mpc_dt;
+    else
+        x_r_next = x_r_feas_next;
+    end
+else %if robot is inside the collision region
+    % for simplicity, just let the robot move opposite to human's next
+    % position. can consider improving this later.
+    theta = -calAngle(x_h-x_r); % 
+    x_r_feas_next = x_r+r_v*[cos(theta);sin(theta)]*mpc_dt;
+%     rh_next_feas_dis = sqrt(sum((x_r_feas_next(1:2) - x_h(1:2)).^2)); % distance between robot's next and human's position
+%     rr_next_feas_dis = sqrt(sum((x_r_feas_next(1:2) - x_r(1:2)).^2)); % distance between robot's current and next position
+%     if (rh_next_feas_dis <= safe_dis) 
+        % if the next waypoint is still inside the safe distance around the human
+        
+        % get the robot's safe travel distance
+        %     r_dis = sqrt(sum((x_r(1:2)-x_h(1:2)).^2)) - safe_dis;
+        %     x_r_feas_next = r_dis/sqrt(sum((x_r(1:2)-x_r_feas_next(1:2)).^2))*(x_r_feas_next-x_r)+x_r;
+        
+        % get robot's new heading
+        x_r_next = x_r_feas_next;
 end
-% determine if the waypoint is inside an obstacle
+
+% obstacle avoidance
 %{
 for jj = 1:size(obs_info,2)
 %     if sum((x(1:2,ii+1)-obs_info(1:2,jj)).^2) - (obs_info(3,jj)+safe_marg)^2 < 0
@@ -48,19 +92,34 @@ for jj = 1:size(obs_info,2)
     end
 %     end
 %}
-% change robot speed to match the human's next speed
-%
+
+% chang robot speed to match human's current estimated speed
 min_v = r_v - maxA*mpc_dt;
 max_v = r_v + maxA*mpc_dt;
-if h_v >= max_v
+if norm(h_v,2) >= max_v
     r_v_next = max_v;
-elseif h_v <= min_v
+elseif norm(h_v,2) <= min_v
     r_v_next = min_v;
 else
-    r_v_next = h_v;
+    r_v_next = norm(h_v,2);
 end
 %}
-% change robot speed so that the robot can move to it 
+
+% a snippet for changing robot speed using constant acceleration. Not
+% compatiable with the idea of discretized speed that is constant between
+% each time step
+%{
+r_dis2 = norm(x_r(1:2)-x_r_feas_next(1:2),2);
+max_dis = r_v*mpc_dt+1/2*maxA*mpc_dt^2;% max distance that robot can travel using r_v and maxA within mpc_dt
+if max_dis < r_dis2 % robot uses max acceleration
+    r_a = maxA;
+    r_v_next = r_v+maxA*mpc_dt;
+    x_r_next = x_r(1:2)+
+else
+    r_a = 2*(r_dis2-r_v*mpc_dt)/mpc_dt^2;
+    r_v_next = r_v+r_a*mpc_dt;
+end
+%}
 opt_x = [[x_r;r_v],[x_r_next*ones(1,hor);r_v_next,zeros(1,hor-1)]];
 opt_u = [[theta;(r_v_next-r_v)/mpc_dt],zeros(2,hor-1)];
 outPara = struct('opt_x',opt_x,'opt_u',opt_u);
@@ -80,15 +139,4 @@ function [a,b,c] = getLine(v1,v2)
 a = v2(2)-v1(2);
 b = v1(1)-v2(1);
 c = v1(2)*v2(1)-v2(2)*v1(1);
-end
-
-function angle = calAngle (vec)
-len = norm(vec);
-x = vec(1);
-y = vec(2);
-if x >= 0
-    angle = asin(y/len);
-else
-    angle = pi - asin(y/len);
-end
 end
