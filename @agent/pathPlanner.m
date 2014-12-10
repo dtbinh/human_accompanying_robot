@@ -1,7 +1,7 @@
 function outPara = pathPlanner(agent,inPara)
 % include IPOPT in YALMIP
-% addpath('D:\Program Files\MATLAB\2013a_crack\IPOPT3.11.8');
-addpath('D:\Chang Liu\ipopt');
+addpath('D:\Program Files\MATLAB\2013a_crack\IPOPT3.11.8');
+% addpath('D:\Chang Liu\ipopt');
 % define input arguments
 x_h = inPara.pre_traj; % predicted human trajectory
 hor = inPara.hor;
@@ -17,6 +17,7 @@ dt = 0.05; % time interval for sampling the points on the line of the robot's pa
 safe_marg2 = 0.1; % margin for the robot's path line from the obstacle
 tmp_hor = hor;
 r_hd = agent.currentPos(3);
+h_v_value = norm(h_v,2);
 
 while(tmp_hor > 0)
     % define MPC
@@ -27,7 +28,7 @@ while(tmp_hor > 0)
     % initial condition
     constr = [x(:,1) == [agent.currentPos(1:2);agent.currentV]];
     % constraints on future states
-    inPara_cg = struct('hor',tmp_hor,'x',x,'u',u,'h_v',h_v,'mpc_dt',mpc_dt,...
+    inPara_cg = struct('hor',tmp_hor,'x',x,'u',u,'h_v',h_v_value,'mpc_dt',mpc_dt,...
         'safe_dis',safe_dis,'safe_marg',safe_marg,'x_h',x_h,'obs_info',obs_info,...
         'non_intersect_flag',non_intersect_flag,'obj',0,'constr',constr,...
         'agent',agent,'dt',dt,'safe_marg2',safe_marg2,'r_hd',r_hd);
