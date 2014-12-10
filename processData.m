@@ -20,7 +20,7 @@ imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 % load('sim_traj_extpol_MPC_08-Dec-2014_1p5_2','pre_traj','r_state');
 % extpol_pre_traj-09-Dec-2014 saves the predicted trajectory using
 % extrapolation. this is a tempory way.
-load('extpol_pre_traj-08-Dec-2014','pre_traj');
+load('sim_traj_IMM_greedy1_2_2_1p5_09-Dec-2014_184623','pre_traj');
 extpol_pre_traj = pre_traj(:,:,1:sim_len);
 % extpol_r_pos = r_state(1:2,1:sim_len);
 % extpol_r_v = r_state(3,1:sim_len);

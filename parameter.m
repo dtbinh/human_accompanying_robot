@@ -4,7 +4,7 @@
 
 T = 0.05; % for estimation [s]
 T1 = 0.5; % for Prediction [s]
-noise = 0; % Noise Variance [m]
+noise = 3; % Noise Variance [m]
 SimulStop = length(obv_traj1)*T;
 
 %% Plant

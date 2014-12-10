@@ -13,7 +13,7 @@ set(0,'DefaultFigureWindowStyle','docked');
 h = agent('human');
 h.currentPos = [30;10;0]*scale;%[290;30;0]; % [x y heading]
 % h.maxV = 1.5;
-h.currentV = 2;
+h.currentV = 1.5;
 h.maxA = 3;
 
 % Robot agent 1
@@ -55,7 +55,7 @@ campus.obs_info = [c_set;r_set]; % gives the center and radius of each obstacle
 kf = 800; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon (s)
-pre_type = 'IMM';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion
+pre_type = 'extpol';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion
 plan_type = 'greedy1'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
 samp_rate = 20; % sampling rate (/Hz)
 safe_dis = 2; %safe distance between human and robot
@@ -64,8 +64,8 @@ mpc_dt = 0.5; % sampling time for model discretization used in MPC
 
 % initialize variables
 obv_traj = zeros(3,0); % observed human trajectory; first row denotes the time
-est_state = zeros(4,kf); % estimated human states for every second [x,vx,y,vy];
-est_state(:,1) = [h.currentPos(1);h.currentV;h.currentPos(2);0]; % human starts with zero heading angle
+est_state = zeros(4,mpc_dt*samp_rate,kf); % estimated human states for every second [x,vx,y,vy];
+% est_state(:,1) = [h.currentPos(1);h.currentV;h.currentPos(2);0]; % human starts with zero heading angle
 pre_traj = zeros(2,hor+1,kf); % current and predicted future human trajectory
 plan_state = zeros(3,hor+1,kf); % robot's current and planned future state [x,y,v]
 r_state = zeros(3,kf); % robot's actual state [x,y,v]
@@ -118,9 +118,10 @@ for k = 1:kf
     [outPara_ams] = agentMove(inPara_ams);
     agents = outPara_ams.agents;
     obv_traj = outPara_ams.obv_traj;
+    samp_num = outPara_ams.samp_num;
     
     % robot moves
-    %{
+    %
     agentIndex = 2;
 %     load('obv_traj3_w_time.mat')% Load Tracjectory of Human
     obv_traj1=obv_traj';
@@ -130,9 +131,10 @@ for k = 1:kf
         'pre_traj',pre_traj,'plan_state',plan_state,'r_state',r_state,'r_input',r_input,...
         'k',k,'hor',hor,'pre_type',pre_type,'samp_rate',samp_rate,...
         'safe_dis',safe_dis,'mpc_dt',mpc_dt,'safe_marg',safe_marg,...
-        'agentIndex',agentIndex,'plan_type',plan_type);
+        'agentIndex',agentIndex,'plan_type',plan_type,'samp_num',samp_num);
     [outPara_ams] = agentMove(inPara_ams);
     agents = outPara_ams.agents;
+    est_state = outPara_ams.est_state;
     pre_traj = outPara_ams.pre_traj;
     plan_state = outPara_ams.plan_state; 
     r_state = outPara_ams.r_state;
@@ -166,7 +168,7 @@ for k = 1:kf
     ylim([0,campus.endpoints(4)]);
     
     % draw agent trajectory
-    for ii = 1%:length(agents)
+    for ii = 1:length(agents)
         tmp_agent = agents(ii);
         h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',1);
         set(h1,'MarkerFaceColor',color_agent{ii});
@@ -197,37 +199,39 @@ for k = 1:kf
     set(gca,'MinorGridLineStyle','-','XColor',[0.5 0.5 0.5],'YColor',[0.5 0.5 0.5])
     axis equal
     xlim([0,xLength]);ylim([0,yLength]);
-    h = gcf;
-    if h > 70 % close plots when there are too many plots
+    h5 = gcf;
+    if h5 > 50 % close plots when there are too many plots
         close all;
     end
     %}
 end
 
 %% save simulation result
-%{
+%
 % save data
 % if the data is a decimal, replace the '.' with 'p'
 str_safe_dis = strrep(num2str(safe_dis),'.','p');
 str_safe_marg = strrep(num2str(safe_marg),'.','p');
+str_h_v = strrep(num2str(agents(1).currentV),'.','p');
 
+str_t = datestr(clock,'dd-mmm-yyyy_HHMMSS');
 folder_path = ('.\sim_res');
-data_name = sprintf('sim_traj_%s_%s_%s_%s_%s.mat',...
-    pre_type,plan_type,date,str_safe_dis,str_safe_marg);
+data_name = sprintf('sim_traj_%s_%s_%s_%s_%s_%s.mat',...
+    pre_type,plan_type,str_safe_dis,str_safe_marg,str_h_v,str_t);
 file_name = fullfile (folder_path,data_name);
 save(file_name,'obv_traj','est_state','pre_traj','plan_state','r_state','r_input');
 
 % save plot
 folder_path = ('.\sim_res');
-fig_name = sprintf('sim_traj_%s_%s_%s_%s_%s.fig',...
-    pre_type,plan_type,date,str_safe_dis,str_safe_marg);
+fig_name = sprintf('sim_traj_%s_%s_%s_%s_%s_%s.fig',...
+    pre_type,plan_type,str_safe_dis,str_safe_marg,str_h_v,str_t);
 file_name = fullfile (folder_path,fig_name);
 h = gcf;
 saveas (h,file_name);
 
 % convert .fig to .pdf
-fig_name2 = sprintf('sim_traj_%s_%s_%s_%s_%s.pdf',...
-    pre_type,plan_type,date,str_safe_dis,str_safe_marg);
+fig_name2 = sprintf('sim_traj_%s_%s_%s_%s_%s_%s.pdf',...
+    pre_type,plan_type,str_safe_dis,str_safe_marg,str_h_v,str_t);
 file_name2 = fullfile (folder_path,fig_name2);
 fig2Pdf(file_name2,300,h)
 %}
