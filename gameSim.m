@@ -121,7 +121,7 @@ for k = 1:kf
     samp_num = outPara_ams.samp_num;
     
     % robot moves
-    %
+    %{
     agentIndex = 2;
 %     load('obv_traj3_w_time.mat')% Load Tracjectory of Human
     obv_traj1=obv_traj';
@@ -168,7 +168,7 @@ for k = 1:kf
     ylim([0,campus.endpoints(4)]);
     
     % draw agent trajectory
-    for ii = 1:length(agents)
+    for ii = 1%:length(agents)
         tmp_agent = agents(ii);
         h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',1);
         set(h1,'MarkerFaceColor',color_agent{ii});
@@ -207,7 +207,7 @@ for k = 1:kf
 end
 
 %% save simulation result
-%
+%{
 % save data
 % if the data is a decimal, replace the '.' with 'p'
 str_safe_dis = strrep(num2str(safe_dis),'.','p');

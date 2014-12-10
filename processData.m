@@ -4,7 +4,7 @@
 %
 clear
 addpath('.\sim_res');
-load('h_state.mat');
+load('h_state_1p5.mat');
 sim_len = size(h_state,2); % simulation time
 h_traj = h_state(1:2,:); % h_state contains [x;y;heading]
 % safe_dist1 = 2; % safe_dist for imm
@@ -12,7 +12,7 @@ h_traj = h_state(1:2,:); % h_state contains [x;y;heading]
 % h_v = 2;
 
 % imm
-load('sim_traj_IMM_MPC_08-Dec-2014_2_2','pre_traj','r_state');
+load('sim_traj_extpol_greedy1_2_2_1p5_09-Dec-2014_185613','pre_traj');
 imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 % imm_r_pos = r_state(1:2,1:sim_len);
 % imm_r_v = r_state(3,1:sim_len);
@@ -89,11 +89,11 @@ legend('imm','extpol')
 %% compare the motion planning
 % load data
 addpath('.\sim_res');
-load('h_state.mat');
+load('h_state_1p5.mat');
 sim_len = size(h_state,2); % simulation time
 h_traj = h_state(1:2,:); % h_state contains [x;y;heading]
 safe_dist = 2; % safe_dist for imm
-h_v = 2;
+h_v = 1.5;
 
 % mpc
 load('sim_traj_IMM_MPC_08-Dec-2014_2_2','pre_traj','r_state');
