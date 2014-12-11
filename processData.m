@@ -11,19 +11,19 @@ h_traj = h_state(1:2,:); % h_state contains [x;y;heading]
 % safe_dist2 = 1.5; % safe_dist for extpol
 % h_v = 2;
 
-% imm
-load('sim_traj_extpol_greedy1_2_2_1p5_09-Dec-2014_185613','pre_traj');
-imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
-% imm_r_pos = r_state(1:2,1:sim_len);
-% imm_r_v = r_state(3,1:sim_len);
 % extrapolation
 % load('sim_traj_extpol_MPC_08-Dec-2014_1p5_2','pre_traj','r_state');
 % extpol_pre_traj-09-Dec-2014 saves the predicted trajectory using
 % extrapolation. this is a tempory way.
-load('sim_traj_IMM_greedy1_2_2_1p5_09-Dec-2014_184623','pre_traj');
+load('sim_traj_extpol_greedy1_2_2_1p5_09-Dec-2014_204347','pre_traj');
 extpol_pre_traj = pre_traj(:,:,1:sim_len);
 % extpol_r_pos = r_state(1:2,1:sim_len);
 % extpol_r_v = r_state(3,1:sim_len);
+% imm
+load('sim_traj_IMM_greedy1_2_2_1p5_09-Dec-2014_204006','pre_traj');
+imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
+% imm_r_pos = r_state(1:2,1:sim_len);
+% imm_r_v = r_state(3,1:sim_len);
 
 hor = size(pre_traj,2)-1; % planning horizon
 
@@ -45,12 +45,18 @@ for ii = 1:sim_len-1
 end
 ave_pred_err = mean(pred_err,2);
 max_pred_err = max(pred_err,[],2);
-figure
+h1 = figure;
 hold on
-plot(1:size(pred_err,2),pred_err(1,:),'r')
-plot(1:size(pred_err,2),pred_err(2,:),'b')
-legend('imm','extpol')
-title('prediction difference')
+plot((1:size(pred_err,2))*0.5,pred_err(2,:),'r','LineWidth',2)
+plot((1:size(pred_err,2))*0.5,pred_err(1,:),'b','LineWidth',2)
+legend('extpol','imm')
+grid on
+title('Prediction difference')
+xlabel('time/s')
+ylabel('distance/m')
+xlim([0,160])
+saveas(h1,'imm_vs_extpol','fig')
+% fig2Pdf('imm_vs_extpol',300,h1)
 %}
 %% compare the motion planning
 % code is correct, but using the wrong data. motion planning comparison
@@ -96,12 +102,12 @@ safe_dist = 2; % safe_dist for imm
 h_v = 1.5;
 
 % mpc
-load('sim_traj_IMM_MPC_08-Dec-2014_2_2','pre_traj','r_state');
+load('sim_traj_IMM_MPC_2_2_1p5_09-Dec-2014_202253','pre_traj','r_state');
 imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 imm_r_pos = r_state(1:2,1:sim_len);
 imm_r_v = r_state(3,1:sim_len);
 % greedy
-load('sim_traj_IMM_greedy1_09-Dec-2014_2_2','pre_traj','r_state');
+load('sim_traj_IMM_greedy1_2_2_1p5_09-Dec-2014_204006','pre_traj','r_state');
 extpol_pre_traj = pre_traj(:,:,1:sim_len);
 extpol_r_pos = r_state(1:2,1:sim_len);
 extpol_r_v = r_state(3,1:sim_len);
@@ -117,20 +123,35 @@ for ii = 1:sim_len-1
 end
 ave_pos_dif = mean(pos_dif,2);
 max_pos_dif = max(abs(pos_dif),[],2);
-figure
+h2 = figure;
 hold on
-plot(1:size(pos_dif,2),pos_dif(1,:),'r')
-plot(1:size(pos_dif,2),pos_dif(2,:),'b')
-legend('mpc','greedy')
-title('distance difference')
+plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2)
+plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',2)
+legend('greedy','mpc')
+grid on
+title('Distance difference')
+xlabel('time/s')
+ylabel('distance/m')
+xlim([0,160])
+saveas(h2,'mpc_vs_greedy_dis_diff','fig')
+% fig2Pdf('mpc_vs_greedy_dis_diff',300,h2)
 
 v_dif(1,:) = imm_r_v(1:end-1)-h_v;
 v_dif(2,:) = extpol_r_v(1:end-1)-h_v;
 ave_v_dif = mean(v_dif,2);
 max_v_dif = max(abs(v_dif),[],2);
-figure
+h3 = figure;
 hold on
-plot(1:size(v_dif,2),v_dif(1,:),'r')
-plot(1:size(v_dif,2),v_dif(2,:),'b')
-legend('mpc','greedy')
-title('velocity difference')
+plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r','LineWidth',2)
+plot((1:size(v_dif,2))*0.5,v_dif(1,:),'b','LineWidth',2)
+legend('greedy','mpc')
+grid on
+title('Velocity difference')
+xlabel('time/s')
+ylabel('speed/(m/s)')
+xlim([0,160])
+saveas(h3,'mpc_vs_greedy_vel','fig')
+fig2Pdf('mpc_vs_greedy_vel',300,h3)
+
+save('sim_res.mat','ave_pred_err','max_pred_err',...
+    'ave_pos_dif','max_pos_dif','ave_v_dif','max_v_dif');
