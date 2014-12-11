@@ -21,6 +21,7 @@ r = agent('robot');
 r.currentPos = [30;20;0]*scale;%[310;30;0]; %[23.5;0.5;0];
 r.currentV = 1.5;
 r.maxA = 1.5;
+r.maxW = 20/180*pi;
 
 %%% Set field %%%
 xLength = 300*scale; 
@@ -52,7 +53,7 @@ campus.agentNum = 2;
 campus.obs_info = [c_set;r_set]; % gives the center and radius of each obstacle
 %% Simulation
 % simulation parameters
-kf = 800; % simulation length (/s)
+kf = 500; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon (s)
 pre_type = 'IMM';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion

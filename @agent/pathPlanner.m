@@ -16,22 +16,21 @@ non_intersect_flag = 0; % flag for showing whether imposing the non-intersection
 dt = 0.05; % time interval for sampling the points on the line of the robot's path. used for imposing non-intersection constriant
 safe_marg2 = 0.1; % margin for the robot's path line from the obstacle
 tmp_hor = hor;
-r_hd = agent.currentPos(3);
 h_v_value = norm(h_v,2);
 
 while(tmp_hor > 0)
     % define MPC
-    x = sdpvar(3,tmp_hor+1); %[x,y,v]
-    u = sdpvar(2,tmp_hor); %[psi,a]
+    x = sdpvar(4,tmp_hor+1); %[x,y,theta,v]
+    u = sdpvar(2,tmp_hor); %[w,a]
     
     % impose constraints
     % initial condition
-    constr = [x(:,1) == [agent.currentPos(1:2);agent.currentV]];
+    constr = [x(:,1) == [agent.currentPos;agent.currentV]];
     % constraints on future states
     inPara_cg = struct('hor',tmp_hor,'x',x,'u',u,'h_v',h_v_value,'mpc_dt',mpc_dt,...
         'safe_dis',safe_dis,'safe_marg',safe_marg,'x_h',x_h,'obs_info',obs_info,...
         'non_intersect_flag',non_intersect_flag,'obj',0,'constr',constr,...
-        'agent',agent,'dt',dt,'safe_marg2',safe_marg2,'r_hd',r_hd);
+        'agent',agent,'dt',dt,'safe_marg2',safe_marg2);
     [obj,constr] = genMPC(inPara_cg); % generate constraints. contain a parameter that decides whether using the non-intersection constraints
     
     % solve MPC
@@ -111,18 +110,18 @@ constr = inPara.constr;
 agent = inPara.agent;
 dt = inPara.dt;
 safe_marg2 = inPara.safe_marg2;
-r_hd = inPara.r_hd;
 
 for ii = 1:hor
     hr_dis = sum((x(1:2,ii+1)-x_h(:,ii+1)).^2); % square of the Euclidean distance between human and robot
     if ii == 1
-        obj = obj+hr_dis+0.1*(x(3,ii+1)-h_v)^2;%-0.05*log(hr_dis-safe_dis)+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
+        obj = obj+hr_dis+0.1*(x(4,ii+1)-h_v)^2;%-0.05*log(hr_dis-safe_dis)+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
     else
-        obj = obj+hr_dis+0.1*(x(3,ii+1)-h_v)^2;%-0.05*log(hr_dis-safe_dis)+(sin(u(1,ii))-sin(u(1,ii-1)))^2;
+        obj = obj+hr_dis+0.1*(x(4,ii+1)-h_v)^2;%-0.05*log(hr_dis-safe_dis)+(sin(u(1,ii))-sin(u(1,ii-1)))^2;
     end
     % constraints on robot dynamics
-    constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(3,ii)*[cos(u(1,ii));sin(u(1,ii))]*mpc_dt,...
-        x(3,ii+1) == x(3,ii)+u(2,ii)*mpc_dt,x(3,ii+1)>=0,-agent.maxA<=u(2,ii)<=agent.maxA];   
+    constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(3,ii)*[cos(x(4,ii));sin(x(4,ii))]*mpc_dt,...
+        x(3,ii+1) == x(3,ii) + u(1,ii)*mpc_dt, x(4,ii+1) == x(4,ii)+u(2,ii)*mpc_dt,x(4,ii+1)>=0,...
+        -agent.maxA<=u(2,ii)<=agent.maxA, -agent.maxW<=u(1,ii)<=agent.maxW];
     % constraint on safe distance
     constr = [constr,sum((x(1:2,ii+1)-x_h(:,ii+1)).^2) >= safe_dis^2];
     % constraint on obstacle avoidance
