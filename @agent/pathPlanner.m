@@ -18,6 +18,7 @@ safe_marg2 = 0.1; % margin for the robot's path line from the obstacle
 tmp_hor = hor;
 h_v_value = norm(h_v,2);
 
+init_state = [agent.currentPos;agent.currentV];
 while(tmp_hor > 0)
     % define MPC
     x = sdpvar(4,tmp_hor+1); %[x,y,theta,v]
@@ -25,12 +26,12 @@ while(tmp_hor > 0)
     
     % impose constraints
     % initial condition
-    constr = [x(:,1) == [agent.currentPos;agent.currentV]];
+    constr = [x(:,1) == init_state];
     % constraints on future states
     inPara_cg = struct('hor',tmp_hor,'x',x,'u',u,'h_v',h_v_value,'mpc_dt',mpc_dt,...
         'safe_dis',safe_dis,'safe_marg',safe_marg,'x_h',x_h,'obs_info',obs_info,...
         'non_intersect_flag',non_intersect_flag,'obj',0,'constr',constr,...
-        'agent',agent,'dt',dt,'safe_marg2',safe_marg2);
+        'agent',agent,'dt',dt,'safe_marg2',safe_marg2,'init_state',init_state);
     [obj,constr] = genMPC(inPara_cg); % generate constraints. contain a parameter that decides whether using the non-intersection constraints
     
     % solve MPC
@@ -48,13 +49,13 @@ while(tmp_hor > 0)
             for jj = 1:size(obs_info,2)
                 % check if the line intersects with some obstacle
                 n = floor(mpc_dt/dt);
-%                 x0 = obs_info(1,jj); y0 = obs_info(2,jj);
+                %                 x0 = obs_info(1,jj); y0 = obs_info(2,jj);
                 r = obs_info(3,jj);
                 for kk = 0:n
                     tmp = sum((kk/n*opt_x(1:2,ii+1)+(n-kk)/n*opt_x(1:2,ii)-obs_info(1:2,jj)).^2) - (r+safe_marg2)^2;
                     if tmp < 0
-                      non_intersect_flag = 1;
-                      break
+                        non_intersect_flag = 1;
+                        break
                     end
                 end
                 if tmp < 0
@@ -72,8 +73,71 @@ while(tmp_hor > 0)
         display('Fail to solve MPC')
         sol.info
         yalmiperror(sol.problem)
+        %         safe_dis = safe_dis/2;
+        % determine if the initial condition is infeasible
+        
         tmp_hor = tmp_hor-1;
     end
+end
+
+if tmp_hor == 0 % if the MPC fails, just find the input at the next step to maximize the humna-robot distance
+    % define MPC
+    x = sdpvar(4,hor+1); %[x,y,theta,v]
+    u = sdpvar(2,hor); %[w,a]
+    tmp_hor = 1;
+    % impose constraints
+    % initial condition
+    constr = [x(:,1) == init_state];
+    % constraints on future states
+    %     for tmp_hor = 2:hor+1
+    inPara_cg = struct('hor',tmp_hor,'x',x,'u',u,'h_v',h_v_value,'mpc_dt',mpc_dt,...
+        'safe_dis',safe_dis,'safe_marg',safe_marg,'x_h',x_h,'obs_info',obs_info,...
+        'non_intersect_flag',non_intersect_flag,'obj',0,'constr',constr,...
+        'agent',agent,'dt',dt,'safe_marg2',safe_marg2,'init_state',init_state);
+    [obj,constr] = genMPCinfea(inPara_cg); % generate constraints. contain a parameter that decides whether using the non-intersection constraints
+    % solve MPC
+    opt = sdpsettings('solver','ipopt','usex0',1,'debug',1);
+    sol = optimize(constr,obj,opt);
+    
+    if sol.problem == 0
+        opt_x = value(x); % current and future states
+        opt_u = value(u); % future input
+        opt_x(:,tmp_hor+2:end) = zeros(size(opt_x,1),size(opt_x,2)-tmp_hor-1);
+        opt_u(:,tmp_hor+2:end) = zeros(size(opt_u,1),size(opt_u,2)-tmp_hor-1);
+        %{
+        for ii = 1:hor
+            for jj = 1:size(obs_info,2)
+                % check if the line intersects with some obstacle
+                n = floor(mpc_dt/dt);
+                %                 x0 = obs_info(1,jj); y0 = obs_info(2,jj);
+                r = obs_info(3,jj);
+                for kk = 0:n
+                    tmp = sum((kk/n*opt_x(1:2,ii+1)+(n-kk)/n*opt_x(1:2,ii)-obs_info(1:2,jj)).^2) - (r+safe_marg2)^2;
+                    if tmp < 0
+                        non_intersect_flag = 1;
+                        break
+                    end
+                end
+                if tmp < 0
+                    break
+                end
+            end
+            if tmp < 0
+                break
+            end
+        end
+        if tmp >= 0
+            break
+        end
+        %}
+    else
+        display('Fail to solve MPC')
+        sol.info
+        yalmiperror(sol.problem)
+        %         safe_dis = safe_dis/2;
+        %         tmp_hor = tmp_hor-1;
+    end
+    %     end
 end
 outPara = struct('opt_x',opt_x,'opt_u',opt_u);
 end
@@ -110,25 +174,31 @@ constr = inPara.constr;
 agent = inPara.agent;
 dt = inPara.dt;
 safe_marg2 = inPara.safe_marg2;
+init_state = inPara.init_state;
 
+% [A,B,c] = linearize_model(init_state,mpc_dt);
 for ii = 1:hor
     hr_dis = sum((x(1:2,ii+1)-x_h(:,ii+1)).^2); % square of the Euclidean distance between human and robot
     if ii == 1
-        obj = obj+hr_dis+0.1*(x(4,ii+1)-h_v)^2;%-0.05*log(hr_dis-safe_dis)+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
+        obj = obj+hr_dis+0.5*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
     else
-        obj = obj+hr_dis+0.1*(x(4,ii+1)-h_v)^2;%-0.05*log(hr_dis-safe_dis)+(sin(u(1,ii))-sin(u(1,ii-1)))^2;
+        obj = obj+hr_dis+0.5*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(u(1,ii-1)))^2;
     end
     % constraints on robot dynamics
-    constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(3,ii)*[cos(x(4,ii));sin(x(4,ii))]*mpc_dt,...
-        x(3,ii+1) == x(3,ii) + u(1,ii)*mpc_dt, x(4,ii+1) == x(4,ii)+u(2,ii)*mpc_dt,x(4,ii+1)>=0,...
-        -agent.maxA<=u(2,ii)<=agent.maxA, -agent.maxW<=u(1,ii)<=agent.maxW];
+    constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(4,ii)*[cos(x(3,ii));sin(x(3,ii))]*mpc_dt,...
+        x(3,ii+1) == x(3,ii) + u(1,ii)*mpc_dt, x(4,ii+1) == x(4,ii)+u(2,ii)*mpc_dt,...
+       x(4,ii+1)>=0,agent.a_lb<=u(2,ii)<=agent.a_ub,-agent.maxW<=u(1,ii)<=agent.maxW];%
+%     constr = [constr,x(:,ii+1) == A*x(:,ii)+B*u(:,ii)+c];
+%     constr = [constr,x(4,ii+1)>=0,agent.a_lb<=u(2,ii)<=agent.a_ub,-agent.maxW<=u(1,ii)<=agent.maxW];%
     % constraint on safe distance
     constr = [constr,sum((x(1:2,ii+1)-x_h(:,ii+1)).^2) >= safe_dis^2];
+%     constr = [constr,max(x(1:2,ii+1)-x_h(:,ii+1)) >= safe_dis];
     % constraint on obstacle avoidance
     % robot should not be inside the obstacles, i.e. robot waypoints should
     % not be inside the obstacle and the line connecting the waypoints 
     % should not intersect with the obstacle
 %     [a,b,c] = getLine(x(1:2,ii+1),x(1:2,ii));
+%{
     for jj = 1:size(obs_info,2)
         % waypoints not inside the obstacle
         constr = [constr,sum((x(1:2,ii+1)-obs_info(1:2,jj)).^2) >= (obs_info(3,jj)+safe_marg)^2];
@@ -142,5 +212,61 @@ for ii = 1:hor
             end
         end
     end    
+%}
+end
+end
+
+function [obj,constr] = genMPCinfea(inPara)
+% solve optimization problem when the initial condition is infeasible
+hor = inPara.hor;
+x = inPara.x;
+u = inPara.u;
+h_v = inPara.h_v;
+mpc_dt = inPara.mpc_dt;
+safe_dis = inPara.safe_dis;
+safe_marg = inPara.safe_marg;
+x_h = inPara.x_h;
+obs_info = inPara.obs_info;
+non_intersect_flag = inPara.non_intersect_flag;
+obj = inPara.obj;
+constr = inPara.constr;
+agent = inPara.agent;
+dt = inPara.dt;
+safe_marg2 = inPara.safe_marg2;
+init_state = inPara.init_state;
+
+% [A,B,c] = linearize_model(init_state,mpc_dt);
+% constr = [constr,sum((x(1:2,t)-x_h(:,t)).^2) >= safe_dis^2];
+obj = -sum((x(1:2,2)-x_h(:,2)).^2);
+for ii = 1:hor
+    % constraints on robot dynamics
+    constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(4,ii)*[cos(x(3,ii));sin(x(3,ii))]*mpc_dt,...
+        x(3,ii+1) == x(3,ii) + u(1,ii)*mpc_dt, x(4,ii+1) == x(4,ii)+u(2,ii)*mpc_dt,...
+       x(4,ii+1)>=0,agent.a_lb<=u(2,ii)<=agent.a_ub,-agent.maxW<=u(1,ii)<=agent.maxW];
+%     constr = [constr,x(:,ii+1) == A*x(:,ii)+B*u(:,ii)+c];
+%     constr = [constr,x(4,ii+1)>=0,agent.a_lb<=u(2,ii)<=agent.a_ub,-agent.maxW<=u(1,ii)<=agent.maxW];%
+    % constraint on safe distance
+    
+%     constr = [constr,max(x(1:2,ii+1)-x_h(:,ii+1)) >= safe_dis];
+    % constraint on obstacle avoidance
+    % robot should not be inside the obstacles, i.e. robot waypoints should
+    % not be inside the obstacle and the line connecting the waypoints 
+    % should not intersect with the obstacle
+%     [a,b,c] = getLine(x(1:2,ii+1),x(1:2,ii));
+%{
+    for jj = 1:size(obs_info,2)
+        % waypoints not inside the obstacle
+        constr = [constr,sum((x(1:2,ii+1)-obs_info(1:2,jj)).^2) >= (obs_info(3,jj)+safe_marg)^2];
+        if non_intersect_flag == 1
+            % line not intersecting with the obstacle
+            n = floor(mpc_dt/dt);
+            x0 = obs_info(1,jj); y0 = obs_info(2,jj);
+            r = obs_info(3,jj);
+            for kk = 0:n
+                constr = [constr,sum((kk/n*x(1:2,ii+1)+(n-kk)/n*x(1:2,ii)-obs_info(1:2,jj)).^2)>=(r+safe_marg2)^2];
+            end
+        end
+    end    
+%}
 end
 end

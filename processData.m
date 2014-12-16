@@ -1,5 +1,5 @@
 % process simulation result
-%% imm vs extpol
+%% imm vs single-model
 % load data
 %
 clear
@@ -11,14 +11,23 @@ h_traj = h_state(1:2,:); % h_state contains [x;y;heading]
 % safe_dist2 = 1.5; % safe_dist for extpol
 % h_v = 2;
 
-% extrapolation
-% load('sim_traj_extpol_MPC_08-Dec-2014_1p5_2','pre_traj','r_state');
-% extpol_pre_traj-09-Dec-2014 saves the predicted trajectory using
-% extrapolation. this is a tempory way.
-load('sim_traj_extpol_greedy1_2_2_1p5_09-Dec-2014_204347','pre_traj');
-extpol_pre_traj = pre_traj(:,:,1:sim_len);
-% extpol_r_pos = r_state(1:2,1:sim_len);
-% extpol_r_v = r_state(3,1:sim_len);
+% % extrapolation
+% % load('sim_traj_extpol_MPC_08-Dec-2014_1p5_2','pre_traj','r_state');
+% % extpol_pre_traj-09-Dec-2014 saves the predicted trajectory using
+% % extrapolation. this is a tempory way.
+% load('sim_traj_extpol_greedy1_2_2_1p5_09-Dec-2014_204347','pre_traj');
+% extpol_pre_traj = pre_traj(:,:,1:sim_len);
+% % extpol_r_pos = r_state(1:2,1:sim_len);
+% % extpol_r_v = r_state(3,1:sim_len);
+
+% single model
+load('x_pos_pre1_single_model','x_pos_pre1')
+load('y_pos_pre1_single_model','y_pos_pre1')
+
+sgm_pre_traj = zeros(2,size(x_pos_pre1,1)-1,size(x_pos_pre1,2));
+sgm_pre_traj(1,:,:) = x_pos_pre1(2:end,:);
+sgm_pre_traj(2,:,:) = y_pos_pre1(2:end,:);
+
 % imm
 load('sim_traj_IMM_greedy1_2_2_1p5_09-Dec-2014_204006','pre_traj');
 imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
@@ -32,13 +41,13 @@ pred_err = zeros(2,sim_len-1); % prediction error. 1st row for imm and 2nd row f
 for ii = 1:sim_len-1
     if ii+hor <= sim_len-1
         dif_vec1 = imm_pre_traj(:,:,ii)-h_traj(:,ii:ii+hor);
-        dif_vec2 = extpol_pre_traj(:,:,ii)-h_traj(:,ii:ii+hor);
+        dif_vec2 = sgm_pre_traj(:,:,ii)-h_traj(:,ii:ii+hor);
         pred_err(1,ii) = sum(sqrt(sum(dif_vec1.^2,1)))/(hor+1);
         pred_err(2,ii) = sum(sqrt(sum(dif_vec2.^2,1)))/(hor+1);
     else
         tmp_len = sim_len-ii;
         dif_vec1 = imm_pre_traj(:,1:tmp_len,ii)-h_traj(:,ii:sim_len-1);
-        dif_vec2 = extpol_pre_traj(:,1:tmp_len,ii)-h_traj(:,ii:sim_len-1);
+        dif_vec2 = sgm_pre_traj(:,1:tmp_len,ii)-h_traj(:,ii:sim_len-1);
         pred_err(1,ii) = sum(sqrt(sum(dif_vec1.^2,1)))/tmp_len;
         pred_err(2,ii) = sum(sqrt(sum(dif_vec2.^2,1)))/tmp_len;
     end
@@ -46,17 +55,18 @@ end
 ave_pred_err = mean(pred_err,2);
 max_pred_err = max(pred_err,[],2);
 h1 = figure;
+box on
 hold on
-plot((1:size(pred_err,2))*0.5,pred_err(2,:),'r','LineWidth',2)
+plot((1:size(pred_err,2))*0.5,pred_err(2,:),'r--','LineWidth',2)
 plot((1:size(pred_err,2))*0.5,pred_err(1,:),'b','LineWidth',2)
-legend('extpol','imm')
+legend('single','imm')
 grid on
 title('Prediction difference')
 xlabel('time/s')
 ylabel('distance/m')
 xlim([0,160])
-saveas(h1,'imm_vs_extpol','fig')
-% fig2Pdf('imm_vs_extpol',300,h1)
+saveas(h1,'imm_vs_single','fig')
+fig2Pdf('imm_vs_single',300,h1)
 %}
 %% compare the motion planning
 % code is correct, but using the wrong data. motion planning comparison

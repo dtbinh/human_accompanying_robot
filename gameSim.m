@@ -1,8 +1,7 @@
 % 11/24/2014
 % this file is for the ME 290J course project
 clc 
-clearvars
-clearvars -global % clear global variables
+clear % clear global variables
 close all
 
 %% Setup
@@ -11,17 +10,17 @@ set(0,'DefaultFigureWindowStyle','docked');
 %%% define agents %%%
 % Human agent 1
 h = agent('human');
-h.currentPos = [30;10;0]*scale;%[290;30;0]; % [x y heading]
+h.currentPos = [30;10;1]*scale;%[290;30;0]; % [x y heading]
 % h.maxV = 1.5;
 h.currentV = 1.5;
-h.maxA = 3;
 
 % Robot agent 1
 r = agent('robot');
-r.currentPos = [30;20;0]*scale;%[310;30;0]; %[23.5;0.5;0];
-r.currentV = 1.5;
-r.maxA = 1.5;
-r.maxW = 20/180*pi;
+r.currentPos = [30;30;1]*scale;%[310;30;0]; %[23.5;0.5;0];
+r.currentV = 1;
+r.a_lb = -3; 
+r.a_ub = 1;
+r.maxW = pi/6;
 
 %%% Set field %%%
 xLength = 300*scale; 
@@ -55,22 +54,21 @@ campus.obs_info = [c_set;r_set]; % gives the center and radius of each obstacle
 % simulation parameters
 kf = 500; % simulation length (/s)
 agents = [h r];
-hor = 5; % MPC horizon (s)
+hor = 5; % MPC horizon 
 pre_type = 'IMM';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion
-plan_type = 'greedy1'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
+plan_type = 'MPC'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
 samp_rate = 20; % sampling rate (/Hz)
 safe_dis = 2; %safe distance between human and robot
 safe_marg = 2; % safety margin between human the the obstacle
 mpc_dt = 0.5; % sampling time for model discretization used in MPC
 
 % initialize variables
-obv_traj = zeros(3,0); % observed human trajectory; first row denotes the time
+obv_traj = zeros(3,0); % observed human trajectory; first row denotes the time [t,x,y]
 est_state = zeros(4,mpc_dt*samp_rate,kf); % estimated human states for every second [x,vx,y,vy];
-% est_state(:,1) = [h.currentPos(1);h.currentV;h.currentPos(2);0]; % human starts with zero heading angle
-pre_traj = zeros(2,hor+1,kf); % current and predicted future human trajectory
-plan_state = zeros(3,hor+1,kf); % robot's current and planned future state [x,y,v]
-r_state = zeros(3,kf); % robot's actual state [x,y,v]
-r_input = zeros(2,kf); % robot's actual control input [psi,a]
+pre_traj = zeros(2,hor+1,kf); % current and predicted future human trajectory [x,y]
+plan_state = zeros(4,hor+1,kf); % robot's current and planned future state [x,y,v]
+r_state = zeros(4,kf); % robot's actual state [x,y,theta,v]
+r_input = zeros(2,kf); % robot's actual control input [w,a]
 wp_cnt = 1; % the waypoint that the human is heading for
 h_tar_wp = h_way_pts(:,wp_cnt); % the way point that the human is heading for
 
@@ -184,12 +182,15 @@ for k = 1:kf
         set(h2,'LineStyle',line_agent{ii});
         set(h2,'Marker',marker_agent{ii});
     end
+    % predicted human positions
     h3 = plot(pre_traj(1,:,k),pre_traj(2,:,k),color_agent{3},'markers',1);
     set(h3,'MarkerFaceColor',color_agent{3});
     set(h3,'MarkerEdgeColor',color_agent{3});
     set(h3,'Color',color_agent{3});
     set(h3,'LineStyle',line_agent{3});
     set(h3,'Marker',marker_agent{3});
+    
+    % planned robot trajectory
     h4 = plot(plan_state(1,:,k),plan_state(2,:,k),color_agent{4},'markers',1);
     set(h4,'MarkerFaceColor',color_agent{4});
     set(h4,'MarkerEdgeColor',color_agent{4});
@@ -200,15 +201,17 @@ for k = 1:kf
     set(gca,'MinorGridLineStyle','-','XColor',[0.5 0.5 0.5],'YColor',[0.5 0.5 0.5])
     axis equal
     xlim([0,xLength]);ylim([0,yLength]);
+    
+    % close plots when there are too many plots
     h5 = gcf;
-    if h5 > 50 % close plots when there are too many plots
+    if h5 > 50 
         close all;
     end
     %}
 end
 
 %% save simulation result
-%
+%{
 % save data
 % if the data is a decimal, replace the '.' with 'p'
 str_safe_dis = strrep(num2str(safe_dis),'.','p');
