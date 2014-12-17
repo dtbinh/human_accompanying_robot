@@ -111,11 +111,11 @@ legend('imm','extpol')
 title('velocity difference')
 legend('imm','extpol')
 %}
-%% mpc vs greedy
+%% mpc vs reactive
 
 %% compare the motion planning
 % load data
-%{
+%
 addpath('.\sim_res');
 load('h_state_1p5.mat');
 sim_len = size(h_state,2); % simulation time
@@ -124,15 +124,15 @@ safe_dist = 2; % safe_dist for imm
 h_v = 1.5;
 
 % mpc
-load('sim_traj_IMM_MPC_2_2_1p5_16-Dec-2014_100143','pre_traj','r_state');
+load('sim_traj_IMM_MPC_2_2_1p5_16-Dec-2014_201010','pre_traj','r_state');
 imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 imm_r_pos = r_state(1:2,1:sim_len);
 imm_r_v = r_state(4,1:sim_len);
 % greedy
-load('sim_traj_IMM_greedy1_2_2_1p5_09-Dec-2014_204006','pre_traj','r_state');
+load('sim_traj_IMM_greedy1_2_2_1p5_16-Dec-2014_205123','r_state');
 extpol_pre_traj = pre_traj(:,:,1:sim_len);
 extpol_r_pos = r_state(1:2,1:sim_len);
-extpol_r_v = r_state(3,1:sim_len);
+extpol_r_v = r_state(4,1:sim_len);
 
 pos_dif = zeros(2,sim_len-1);
 v_dif = zeros(2,sim_len-1);
@@ -149,7 +149,7 @@ h2 = figure;
 hold on
 plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2)
 plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',2)
-legend('greedy','mpc')
+legend('reactive','mpc')
 grid on
 title('Distance difference')
 xlabel('time/s')

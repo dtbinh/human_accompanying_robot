@@ -73,6 +73,13 @@ r_input = zeros(2,kf); % robot's actual control input [w,a]
 wp_cnt = 1; % the waypoint that the human is heading for
 h_tar_wp = h_way_pts(:,wp_cnt); % the way point that the human is heading for
 
+addpath('.\sim_res')
+load('x_pos_pre_imm','x_pos_pre_imm')
+load('y_pos_pre_imm','y_pos_pre_imm')
+pos_pre_imm = zeros(2,size(x_pos_pre_imm,1)-1,size(x_pos_pre_imm,2));
+for ii = 1:size(x_pos_pre_imm,2)
+    pos_pre_imm(:,:,ii) = [x_pos_pre_imm(2:end,ii)';y_pos_pre_imm(2:end,ii)'];
+end
 for k = 1:kf
     display(k)
     
@@ -131,7 +138,8 @@ for k = 1:kf
         'pre_traj',pre_traj,'plan_state',plan_state,'r_state',r_state,'r_input',r_input,...
         'k',k,'hor',hor,'pre_type',pre_type,'samp_rate',samp_rate,...
         'safe_dis',safe_dis,'mpc_dt',mpc_dt,'safe_marg',safe_marg,...
-        'agentIndex',agentIndex,'plan_type',plan_type,'samp_num',samp_num);
+        'agentIndex',agentIndex,'plan_type',plan_type,'samp_num',samp_num,...
+        'pos_pre_imm',pos_pre_imm);
     [outPara_ams] = agentMove(inPara_ams);
     agents = outPara_ams.agents;
     est_state = outPara_ams.est_state;
@@ -211,8 +219,9 @@ for k = 1:kf
     %}
 end
 
+% pre_traj = pos_pre_imm;
 %% save simulation result
-%{
+%
 % save data
 % if the data is a decimal, replace the '.' with 'p'
 str_safe_dis = strrep(num2str(safe_dis),'.','p');

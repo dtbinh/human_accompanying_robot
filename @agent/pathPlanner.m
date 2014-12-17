@@ -79,6 +79,7 @@ while(tmp_hor > 0)
 end
 
 if tmp_hor == 0 % if the MPC fails, just find the input at the next step to maximize the humna-robot distance
+    %{
     % define MPC
     x = sdpvar(4,hor+1); %[x,y,theta,v]
     u = sdpvar(2,hor); %[w,a]
@@ -136,7 +137,88 @@ if tmp_hor == 0 % if the MPC fails, just find the input at the next step to maxi
         %         tmp_hor = tmp_hor-1;
     end
     %     end
+    %}
+    x_r = agent.currentPos(1:2);
+    r_hd = agent.currentPos(3);
+    r_v = agent.currentV;
+    a_lb = agent.a_lb;
+    a_ub = agent.a_ub;
+    w_lb = agent.w_lb;
+    w_ub = agent.w_ub;
+    x_r_next = x_r+r_v*[cos(r_hd);sin(r_hd)]*mpc_dt;
+    rh_dis_next = sqrt(sum((x_r_next - x_h(:,2)).^2));
+    rh_dir = calAngle(x_h(:,2)-x_r_next); % direction from robot to human
+    if (rh_dis_next >= safe_dis)
+        % if robot will be outside of the collision region, then turn its
+        % heading toward the human's next position
+        min_hd = r_hd + w_lb*mpc_dt;
+        max_hd = r_hd + w_ub*mpc_dt;
+        if rh_dir<=max_hd && rh_dir>=min_hd
+            r_hd_next = rh_dir;
+        else
+            hd_dif_min = min(abs(min_hd-rh_dir),abs(2*pi-abs(min_hd-rh_dir)));
+            hd_dif_max = min(abs(max_hd-rh_dir),abs(2*pi-abs(max_hd-rh_dir)));
+            if hd_dif_min < hd_dif_max
+                r_hd_next = min_hd;
+            else
+                r_hd_next = max_hd;
+            end
+        end
+        
+        %     r_v_next = r_v + a_ub*mpc_dt;
+    else
+        % if robot will be inside collision region, then turn its
+        % heading against the human's next position
+        min_hd = r_hd + w_lb*mpc_dt;
+        max_hd = r_hd + w_ub*mpc_dt;
+        op_rh_dir = -rh_dir;
+        op_rh_dir = op_rh_dir - floor(op_rh_dir/(2*pi))*2*pi;
+        if op_rh_dir<=max_hd && op_rh_dir>=min_hd
+            r_hd_next = op_rh_dir;
+        else
+            hd_dif_min = min(abs(min_hd-rh_dir),abs(2*pi-abs(min_hd-rh_dir)));
+            hd_dif_max = min(abs(max_hd-rh_dir),abs(2*pi-abs(max_hd-rh_dir)));
+            if hd_dif_min < hd_dif_max
+                r_hd_next = max_hd;
+            else
+                r_hd_next = min_hd;
+            end
+            %     elseif op_rh_dir<min_hd
+            %         r_hd_next = max_hd;
+            %     elseif op_rh_dir>max_hd
+            %         r_hd_next = min_hd;
+        end
+        
+        %     r_v_next = r_v + a_lb*mpc_dt;
+    end
+    tmp = r_hd_next;
+    tmp = tmp - 2*pi*floor(tmp/(2*pi));
+    r_hd_next = tmp;
+
+
+    % chang robot speed to match human's current estimated speed
+    min_v = r_v + a_lb*mpc_dt;
+    max_v = r_v + a_ub*mpc_dt;
+    
+    if (rh_dis_next >= 2*safe_dis)
+        r_v_next = max_v;
+    elseif (rh_dis_next >= safe_dis) && (rh_dis_next < 2*safe_dis)
+        if norm(h_v,2) >= max_v
+            r_v_next = max_v;
+        elseif norm(h_v,2) <= min_v
+            r_v_next = min_v;
+        else
+            r_v_next = norm(h_v,2);
+        end
+    else
+        r_v_next = min_v;
+    end
+    r_v_next = max(r_v_next,0);
+    
+    opt_x = [[x_r;r_hd;r_v],[x_r_next*ones(1,hor);r_hd_next*ones(1,hor);r_v_next,zeros(1,hor-1)]];
+    opt_u = [[(r_hd_next-r_hd)/mpc_dt;(r_v_next-r_v)/mpc_dt],zeros(2,hor-1)];
 end
+
 % normalize the heading to [0,2*pi)
 for ii = 1:size(opt_x,2)
     tmp = opt_x(3,ii);
@@ -202,7 +284,7 @@ for ii = 1:hor
     % not be inside the obstacle and the line connecting the waypoints 
     % should not intersect with the obstacle
 %     [a,b,c] = getLine(x(1:2,ii+1),x(1:2,ii));
-%
+%{
     for jj = 1:size(obs_info,2)
         % waypoints not inside the obstacle
         constr = [constr,sum((x(1:2,ii+1)-obs_info(1:2,jj)).^2) >= (obs_info(3,jj)+safe_marg)^2];

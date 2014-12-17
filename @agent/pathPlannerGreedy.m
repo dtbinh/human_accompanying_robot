@@ -41,13 +41,17 @@ if (rh_dis_next >= safe_dis)
     max_hd = r_hd + w_ub*mpc_dt;
     if rh_dir<=max_hd && rh_dir>=min_hd
         r_hd_next = rh_dir;
-    elseif rh_dir<min_hd
-        r_hd_next = min_hd;
-    elseif rh_dir>max_hd
-        r_hd_next = max_hd;
+    else
+        hd_dif_min = min(abs(min_hd-rh_dir),abs(2*pi-abs(min_hd-rh_dir)));
+        hd_dif_max = min(abs(max_hd-rh_dir),abs(2*pi-abs(max_hd-rh_dir)));
+        if hd_dif_min < hd_dif_max
+            r_hd_next = min_hd;
+        else
+            r_hd_next = max_hd;
+        end
     end
     
-    r_v_next = r_v + a_ub*mpc_dt;
+%     r_v_next = r_v + a_ub*mpc_dt;
 else
     % if robot will be inside collision region, then turn its
     % heading against the human's next position
@@ -57,14 +61,25 @@ else
     op_rh_dir = op_rh_dir - floor(op_rh_dir/(2*pi))*2*pi;
     if op_rh_dir<=max_hd && op_rh_dir>=min_hd
         r_hd_next = op_rh_dir;
-    elseif op_rh_dir<min_hd
-        r_hd_next = max_hd;
-    elseif op_rh_dir>max_hd
-        r_hd_next = min_hd;
+    else
+        hd_dif_min = min(abs(min_hd-rh_dir),abs(2*pi-abs(min_hd-rh_dir)));
+        hd_dif_max = min(abs(max_hd-rh_dir),abs(2*pi-abs(max_hd-rh_dir)));
+        if hd_dif_min < hd_dif_max
+            r_hd_next = max_hd;
+        else
+            r_hd_next = min_hd;
+        end
+    %     elseif op_rh_dir<min_hd
+    %         r_hd_next = max_hd;
+    %     elseif op_rh_dir>max_hd
+    %         r_hd_next = min_hd;
     end
     
-    r_v_next = r_v + a_lb*mpc_dt;
+%     r_v_next = r_v + a_lb*mpc_dt;
 end 
+tmp = r_hd_next;
+tmp = tmp - 2*pi*floor(tmp/(2*pi));
+r_hd_next = tmp;
 %{
 % safety constraint
 % collision avoidance with human
@@ -137,15 +152,23 @@ for jj = 1:size(obs_info,2)
 %}
 
 % chang robot speed to match human's current estimated speed
-% min_v = r_v + a_lb*mpc_dt;
-% max_v = r_v + a_ub*mpc_dt;
-% if norm(h_v,2) >= max_v
-%     r_v_next = max_v;
-% elseif norm(h_v,2) <= min_v
-%     r_v_next = min_v;
-% else
-%     r_v_next = norm(h_v,2);
-% end
+min_v = r_v + a_lb*mpc_dt;
+max_v = r_v + a_ub*mpc_dt;
+
+if (rh_dis_next >= 2*safe_dis) 
+    r_v_next = max_v;
+elseif (rh_dis_next >= safe_dis) && (rh_dis_next < 2*safe_dis)
+    if norm(h_v,2) >= max_v
+        r_v_next = max_v;
+    elseif norm(h_v,2) <= min_v
+        r_v_next = min_v;
+    else
+        r_v_next = norm(h_v,2);
+    end
+else
+    r_v_next = min_v;
+end
+r_v_next = max(r_v_next,0);
 %}
 
 % a snippet for changing robot speed using constant acceleration. Not
