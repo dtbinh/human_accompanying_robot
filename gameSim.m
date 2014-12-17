@@ -20,8 +20,8 @@ r.currentPos = [20;10;0]*scale;%[310;30;0]; %[23.5;0.5;0];
 r.currentV = 1;
 r.a_lb = -3; 
 r.a_ub = 1;
-r.w_lb = -pi/4;
-r.w_ub = pi/4;
+r.w_lb = -pi/12;
+r.w_ub = pi/12;
 
 %%% Set field %%%
 xLength = 300*scale; 
@@ -57,7 +57,7 @@ kf = 500; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon 
 pre_type = 'IMM';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion
-plan_type = 'MPC'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
+plan_type = 'greedy1'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
 samp_rate = 20; % sampling rate (/Hz)
 safe_dis = 2; %safe distance between human and robot
 safe_marg = 2; % safety margin between human the the obstacle

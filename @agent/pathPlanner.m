@@ -172,7 +172,7 @@ if tmp_hor == 0 % if the MPC fails, just find the input at the next step to maxi
         min_hd = r_hd + w_lb*mpc_dt;
         max_hd = r_hd + w_ub*mpc_dt;
         op_rh_dir = -rh_dir;
-        op_rh_dir = op_rh_dir - floor(op_rh_dir/(2*pi))*2*pi;
+        op_rh_dir = op_rh_dir - floor(op_rh_dir/(2*pi))*2*pi; % opposite direction
         if op_rh_dir<=max_hd && op_rh_dir>=min_hd
             r_hd_next = op_rh_dir;
         else

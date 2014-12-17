@@ -73,8 +73,8 @@ plot((1:size(pred_err,2))*0.5,pred_err(1,:),'b','LineWidth',2)
 legend('single','imm')
 grid on
 title('Prediction difference')
-xlabel('time/s')
-ylabel('distance/m')
+xlabel('time [sec]')
+ylabel('distance [m]')
 xlim([0,160])
 saveas(h1,'imm_vs_single','fig')
 fig2Pdf('imm_vs_single',300,h1)
@@ -124,12 +124,12 @@ safe_dist = 2; % safe_dist for imm
 h_v = 1.5;
 
 % mpc
-load('sim_traj_IMM_MPC_2_2_1p5_16-Dec-2014_201010','pre_traj','r_state');
+load('sim_traj_IMM_MPC_2_2_1p5_16-Dec-2014_215944','pre_traj','r_state');
 imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 imm_r_pos = r_state(1:2,1:sim_len);
 imm_r_v = r_state(4,1:sim_len);
 % greedy
-load('sim_traj_IMM_greedy1_2_2_1p5_16-Dec-2014_205123','r_state');
+load('sim_traj_IMM_greedy1_2_2_1p5_17-Dec-2014_013034','r_state');
 extpol_pre_traj = pre_traj(:,:,1:sim_len);
 extpol_r_pos = r_state(1:2,1:sim_len);
 extpol_r_v = r_state(4,1:sim_len);
@@ -138,8 +138,8 @@ pos_dif = zeros(2,sim_len-1);
 v_dif = zeros(2,sim_len-1);
 
 for ii = 1:sim_len-1
-    dif_vec1 = imm_r_pos(:,ii)-h_traj(:,ii+1);
-    dif_vec2 = extpol_r_pos(:,ii)-h_traj(:,ii+1);
+    dif_vec1 = imm_r_pos(:,ii)-h_traj(:,ii);
+    dif_vec2 = extpol_r_pos(:,ii)-h_traj(:,ii);
     pos_dif(1,ii) = norm(dif_vec1,2)-safe_dist;
     pos_dif(2,ii) = norm(dif_vec2,2)-safe_dist;
 end
@@ -147,16 +147,17 @@ ave_pos_dif = mean(pos_dif,2);
 max_pos_dif = max(abs(pos_dif),[],2);
 h2 = figure;
 hold on
+box on
 plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2)
 plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',2)
 legend('reactive','mpc')
 grid on
 title('Distance difference')
-xlabel('time/s')
-ylabel('distance/m')
+xlabel('time [sec]')
+ylabel('distance [m]')
 xlim([0,160])
-saveas(h2,'mpc_vs_greedy_dis_diff','fig')
-% fig2Pdf('mpc_vs_greedy_dis_diff',300,h2)
+saveas(h2,'mpc_vs_single_dis_diff','fig')
+% fig2Pdf('mpc_vs_single_dis_diff',300,h2)
 
 v_dif(1,:) = imm_r_v(1:end-1)-h_v;
 v_dif(2,:) = extpol_r_v(1:end-1)-h_v;
@@ -164,16 +165,17 @@ ave_v_dif = mean(v_dif,2);
 max_v_dif = max(abs(v_dif),[],2);
 h3 = figure;
 hold on
+box on
 plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r','LineWidth',2)
 plot((1:size(v_dif,2))*0.5,v_dif(1,:),'b','LineWidth',2)
-legend('greedy','mpc')
+legend('reactive','mpc')
 grid on
 title('Velocity difference')
-xlabel('time/s')
-ylabel('speed/(m/s)')
+xlabel('time[sec]')
+ylabel('speed [m/s]')
 xlim([0,160])
-saveas(h3,'mpc_vs_greedy_vel','fig')
-% fig2Pdf('mpc_vs_greedy_vel',300,h3)
+saveas(h3,'mpc_vs_single_vel','fig')
+% fig2Pdf('mpc_vs_single_vel',300,h3)
  
 % save('sim_res.mat','ave_pred_err','max_pred_err',...
 %     'ave_pos_dif','max_pos_dif','ave_v_dif','max_v_dif');
