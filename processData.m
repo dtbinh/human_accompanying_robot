@@ -29,12 +29,19 @@ sgm_pre_traj(1,:,:) = x_pos_pre1(2:end,:);
 sgm_pre_traj(2,:,:) = y_pos_pre1(2:end,:);
 
 % imm
-load('sim_traj_IMM_greedy1_2_2_1p5_09-Dec-2014_204006','pre_traj');
-imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
+% load('sim_traj_IMM_greedy1_2_2_1p5_09-Dec-2014_204006','pre_traj');
+load('x_pos_pre_imm','x_pos_pre_imm')
+load('y_pos_pre_imm','y_pos_pre_imm')
+
+imm_pre_traj = zeros(2,size(x_pos_pre_imm,1)-1,size(x_pos_pre_imm,2));
+imm_pre_traj(1,:,:) = x_pos_pre_imm(2:end,:);
+imm_pre_traj(2,:,:) = y_pos_pre_imm(2:end,:);
+
+% imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 % imm_r_pos = r_state(1:2,1:sim_len);
 % imm_r_v = r_state(3,1:sim_len);
-
-hor = size(pre_traj,2)-1; % planning horizon
+hor = size(imm_pre_traj,2)-1;
+% hor = size(pre_traj,2)-1; % planning horizon
 
 %% compare the prediction
 pred_err = zeros(2,sim_len-1); % prediction error. 1st row for imm and 2nd row for extpol
@@ -44,12 +51,16 @@ for ii = 1:sim_len-1
         dif_vec2 = sgm_pre_traj(:,:,ii)-h_traj(:,ii:ii+hor);
         pred_err(1,ii) = sum(sqrt(sum(dif_vec1.^2,1)))/(hor+1);
         pred_err(2,ii) = sum(sqrt(sum(dif_vec2.^2,1)))/(hor+1);
+%         pred_err(1,ii) = sum(sum(abs(dif_vec1),1))/(hor+1);
+%         pred_err(2,ii) = sum(sum(abs(dif_vec2),1))/(hor+1);
     else
         tmp_len = sim_len-ii;
         dif_vec1 = imm_pre_traj(:,1:tmp_len,ii)-h_traj(:,ii:sim_len-1);
         dif_vec2 = sgm_pre_traj(:,1:tmp_len,ii)-h_traj(:,ii:sim_len-1);
         pred_err(1,ii) = sum(sqrt(sum(dif_vec1.^2,1)))/tmp_len;
         pred_err(2,ii) = sum(sqrt(sum(dif_vec2.^2,1)))/tmp_len;
+%         pred_err(1,ii) = sum(sum(abs(dif_vec1),1))/tmp_len;
+%         pred_err(2,ii) = sum(sum(abs(dif_vec2),1))/tmp_len;
     end
 end
 ave_pred_err = mean(pred_err,2);
@@ -104,6 +115,7 @@ legend('imm','extpol')
 
 %% compare the motion planning
 % load data
+%{
 addpath('.\sim_res');
 load('h_state_1p5.mat');
 sim_len = size(h_state,2); % simulation time
@@ -112,10 +124,10 @@ safe_dist = 2; % safe_dist for imm
 h_v = 1.5;
 
 % mpc
-load('sim_traj_IMM_MPC_2_2_1p5_09-Dec-2014_202253','pre_traj','r_state');
+load('sim_traj_IMM_MPC_2_2_1p5_16-Dec-2014_100143','pre_traj','r_state');
 imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 imm_r_pos = r_state(1:2,1:sim_len);
-imm_r_v = r_state(3,1:sim_len);
+imm_r_v = r_state(4,1:sim_len);
 % greedy
 load('sim_traj_IMM_greedy1_2_2_1p5_09-Dec-2014_204006','pre_traj','r_state');
 extpol_pre_traj = pre_traj(:,:,1:sim_len);
@@ -161,7 +173,8 @@ xlabel('time/s')
 ylabel('speed/(m/s)')
 xlim([0,160])
 saveas(h3,'mpc_vs_greedy_vel','fig')
-fig2Pdf('mpc_vs_greedy_vel',300,h3)
-
-save('sim_res.mat','ave_pred_err','max_pred_err',...
-    'ave_pos_dif','max_pos_dif','ave_v_dif','max_v_dif');
+% fig2Pdf('mpc_vs_greedy_vel',300,h3)
+ 
+% save('sim_res.mat','ave_pred_err','max_pred_err',...
+%     'ave_pos_dif','max_pos_dif','ave_v_dif','max_v_dif');
+%}

@@ -1,4 +1,5 @@
 function outPara = pathPlannerGreedy(agent,inPara)
+% greedy/reactive method for robot motion planning
 % define input arguments
 plan_type = inPara.plan_type;
 if strcmp(plan_type,'greedy1')
@@ -19,15 +20,57 @@ dt = 0.05; % time interval for sampling the points on the line of the robot's pa
 safe_marg2 = 0.1; % margin for the robot's path line from the obstacle
 
 x_r = agent.currentPos(1:2);
+r_hd = agent.currentPos(3);
 r_v = agent.currentV;
-maxA = agent.maxA;
-h_hd = calAngle(h_v); % human heading
+a_lb = agent.a_lb;
+a_ub = agent.a_ub;
+w_lb = agent.w_lb;
+w_ub = agent.w_ub;
+% h_hd = calAngle(h_v); % human heading
 
+% robot's next position
+x_r_next = x_r+r_v*[cos(r_hd);sin(r_hd)]*mpc_dt;
+rh_dis_next = sqrt(sum((x_r_next - x_h).^2));
+rh_dir = calAngle(x_h-x_r_next); % direction from robot to human
+
+% determine the robot's next heading
+if (rh_dis_next >= safe_dis) 
+    % if robot will be outside of the collision region, then turn its
+    % heading toward the human's next position
+    min_hd = r_hd + w_lb*mpc_dt;
+    max_hd = r_hd + w_ub*mpc_dt;
+    if rh_dir<=max_hd && rh_dir>=min_hd
+        r_hd_next = rh_dir;
+    elseif rh_dir<min_hd
+        r_hd_next = min_hd;
+    elseif rh_dir>max_hd
+        r_hd_next = max_hd;
+    end
+    
+    r_v_next = r_v + a_ub*mpc_dt;
+else
+    % if robot will be inside collision region, then turn its
+    % heading against the human's next position
+    min_hd = r_hd + w_lb*mpc_dt;
+    max_hd = r_hd + w_ub*mpc_dt;
+    op_rh_dir = -rh_dir;
+    op_rh_dir = op_rh_dir - floor(op_rh_dir/(2*pi))*2*pi;
+    if op_rh_dir<=max_hd && op_rh_dir>=min_hd
+        r_hd_next = op_rh_dir;
+    elseif op_rh_dir<min_hd
+        r_hd_next = max_hd;
+    elseif op_rh_dir>max_hd
+        r_hd_next = min_hd;
+    end
+    
+    r_v_next = r_v + a_lb*mpc_dt;
+end 
+%{
 % safety constraint
 % collision avoidance with human
 rh_dis = sqrt(sum((x_r(1:2) - x_h(1:2)).^2)); % distance between robot's current and human's position
 
-if (rh_dis >= safe_dis) % if robot is outside of the collision region
+if (rh_dis >= safe_dis) 
     % determine robot heading and the furthest feasible next position
     theta = calAngle(x_h-x_r);
     
@@ -75,7 +118,7 @@ else %if robot is inside the collision region
         % get robot's new heading
         x_r_next = x_r_feas_next;
 end
-
+%}
 % obstacle avoidance
 %{
 for jj = 1:size(obs_info,2)
@@ -94,15 +137,15 @@ for jj = 1:size(obs_info,2)
 %}
 
 % chang robot speed to match human's current estimated speed
-min_v = r_v - maxA*mpc_dt;
-max_v = r_v + maxA*mpc_dt;
-if norm(h_v,2) >= max_v
-    r_v_next = max_v;
-elseif norm(h_v,2) <= min_v
-    r_v_next = min_v;
-else
-    r_v_next = norm(h_v,2);
-end
+% min_v = r_v + a_lb*mpc_dt;
+% max_v = r_v + a_ub*mpc_dt;
+% if norm(h_v,2) >= max_v
+%     r_v_next = max_v;
+% elseif norm(h_v,2) <= min_v
+%     r_v_next = min_v;
+% else
+%     r_v_next = norm(h_v,2);
+% end
 %}
 
 % a snippet for changing robot speed using constant acceleration. Not
@@ -120,8 +163,8 @@ else
     r_v_next = r_v+r_a*mpc_dt;
 end
 %}
-opt_x = [[x_r;r_v],[x_r_next*ones(1,hor);r_v_next,zeros(1,hor-1)]];
-opt_u = [[theta;(r_v_next-r_v)/mpc_dt],zeros(2,hor-1)];
+opt_x = [[x_r;r_hd;r_v],[x_r_next*ones(1,hor);r_hd_next*ones(1,hor);r_v_next,zeros(1,hor-1)]];
+opt_u = [[(r_hd_next-r_hd)/mpc_dt;(r_v_next-r_v)/mpc_dt],zeros(2,hor-1)];
 outPara = struct('opt_x',opt_x,'opt_u',opt_u);
 end
 

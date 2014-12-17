@@ -10,17 +10,18 @@ set(0,'DefaultFigureWindowStyle','docked');
 %%% define agents %%%
 % Human agent 1
 h = agent('human');
-h.currentPos = [30;10;1]*scale;%[290;30;0]; % [x y heading]
+h.currentPos = [30;10;0]*scale;%[290;30;0]; % [x y heading]
 % h.maxV = 1.5;
 h.currentV = 1.5;
 
 % Robot agent 1
 r = agent('robot');
-r.currentPos = [30;30;1]*scale;%[310;30;0]; %[23.5;0.5;0];
+r.currentPos = [20;10;0]*scale;%[310;30;0]; %[23.5;0.5;0];
 r.currentV = 1;
 r.a_lb = -3; 
 r.a_ub = 1;
-r.maxW = pi/6;
+r.w_lb = -pi/4;
+r.w_ub = pi/4;
 
 %%% Set field %%%
 xLength = 300*scale; 

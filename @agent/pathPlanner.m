@@ -49,7 +49,7 @@ while(tmp_hor > 0)
             for jj = 1:size(obs_info,2)
                 % check if the line intersects with some obstacle
                 n = floor(mpc_dt/dt);
-                %                 x0 = obs_info(1,jj); y0 = obs_info(2,jj);
+                % x0 = obs_info(1,jj); y0 = obs_info(2,jj);
                 r = obs_info(3,jj);
                 for kk = 0:n
                     tmp = sum((kk/n*opt_x(1:2,ii+1)+(n-kk)/n*opt_x(1:2,ii)-obs_info(1:2,jj)).^2) - (r+safe_marg2)^2;
@@ -73,9 +73,7 @@ while(tmp_hor > 0)
         display('Fail to solve MPC')
         sol.info
         yalmiperror(sol.problem)
-        %         safe_dis = safe_dis/2;
-        % determine if the initial condition is infeasible
-        
+        % safe_dis = safe_dis/2;   
         tmp_hor = tmp_hor-1;
     end
 end
@@ -139,6 +137,12 @@ if tmp_hor == 0 % if the MPC fails, just find the input at the next step to maxi
     end
     %     end
 end
+% normalize the heading to [0,2*pi)
+for ii = 1:size(opt_x,2)
+    tmp = opt_x(3,ii);
+    tmp = tmp - floor(tmp/(2*pi))*2*pi;
+    opt_x(3,ii) = tmp;
+end
 outPara = struct('opt_x',opt_x,'opt_u',opt_u);
 end
 
@@ -174,20 +178,20 @@ constr = inPara.constr;
 agent = inPara.agent;
 dt = inPara.dt;
 safe_marg2 = inPara.safe_marg2;
-init_state = inPara.init_state;
+% init_state = inPara.init_state;
 
 % [A,B,c] = linearize_model(init_state,mpc_dt);
 for ii = 1:hor
     hr_dis = sum((x(1:2,ii+1)-x_h(:,ii+1)).^2); % square of the Euclidean distance between human and robot
     if ii == 1
-        obj = obj+hr_dis+0.5*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
+        obj = obj+hr_dis+0.2*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
     else
-        obj = obj+hr_dis+0.5*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(u(1,ii-1)))^2;
+        obj = obj+hr_dis+0.2*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(u(1,ii-1)))^2;
     end
     % constraints on robot dynamics
     constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(4,ii)*[cos(x(3,ii));sin(x(3,ii))]*mpc_dt,...
         x(3,ii+1) == x(3,ii) + u(1,ii)*mpc_dt, x(4,ii+1) == x(4,ii)+u(2,ii)*mpc_dt,...
-       x(4,ii+1)>=0,agent.a_lb<=u(2,ii)<=agent.a_ub,-agent.maxW<=u(1,ii)<=agent.maxW];%
+       x(4,ii+1)>=0,agent.a_lb<=u(2,ii)<=agent.a_ub,agent.w_lb<=u(1,ii)<=agent.w_ub];%
 %     constr = [constr,x(:,ii+1) == A*x(:,ii)+B*u(:,ii)+c];
 %     constr = [constr,x(4,ii+1)>=0,agent.a_lb<=u(2,ii)<=agent.a_ub,-agent.maxW<=u(1,ii)<=agent.maxW];%
     % constraint on safe distance
@@ -198,7 +202,7 @@ for ii = 1:hor
     % not be inside the obstacle and the line connecting the waypoints 
     % should not intersect with the obstacle
 %     [a,b,c] = getLine(x(1:2,ii+1),x(1:2,ii));
-%{
+%
     for jj = 1:size(obs_info,2)
         % waypoints not inside the obstacle
         constr = [constr,sum((x(1:2,ii+1)-obs_info(1:2,jj)).^2) >= (obs_info(3,jj)+safe_marg)^2];
@@ -242,7 +246,7 @@ for ii = 1:hor
     % constraints on robot dynamics
     constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(4,ii)*[cos(x(3,ii));sin(x(3,ii))]*mpc_dt,...
         x(3,ii+1) == x(3,ii) + u(1,ii)*mpc_dt, x(4,ii+1) == x(4,ii)+u(2,ii)*mpc_dt,...
-       x(4,ii+1)>=0,agent.a_lb<=u(2,ii)<=agent.a_ub,-agent.maxW<=u(1,ii)<=agent.maxW];
+       x(4,ii+1)>=0,agent.a_lb<=u(2,ii)<=agent.a_ub,agent.w_lb<=u(1,ii)<=agent.w_ub];
 %     constr = [constr,x(:,ii+1) == A*x(:,ii)+B*u(:,ii)+c];
 %     constr = [constr,x(4,ii+1)>=0,agent.a_lb<=u(2,ii)<=agent.a_ub,-agent.maxW<=u(1,ii)<=agent.maxW];%
     % constraint on safe distance
