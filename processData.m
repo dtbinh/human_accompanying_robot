@@ -124,12 +124,12 @@ safe_dist = 2; % safe_dist for imm
 h_v = 1.5;
 
 % mpc
-load('sim_traj_IMM_MPC_2_2_1p5_16-Dec-2014_215944','pre_traj','r_state');
+load('sim_traj_IMM_MPC_2_2_1p5_17-Dec-2014_123019','pre_traj','r_state');
 imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 imm_r_pos = r_state(1:2,1:sim_len);
 imm_r_v = r_state(4,1:sim_len);
 % greedy
-load('sim_traj_IMM_greedy1_2_2_1p5_17-Dec-2014_013034','r_state');
+load('sim_traj_IMM_greedy1_2_2_1p5_17-Dec-2014_132758','r_state');
 extpol_pre_traj = pre_traj(:,:,1:sim_len);
 extpol_r_pos = r_state(1:2,1:sim_len);
 extpol_r_v = r_state(4,1:sim_len);
@@ -148,7 +148,7 @@ max_pos_dif = max(abs(pos_dif),[],2);
 h2 = figure;
 hold on
 box on
-plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2)
+plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r--','LineWidth',2)
 plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',2)
 legend('reactive','mpc')
 grid on
@@ -157,7 +157,7 @@ xlabel('time [sec]')
 ylabel('distance [m]')
 xlim([0,160])
 saveas(h2,'mpc_vs_single_dis_diff','fig')
-% fig2Pdf('mpc_vs_single_dis_diff',300,h2)
+fig2Pdf('mpc_vs_single_dis_diff',300,h2)
 
 v_dif(1,:) = imm_r_v(1:end-1)-h_v;
 v_dif(2,:) = extpol_r_v(1:end-1)-h_v;
@@ -166,7 +166,7 @@ max_v_dif = max(abs(v_dif),[],2);
 h3 = figure;
 hold on
 box on
-plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r','LineWidth',2)
+plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r--','LineWidth',2)
 plot((1:size(v_dif,2))*0.5,v_dif(1,:),'b','LineWidth',2)
 legend('reactive','mpc')
 grid on
@@ -175,8 +175,7 @@ xlabel('time[sec]')
 ylabel('speed [m/s]')
 xlim([0,160])
 saveas(h3,'mpc_vs_single_vel','fig')
-% fig2Pdf('mpc_vs_single_vel',300,h3)
+fig2Pdf('mpc_vs_single_vel',300,h3)
  
 % save('sim_res.mat','ave_pred_err','max_pred_err',...
 %     'ave_pos_dif','max_pos_dif','ave_v_dif','max_v_dif');
-%}

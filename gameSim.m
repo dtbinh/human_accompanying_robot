@@ -20,8 +20,8 @@ r.currentPos = [20;10;0]*scale;%[310;30;0]; %[23.5;0.5;0];
 r.currentV = 1;
 r.a_lb = -3; 
 r.a_ub = 1;
-r.w_lb = -pi/12;
-r.w_ub = pi/12;
+r.w_lb = -pi/6;
+r.w_ub = pi/6;
 
 %%% Set field %%%
 xLength = 300*scale; 

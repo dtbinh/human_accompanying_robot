@@ -154,7 +154,7 @@ for jj = 1:size(obs_info,2)
 % change robot speed to match human's current estimated speed
 min_v = r_v + a_lb*mpc_dt;
 max_v = r_v + a_ub*mpc_dt;
-
+%{
 if norm(h_v,2) >= max_v
     r_v_next = max_v;
 elseif norm(h_v,2) <= min_v
@@ -162,20 +162,22 @@ elseif norm(h_v,2) <= min_v
 else
     r_v_next = norm(h_v,2);
 end
+%}
 % a better speed change strategy
-% if (rh_dis_next >= 2*safe_dis) 
-%     r_v_next = max_v;
-% elseif (rh_dis_next >= safe_dis) && (rh_dis_next < 2*safe_dis)
-%     if norm(h_v,2) >= max_v
-%         r_v_next = max_v;
-%     elseif norm(h_v,2) <= min_v
-%         r_v_next = min_v;
-%     else
-%         r_v_next = norm(h_v,2);
-%     end
-% else
-%     r_v_next = min_v;
-% end
+if (rh_dis_next >= 2*safe_dis) && (rh_dis_next < 3*safe_dis)
+    r_v_next = max_v;
+elseif ((rh_dis_next >= safe_dis) && (rh_dis_next < 2*safe_dis))||...
+        (rh_dis_next >= 3*safe_dis)
+    if norm(h_v,2) >= max_v
+        r_v_next = max_v;
+    elseif norm(h_v,2) <= min_v
+        r_v_next = min_v;
+    else
+        r_v_next = norm(h_v,2);
+    end
+else
+    r_v_next = min_v;
+end
 r_v_next = max(r_v_next,0);
 %}
 
