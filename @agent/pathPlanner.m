@@ -1,7 +1,8 @@
 function outPara = pathPlanner(agent,inPara)
 % include IPOPT in YALMIP
-addpath('D:\Program Files\MATLAB\2013a_crack\IPOPT3.11.8');
+% addpath('D:\Program Files\MATLAB\2013a_crack\IPOPT3.11.8');
 % addpath('D:\Chang Liu\ipopt');
+addpath('/Users/changliu/Documents/MATLAB/Ipopt-3.11.8-linux64mac64win32win64-matlabmexfiles')
 % define input arguments
 x_h = inPara.pre_traj; % predicted human trajectory
 hor = inPara.hor;

@@ -71,7 +71,7 @@ plan_type = inPara.plan_type;
         cur_hd = h.currentPos(3);
         %% estimate human position
         %
-        [x_est,y_est,x_pre,y_pre,x_pos_est,input,time] = IMM_Com_run();
+        [x_est,y_est,x_pos_pre,y_pos_pre] = IMM_UKF_run();
         est_state([1,2],:,k) = x_est((k-1)*samp_num+1:end-1,:)';
         est_state([3,4],:,k) = y_est((k-1)*samp_num+1:end-1,:)';
         %}
@@ -85,7 +85,7 @@ plan_type = inPara.plan_type;
         %%  predict human future path
         % prediction by IMM
         if strcmp(pre_type,'IMM')
-            pre_traj(:,:,k) = [[x_est((k-1)*samp_num+1,1);y_est((k-1)*samp_num+1,1)],[x_pre(k,:);y_pre(k,:)]];
+            pre_traj(:,:,k) = [[x_est((k-1)*samp_num+1,1);y_est((k-1)*samp_num+1,1)],[x_pos_pre(k,:);y_pos_pre(k,:)]];
 %             pre_traj(:,:,k) = [x_pos_pre_imm(:,k)';y_pos_pre_imm(:,k)'];
         % prediction by extrapolation
         elseif strcmp(pre_type,'extpol')
@@ -99,12 +99,12 @@ plan_type = inPara.plan_type;
         %% robot path planning
         %
         if strcmp(plan_type,'MPC')
-%             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
-%                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',[x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],...
-%                 'obs_info',campus.obs_info,'safe_marg',safe_marg);
-            inPara_pp = struct('pre_traj',pos_pre_imm(:,:,k),'hor',hor,...
+            inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',[x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],...
                 'obs_info',campus.obs_info,'safe_marg',safe_marg);
+%             inPara_pp = struct('pre_traj',pos_pre_imm(:,:,k),'hor',hor,...
+%                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',[x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],...
+%                 'obs_info',campus.obs_info,'safe_marg',safe_marg);
             outPara_pp = pathPlanner(agent,inPara_pp);
             opt_x = outPara_pp.opt_x;
             opt_u = outPara_pp.opt_u;

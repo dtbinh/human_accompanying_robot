@@ -74,6 +74,7 @@ wp_cnt = 1; % the waypoint that the human is heading for
 h_tar_wp = h_way_pts(:,wp_cnt); % the way point that the human is heading for
 
 addpath('./sim_res')
+addpath('/Users/changliu/Documents/MATLAB/Ipopt-3.11.8-linux64mac64win32win64-matlabmexfiles')
 load('x_pos_pre_imm','x_pos_pre_imm')
 load('y_pos_pre_imm','y_pos_pre_imm')
 pos_pre_imm = zeros(2,size(x_pos_pre_imm,1)-1,size(x_pos_pre_imm,2));
