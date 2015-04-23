@@ -1,8 +1,4 @@
 function outPara = pathPlanner(agent,inPara)
-% include IPOPT in YALMIP
-% addpath('D:\Program Files\MATLAB\2013a_crack\IPOPT3.11.8');
-% addpath('D:\Chang Liu\ipopt');
-addpath('/Users/changliu/Documents/MATLAB/Ipopt-3.11.8-linux64mac64win32win64-matlabmexfiles')
 % define input arguments
 x_h = inPara.pre_traj; % predicted human trajectory
 hor = inPara.hor;
@@ -36,7 +32,7 @@ while(tmp_hor > 0)
     [obj,constr] = genMPC(inPara_cg); % generate constraints. contain a parameter that decides whether using the non-intersection constraints
     
     % solve MPC
-    opt = sdpsettings('solver','ipopt','usex0',1,'debug',1);
+    opt = sdpsettings('solver','snopt','usex0',1,'debug',1);
     sol = optimize(constr,obj,opt);
     
     if sol.problem == 0

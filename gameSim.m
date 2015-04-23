@@ -5,6 +5,12 @@ clear % clear global variables
 close all
 
 %% Setup
+addpath('/Users/changliu/Documents/MATLAB/studentSnopt')
+% include IPOPT in YALMIP
+% addpath('D:\Program Files\MATLAB\2013a_crack\IPOPT3.11.8');
+% addpath('D:\Chang Liu\ipopt');
+addpath('/Users/changliu/Documents/MATLAB/Ipopt-3.11.8-linux64mac64win32win64-matlabmexfiles')
+
 scale = 1/3; % scale the size of the field
 set(0,'DefaultFigureWindowStyle','docked');
 %%% define agents %%%
@@ -53,7 +59,7 @@ campus.agentNum = 2;
 campus.obs_info = [c_set;r_set]; % gives the center and radius of each obstacle
 %% Simulation
 % simulation parameters
-kf = 300; % simulation length (/s)
+kf = 400; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon 
 pre_type = 'IMM';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion

@@ -121,13 +121,14 @@ CHART_OBJECT,v1,v2,v3,v4,\
 #define _SFD_CS_CALL(v2,v3,v4) _SFD_CHART_CALL(STATE_OBJECT,v2,v3,v4)
 #define _SFD_CT_CALL(v2,v3,v4) _SFD_CHART_CALL(TRANSITION_OBJECT,v2,v3,v4)
 #define _SFD_CE_CALL(v2,v3,v4) _SFD_CHART_CALL(EVENT_OBJECT,v2,v3,v4)
+#define _SFD_CM_CALL(v2,v3,v4) _SFD_CHART_CALL(MESSAGE_OBJECT,v2,v3,v4)
 #define _SFD_EML_CALL(v1,v2,v3) eml_debug_line_call(sfGlobalDebugInstanceStruct, _IMM_UKFMachineNumber_,\
 CHARTINSTANCE_CHARTNUMBER,\
 CHARTINSTANCE_INSTANCENUMBER,\
 v1,v2,\
 v3,_sfTime_,0)
-#define _SFD_SCRIPT_TRANSLATION(v1,v2,v3) sf_debug_set_script_translation(sfGlobalDebugInstanceStruct, _IMM_UKFMachineNumber_,\
-v1,v2,v3)
+#define _SFD_SCRIPT_TRANSLATION(v1,v2,v3,v4) sf_debug_set_script_translation(sfGlobalDebugInstanceStruct, _IMM_UKFMachineNumber_,\
+v1,v2,v3,v4)
 #define _SFD_SCRIPT_CALL(v1,v2,v3) eml_debug_line_call(sfGlobalDebugInstanceStruct, _IMM_UKFMachineNumber_,\
 CHARTINSTANCE_CHARTNUMBER,\
 CHARTINSTANCE_INSTANCENUMBER,\
