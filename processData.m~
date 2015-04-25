@@ -94,7 +94,7 @@ safe_dist = 2; % safe_dist for imm
 h_v = 1.5;
 
 % mpc
-load('sim_traj_IMM_MPC_2_2_1p5_23-Apr-2015_211212','pre_traj','r_state','plan_state');
+load('sim_traj_IMM_MPC_2_2_1p5_23-Apr-2015_211212','pre_traj','r_state','est_state','plan_state');
 mpc_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 mpc_r_plan_pos = plan_state(1:2,:,:);
 mpc_r_pos = r_state(1:2,1:sim_len);
@@ -111,16 +111,16 @@ v_dif = zeros(2,sim_len-1);
 mpc_plan_pos_dif = zeros(6,sim_len-1); % difference between human estimated positon and robot planned position
 grd_plan_pos_dif = zeros(6,sim_len-1); % difference between human estimated positon and robot planned position
 
-for ii = 1:sim_len-2
+for ii = 1:sim_len-1
     dif_vec1 = mpc_r_pos(:,ii)-h_traj(:,ii);
     dif_vec2 = grd_r_pos(:,ii)-h_traj(:,ii);
     pos_dif(1,ii) = norm(dif_vec1,2)-safe_dist;
     pos_dif(2,ii) = norm(dif_vec2,2)-safe_dist;
-    dif_vec3 = mpc_r_pos(:,ii)-mpc_pre_traj(:,1,ii);
-    dif_vec4 = grd_r_pos(:,ii)-grd_pre_traj(:,1,ii);
+    dif_vec3 = mpc_r_pos(:,ii)-est_state([1,3],1,ii);
+    dif_vec4 = grd_r_pos(:,ii)-est_state([1,3],1,ii);
     pos_dif(3,ii) = norm(dif_vec3,2)-safe_dist;
     pos_dif(4,ii) = norm(dif_vec4,2)-safe_dist;
-    dif_vec5 = mpc_r_plan_pos(:,:,ii)-mpc_pre_traj(:,:,ii);
+    dif_vec5 = mpc_r_plan_pos(:,:,ii)-mpc_pre_traj(:,2:end,ii);
 %     dif_vec6 = grd_r_plan_pos(:,2:end,ii)-grd_pre_traj(:,2:end,ii);
     mpc_plan_pos_dif(:,ii) = sqrt((sum(dif_vec5.*dif_vec5,1))');
 %     grd_plan_pos_dif(:,ii) = sqrt((sum(dif_vec6.*dif_vec6,1))');

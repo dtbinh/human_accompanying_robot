@@ -26,8 +26,8 @@ r.currentPos = [20;10;0]*scale;%[310;30;0]; %[23.5;0.5;0];
 r.currentV = 1;
 r.a_lb = -3; 
 r.a_ub = 1;
-r.w_lb = -pi/6;
-r.w_ub = pi/6;
+r.w_lb = -pi/2;
+r.w_ub = pi/2;
 
 %%% Set field %%%
 xLength = 300*scale; 
@@ -63,7 +63,7 @@ kf = 400; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon 
 pre_type = 'IMM';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion
-plan_type = 'MPC'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
+plan_type = 'greedy1'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
 samp_rate = 20; % sampling rate (/Hz)
 safe_dis = 2; %safe distance between human and robot
 safe_marg = 2; % safety margin between human the the obstacle
@@ -79,6 +79,8 @@ r_input = zeros(2,kf); % robot's actual control input [w,a]
 wp_cnt = 1; % the waypoint that the human is heading for
 h_tar_wp = h_way_pts(:,wp_cnt); % the way point that the human is heading for
 
+% the following snippet seems not in use, but only for purpose of the input
+% of agentMove for robot
 addpath('./sim_res')
 load('x_pos_pre_imm','x_pos_pre_imm')
 load('y_pos_pre_imm','y_pos_pre_imm')
@@ -168,7 +170,7 @@ for k = 1:kf
 
     % draw targets
     for jj = 1:campus.targetNum
-        h = plot(campus.targetPos(1,jj),campus.targetPos(2,jj),'MarkerSize',11);
+        h = plot(campus.targetPos(1,jj),campus.targetPos(2,jj),'MarkerSize',15);
         set(h,'Marker','p');
     end
     
@@ -184,13 +186,13 @@ for k = 1:kf
     % draw agent trajectory
     for ii = 1:length(agents)
         tmp_agent = agents(ii);
-        h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',1);
+        h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',2);
         set(h1,'MarkerFaceColor',color_agent{ii});
         set(h1,'MarkerEdgeColor',color_agent{ii});
         set(h1,'Color',color_agent{ii});
         set(h1,'LineStyle',line_agent{ii});
         set(h1,'Marker',marker_agent{ii});
-        h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',3);
+        h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',2);
         set(h2,'MarkerFaceColor',color_agent{ii});
         set(h2,'MarkerEdgeColor',color_agent{ii});
         set(h2,'Color',color_agent{ii});
@@ -198,20 +200,40 @@ for k = 1:kf
         set(h2,'Marker',marker_agent{ii});
     end
     % predicted human positions
-    h3 = plot(pre_traj(1,:,k),pre_traj(2,:,k),color_agent{3},'markers',1);
+    h3 = plot(pre_traj(1,:,k),pre_traj(2,:,k),color_agent{3},'markers',2);
     set(h3,'MarkerFaceColor',color_agent{3});
     set(h3,'MarkerEdgeColor',color_agent{3});
     set(h3,'Color',color_agent{3});
     set(h3,'LineStyle',line_agent{3});
     set(h3,'Marker',marker_agent{3});
+    hold on
+    c_set = [pre_traj(1,2:end,k);pre_traj(2,2:end,k)];
+    r_set = [safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2];
+    theta_set1 = {{0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi}};
+    inPara_gwp = struct('c_set',c_set,'r_set',r_set,'theta_set',theta_set1,'type','obs');
+    circle_pos = getWayPts(inPara_gwp);
+    for jj = 1:size(circle_pos)
+        tmp_pos = circle_pos{jj};
+        plot(tmp_pos(1,:),tmp_pos(2,:));%,color_agent{3});
+    end
     
     % planned robot trajectory
-    h4 = plot(plan_state(1,:,k),plan_state(2,:,k),color_agent{4},'markers',1);
+    h4 = plot(plan_state(1,:,k),plan_state(2,:,k),color_agent{4},'markers',2);
     set(h4,'MarkerFaceColor',color_agent{4});
     set(h4,'MarkerEdgeColor',color_agent{4});
     set(h4,'Color',color_agent{4});
     set(h4,'LineStyle',line_agent{4});
     set(h4,'Marker',marker_agent{4});
+    c_set = [plan_state(1,2:end,k);plan_state(2,2:end,k)];
+    r_set = [safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2];
+    theta_set1 = {{0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi}};
+    inPara_gwp = struct('c_set',c_set,'r_set',r_set,'theta_set',theta_set1,'type','obs');
+    circle_pos = getWayPts(inPara_gwp);
+    for jj = 1:size(circle_pos)
+        tmp_pos = circle_pos{jj};
+        plot(tmp_pos(1,:),tmp_pos(2,:));%,color_agent{3});
+    end
+       
     grid minor
     set(gca,'MinorGridLineStyle','-','XColor',[0.5 0.5 0.5],'YColor',[0.5 0.5 0.5])
     axis equal
@@ -235,14 +257,14 @@ str_safe_marg = strrep(num2str(safe_marg),'.','p');
 str_h_v = strrep(num2str(agents(1).currentV),'.','p');
 
 str_t = datestr(clock,'dd-mmm-yyyy_HHMMSS');
-folder_path = ('.\sim_res');
+folder_path = ('./sim_res');
 data_name = sprintf('sim_traj_%s_%s_%s_%s_%s_%s.mat',...
     pre_type,plan_type,str_safe_dis,str_safe_marg,str_h_v,str_t);
 file_name = fullfile (folder_path,data_name);
 save(file_name,'obv_traj','est_state','pre_traj','plan_state','r_state','r_input');
 
 % save plot
-folder_path = ('.\sim_res');
+folder_path = ('./sim_res');
 fig_name = sprintf('sim_traj_%s_%s_%s_%s_%s_%s.fig',...
     pre_type,plan_type,str_safe_dis,str_safe_marg,str_h_v,str_t);
 file_name = fullfile (folder_path,fig_name);

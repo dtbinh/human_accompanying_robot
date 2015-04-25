@@ -26,7 +26,7 @@ elseif (strcmp(type,'obs'))
     
     obs_wp = cell(size(c_set,2),1);
     % generate way points for round obstacles
-    figure
+%     figure
     for ii = 1:size(obs_wp,1)
         theta = theta_set{ii};
         cor = zeros(2,length(theta)); %coordinates

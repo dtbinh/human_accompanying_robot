@@ -95,7 +95,7 @@ plan_type = inPara.plan_type;
                 'hor',hor,'pre_type',pre_type,'mpc_dt',mpc_dt);
             pre_traj(:,:,k) = predictHumanTraj(agent,inPara_phj);
         end     
-        pos_pre_imm = inPara.pos_pre_imm;
+%         pos_pre_imm = inPara.pos_pre_imm;
         %% robot path planning
         %
         if strcmp(plan_type,'MPC')
@@ -110,11 +110,11 @@ plan_type = inPara.plan_type;
             opt_u = outPara_pp.opt_u;
             agent.currentPos = opt_x(1:3,2); % update robot position
             agent.currentV = opt_x(4,2); % update robot speed
-            r_state(:,k) = opt_x(:,2);
+            r_state(:,k+1) = opt_x(:,2);
             r_input(:,k) = opt_u(:,1);
             plan_state(:,:,k) = opt_x;
         elseif strcmp(plan_type,'greedy1') || strcmp(plan_type,'greedy0')
-            inPara_pp = struct('pre_traj',pos_pre_imm(:,:,k),'hor',hor,...
+            inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',...
                 [x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],'obs_info',campus.obs_info,...
                 'safe_marg',safe_marg,'plan_type',plan_type);
@@ -123,7 +123,7 @@ plan_type = inPara.plan_type;
             opt_u = outPara_pp.opt_u;
             agent.currentPos = opt_x(1:3,2); % robot moves
             agent.currentV = opt_x(4,2); % robot updates its speed
-            r_state(:,k) = opt_x(:,2);
+            r_state(:,k+1) = opt_x(:,2);
             r_input(:,k) = opt_u(:,1);
             plan_state(:,:,k) = opt_x;
         end
