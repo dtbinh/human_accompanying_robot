@@ -197,9 +197,9 @@ if tmp_hor == 0 % if the MPC fails, just find the input at the next step to maxi
     min_v = r_v + a_lb*mpc_dt;
     max_v = r_v + a_ub*mpc_dt;
     
-    if (rh_dis_next >= 2*safe_dis)
+    if (rh_dis_next >= 1.2*safe_dis)
         r_v_next = max_v;
-    elseif (rh_dis_next >= safe_dis) && (rh_dis_next < 2*safe_dis)
+    elseif ((rh_dis_next >= 0.8*safe_dis) && (rh_dis_next < 1.2*safe_dis))
         if norm(h_v,2) >= max_v
             r_v_next = max_v;
         elseif norm(h_v,2) <= min_v
@@ -263,9 +263,9 @@ safe_marg2 = inPara.safe_marg2;
 for ii = 1:hor
     hr_dis = sum((x(1:2,ii+1)-x_h(:,ii+1)).^2); % square of the Euclidean distance between human and robot
     if ii == 1
-        obj = obj+hr_dis+0.2*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
+        obj = obj+hr_dis+2*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
     else
-        obj = obj+hr_dis+0.2*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(u(1,ii-1)))^2;
+        obj = obj+hr_dis+2*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(u(1,ii-1)))^2;
     end
     % constraints on robot dynamics
     constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(4,ii)*[cos(x(3,ii));sin(x(3,ii))]*mpc_dt,...

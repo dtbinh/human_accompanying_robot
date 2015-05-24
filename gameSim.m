@@ -26,8 +26,8 @@ r.currentPos = [20;10;0]*scale;%[310;30;0]; %[23.5;0.5;0];
 r.currentV = 1;
 r.a_lb = -3; 
 r.a_ub = 1;
-r.w_lb = -pi/2;
-r.w_ub = pi/2;
+r.w_lb = -pi/6;
+r.w_ub = pi/6;
 
 %%% Set field %%%
 xLength = 300*scale; 
@@ -74,7 +74,7 @@ obv_traj = zeros(3,0); % observed human trajectory; first row denotes the time [
 est_state = zeros(4,mpc_dt*samp_rate,kf); % estimated human states for every second [x,vx,y,vy];
 pre_traj = zeros(2,hor+1,kf); % current and predicted future human trajectory [x,y]
 plan_state = zeros(4,hor+1,kf); % robot's current and planned future state [x,y,v]
-r_state = zeros(4,kf); % robot's actual state [x,y,theta,v]
+r_state = [[r.currentPos;r.currentV],zeros(4,kf-1)]; % robot's actual state [x,y,theta,v]
 r_input = zeros(2,kf); % robot's actual control input [w,a]
 wp_cnt = 1; % the waypoint that the human is heading for
 h_tar_wp = h_way_pts(:,wp_cnt); % the way point that the human is heading for
@@ -163,6 +163,7 @@ for k = 1:kf
     color_agent = {'r','g','r','g'};
     marker_agent = {'o','^','*','d'};
     line_agent = {'-','-','-','-'};
+    line_wid = {2,2,2,2};
     orange = [1 204/255 0];
     color_target = {'m','b',orange};
     figure;
@@ -172,6 +173,7 @@ for k = 1:kf
     for jj = 1:campus.targetNum
         h = plot(campus.targetPos(1,jj),campus.targetPos(2,jj),'MarkerSize',15);
         set(h,'Marker','p');
+        set(h,'linewidth',2);
     end
     
     % draw obstacles
@@ -192,6 +194,7 @@ for k = 1:kf
         set(h1,'Color',color_agent{ii});
         set(h1,'LineStyle',line_agent{ii});
         set(h1,'Marker',marker_agent{ii});
+        set(h1,'linewidth',line_wid{ii});
         h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',2);
         set(h2,'MarkerFaceColor',color_agent{ii});
         set(h2,'MarkerEdgeColor',color_agent{ii});
@@ -206,6 +209,7 @@ for k = 1:kf
     set(h3,'Color',color_agent{3});
     set(h3,'LineStyle',line_agent{3});
     set(h3,'Marker',marker_agent{3});
+    set(h3,'linewidth',line_wid{3});
     hold on
     c_set = [pre_traj(1,2:end,k);pre_traj(2,2:end,k)];
     r_set = [safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2];
@@ -224,6 +228,7 @@ for k = 1:kf
     set(h4,'Color',color_agent{4});
     set(h4,'LineStyle',line_agent{4});
     set(h4,'Marker',marker_agent{4});
+    set(h1,'linewidth',line_wid{4});
     c_set = [plan_state(1,2:end,k);plan_state(2,2:end,k)];
     r_set = [safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2];
     theta_set1 = {{0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi}};

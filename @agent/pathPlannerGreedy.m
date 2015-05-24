@@ -164,9 +164,10 @@ else
 end
 %}
 % a better speed change strategy
-if (rh_dis_next >= 2*safe_dis) && (rh_dis_next < 3*safe_dis)
+%
+if (rh_dis_next >= 1.2*safe_dis) && (rh_dis_next < 3*safe_dis)
     r_v_next = max_v;
-elseif ((rh_dis_next >= safe_dis) && (rh_dis_next < 2*safe_dis))||...
+elseif ((rh_dis_next >= 0.8*safe_dis) && (rh_dis_next < 1.2*safe_dis))||...
         (rh_dis_next >= 3*safe_dis)
     if norm(h_v,2) >= max_v
         r_v_next = max_v;
@@ -180,7 +181,23 @@ else
 end
 r_v_next = max(r_v_next,0);
 %}
-
+% try to improve the speed change policy from the code above 
+%{
+if (rh_dis_next >= 1.2*safe_dis)
+    r_v_next = max_v;
+elseif ((rh_dis_next >= 0.8*safe_dis) && (rh_dis_next < 1.2*safe_dis))
+    if norm(h_v,2) >= max_v
+        r_v_next = max_v;
+    elseif norm(h_v,2) <= min_v
+        r_v_next = min_v;
+    else
+        r_v_next = norm(h_v,2);
+    end
+else
+    r_v_next = min_v;
+end
+r_v_next = max(r_v_next,0);
+%}
 % a snippet for changing robot speed using constant acceleration. Not
 % compatiable with the idea of discretized speed that is constant between
 % each time step

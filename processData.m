@@ -1,7 +1,7 @@
 % process simulation result
 %% imm vs single-model
 % load data
-%{
+%
 clear
 addpath('./sim_res');
 load('h_state_1p5.mat');
@@ -21,68 +21,84 @@ h_traj = h_state(1:2,:); % h_state contains [x;y;heading]
 % % extpol_r_v = r_state(3,1:sim_len);
 
 % single model
-load('x_pos_pre1_single_model','x_pos_pre1')
-load('y_pos_pre1_single_model','y_pos_pre1')
+load('x_pos_LKF','x_pos_LKF')
+load('y_pos_LKF','y_pos_LKF')
 
-sgm_pre_traj = zeros(2,size(x_pos_pre1,1)-1,size(x_pos_pre1,2));
-sgm_pre_traj(1,:,:) = x_pos_pre1(2:end,:);
-sgm_pre_traj(2,:,:) = y_pos_pre1(2:end,:);
+lkf_pre_traj = zeros(2,size(x_pos_LKF,1)-2,size(x_pos_LKF,2));
+lkf_pre_traj(1,:,:) = x_pos_LKF(3:end,:);
+lkf_pre_traj(2,:,:) = y_pos_LKF(3:end,:);
+
+load('x_pos_UKF','x_pos_UKF')
+load('y_pos_UKF','y_pos_UKF')
+
+ukf_pre_traj = zeros(2,size(x_pos_UKF,1)-2,size(x_pos_UKF,2));
+ukf_pre_traj(1,:,:) = x_pos_UKF(3:end,:);
+ukf_pre_traj(2,:,:) = y_pos_UKF(3:end,:);
 
 % imm
-% load('sim_traj_IMM_greedy1_2_2_1p5_09-Dec-2014_204006','pre_traj');
-load('x_pos_pre_imm','x_pos_pre_imm')
-load('y_pos_pre_imm','y_pos_pre_imm')
+load('x_pos_imm_LKF','x_pos_imm_LKF')
+load('y_pos_imm_LKF','y_pos_imm_LKF')
 
-imm_pre_traj = zeros(2,size(x_pos_pre_imm,1)-1,size(x_pos_pre_imm,2));
-imm_pre_traj(1,:,:) = x_pos_pre_imm(2:end,:);
-imm_pre_traj(2,:,:) = y_pos_pre_imm(2:end,:);
+imm_lkf_pre_traj = zeros(2,size(x_pos_imm_LKF,1)-2,size(x_pos_imm_LKF,2));
+imm_lkf_pre_traj(1,:,:) = x_pos_imm_LKF(3:end,:);
+imm_lkf_pre_traj(2,:,:) = y_pos_imm_LKF(3:end,:);
 
-% imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
-% imm_r_pos = r_state(1:2,1:sim_len);
-% imm_r_v = r_state(3,1:sim_len);
-hor = size(imm_pre_traj,2)-1;
-% hor = size(pre_traj,2)-1; % planning horizon
-%}
+load('x_pos_imm_UKF','x_pos_imm_UKF')
+load('y_pos_imm_UKF','y_pos_imm_UKF')
+
+imm_ukf_pre_traj = zeros(2,size(x_pos_imm_UKF,1)-2,size(x_pos_imm_UKF,2));
+imm_ukf_pre_traj(1,:,:) = x_pos_imm_UKF(3:end,:);
+imm_ukf_pre_traj(2,:,:) = y_pos_imm_UKF(3:end,:);
+
+hor = size(imm_lkf_pre_traj,2);
 
 % compare the prediction
-%{
-pred_err = zeros(2,sim_len-1); % prediction error. 1st row for imm and 2nd row for extpol
-for ii = 1:sim_len-1
+%
+pred_err = zeros(4,sim_len-1); % prediction error. 1st row: lfk; 2nd: ukf; 3rd: imm_lkf; 4th: imm_ukf
+for ii = 1:sim_len-2
     if ii+hor <= sim_len-1
-        dif_vec1 = imm_pre_traj(:,:,ii)-h_traj(:,ii:ii+hor);
-        dif_vec2 = sgm_pre_traj(:,:,ii)-h_traj(:,ii:ii+hor);
-        pred_err(1,ii) = sum(sqrt(sum(dif_vec1.^2,1)))/(hor+1);
-        pred_err(2,ii) = sum(sqrt(sum(dif_vec2.^2,1)))/(hor+1);
-%         pred_err(1,ii) = sum(sum(abs(dif_vec1),1))/(hor+1);
-%         pred_err(2,ii) = sum(sum(abs(dif_vec2),1))/(hor+1);
+        dif_vec1 = lkf_pre_traj(:,:,ii)-h_traj(:,ii+1:ii+hor);
+        dif_vec2 = ukf_pre_traj(:,:,ii)-h_traj(:,ii+1:ii+hor);
+        dif_vec3 = imm_lkf_pre_traj(:,:,ii)-h_traj(:,ii+1:ii+hor);
+        dif_vec4 = imm_ukf_pre_traj(:,:,ii)-h_traj(:,ii+1:ii+hor);
+        pred_err(1,ii) = sum(sqrt(sum(dif_vec1.^2,1)))/(hor);
+        pred_err(2,ii) = sum(sqrt(sum(dif_vec2.^2,1)))/(hor);
+        pred_err(3,ii) = sum(sqrt(sum(dif_vec3.^2,1)))/(hor);
+        pred_err(4,ii) = sum(sqrt(sum(dif_vec4.^2,1)))/(hor);
     else
-        tmp_len = sim_len-ii;
-        dif_vec1 = imm_pre_traj(:,1:tmp_len,ii)-h_traj(:,ii:sim_len-1);
-        dif_vec2 = sgm_pre_traj(:,1:tmp_len,ii)-h_traj(:,ii:sim_len-1);
-        pred_err(1,ii) = sum(sqrt(sum(dif_vec1.^2,1)))/tmp_len;
-        pred_err(2,ii) = sum(sqrt(sum(dif_vec2.^2,1)))/tmp_len;
-%         pred_err(1,ii) = sum(sum(abs(dif_vec1),1))/tmp_len;
-%         pred_err(2,ii) = sum(sum(abs(dif_vec2),1))/tmp_len;
+        tmp_len = sim_len-ii-1;
+        dif_vec1 = lkf_pre_traj(:,1:tmp_len,ii)-h_traj(:,ii+1:sim_len-1);
+        dif_vec2 = ukf_pre_traj(:,1:tmp_len,ii)-h_traj(:,ii+1:sim_len-1);
+        dif_vec3 = imm_lkf_pre_traj(:,1:tmp_len,ii)-h_traj(:,ii+1:sim_len-1);
+        dif_vec4 = imm_ukf_pre_traj(:,1:tmp_len,ii)-h_traj(:,ii+1:sim_len-1);
+        pred_err(1,ii) = sum(sqrt(sum(dif_vec1.^2,1)))/(tmp_len);
+        pred_err(2,ii) = sum(sqrt(sum(dif_vec2.^2,1)))/(tmp_len);
+        pred_err(3,ii) = sum(sqrt(sum(dif_vec3.^2,1)))/(tmp_len);
+        pred_err(4,ii) = sum(sqrt(sum(dif_vec4.^2,1)))/(tmp_len);
     end
 end
 ave_pred_err = mean(pred_err,2);
+std_pred_err = (std(pred_err'))';
 max_pred_err = max(pred_err,[],2);
 h1 = figure;
 box on
 hold on
-plot((1:size(pred_err,2))*0.5,pred_err(2,:),'r--','LineWidth',2)
-plot((1:size(pred_err,2))*0.5,pred_err(1,:),'b','LineWidth',2)
-legend('single','imm')
+plot((1:size(pred_err,2))*0.5,pred_err(1,:),'m--','LineWidth',2)
+plot((1:size(pred_err,2))*0.5,pred_err(3,:),'r:','LineWidth',2)
+plot((1:size(pred_err,2))*0.5,pred_err(2,:),'c--','LineWidth',2)
+plot((1:size(pred_err,2))*0.5,pred_err(4,:),'b-.','LineWidth',2)
+legend('lkf','imm-lkf','ukf','imm-ukf')
 grid on
 title('Prediction difference')
 xlabel('time [sec]')
 ylabel('distance [m]')
 xlim([0,160])
 saveas(h1,'imm_vs_single','fig')
-fig2Pdf('imm_vs_single',300,h1)
+% fig2Pdf('imm_vs_single',300,h1)
+saveTightFigure(h1,'imm_vs_single')
 %}
 %% mpc vs reactive
-
+%{
 % compare the motion planning
 % load data
 %
@@ -94,13 +110,13 @@ safe_dist = 2; % safe_dist for imm
 h_v = 1.5;
 
 % mpc
-load('sim_traj_IMM_MPC_2_2_1p5_23-Apr-2015_211212','pre_traj','r_state','plan_state');
+load('sim_traj_IMM_MPC_2_2_1p5_25-Apr-2015_224736','pre_traj','r_state','plan_state');
 mpc_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 mpc_r_plan_pos = plan_state(1:2,:,:);
 mpc_r_pos = r_state(1:2,1:sim_len);
 mpc_r_v = r_state(4,1:sim_len);
 % greedy
-load('sim_traj_IMM_greedy1_2_2_1p5_23-Apr-2015_225328','r_state','plan_state');
+load('sim_traj_IMM_greedy1_2_2_1p5_25-Apr-2015_215112','r_state','plan_state');
 grd_pre_traj = pre_traj(:,:,1:sim_len);
 grd_r_plan_pos = plan_state(1:2,:,:);
 grd_r_pos = r_state(1:2,1:sim_len);
@@ -132,7 +148,7 @@ max_pos_dif = max(abs(pos_dif),[],2);
 h2 = figure;
 hold on
 box on
-plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r--','LineWidth',2)
+plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2)
 plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',2)
 legend('reactive','mpc')
 grid on
@@ -140,9 +156,10 @@ title('Distance difference')
 xlabel('time [sec]')
 ylabel('distance [m]')
 xlim([0,160])
-saveas(h2,'mpc_vs_single_dis_diff','fig')
-fig2Pdf('mpc_vs_single_dis_diff',300,h2)
+saveas(h2,'mpc_vs_reac_dis_diff','fig')
+fig2Pdf('mpc_vs_reac_dis_diff',300,h2)
 
+%{
 h3 = figure;
 hold on
 box on
@@ -154,7 +171,8 @@ title('Distance difference between estimated human positions and robot positions
 xlabel('time [sec]')
 ylabel('distance [m]')
 xlim([0,160])
-saveas(h3,'mpc_vs_single_dis_diff','fig')
+saveas(h3,'mpc_vs_reac_dis_diff','fig')
+%}
 
 v_dif(1,:) = mpc_r_v(1:end-1)-h_v;
 v_dif(2,:) = grd_r_v(1:end-1)-h_v;
@@ -163,7 +181,7 @@ max_v_dif = max(abs(v_dif),[],2);
 h4 = figure;
 hold on
 box on
-plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r--','LineWidth',2)
+plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r','LineWidth',2)
 plot((1:size(v_dif,2))*0.5,v_dif(1,:),'b','LineWidth',2)
 legend('reactive','mpc')
 grid on
@@ -171,8 +189,9 @@ title('Velocity difference')
 xlabel('time[sec]')
 ylabel('speed [m/s]')
 xlim([0,160])
-saveas(h4,'mpc_vs_single_vel','fig')
-fig2Pdf('mpc_vs_single_vel',300,h4)
+saveas(h4,'mpc_vs_reac_vel_diff','fig')
+fig2Pdf('mpc_vs_reac_vel_diff',300,h4)
  
 % save('sim_res.mat','ave_pred_err','max_pred_err',...
 %     'ave_pos_dif','max_pos_dif','ave_v_dif','max_v_dif');
+%}
