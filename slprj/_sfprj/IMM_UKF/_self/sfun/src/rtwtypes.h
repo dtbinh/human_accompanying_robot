@@ -9,15 +9,12 @@ typedef void * pointer_T;
 
 #endif
 
-/* Logical type definitions */
-#if (!defined(__cplusplus))
-#  ifndef false
-#   define false                       (0U)
-#  endif
+#ifndef TRUE
+# define TRUE                          (1U)
+#endif
 
-#  ifndef true
-#   define true                        (1U)
-#  endif
+#ifndef FALSE
+# define FALSE                         (0U)
 #endif
 
 #ifndef INT64_T

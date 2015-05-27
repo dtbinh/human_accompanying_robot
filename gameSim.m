@@ -16,13 +16,13 @@ set(0,'DefaultFigureWindowStyle','docked');
 %%% define agents %%%
 % Human agent 1
 h = agent('human');
-h.currentPos = [30;10;0]*scale;%[290;30;0]; % [x y heading]
+h.currentPos = [5;10/3;0]; %[10;10/3;0] [x y heading]
 % h.maxV = 1.5;
 h.currentV = 1.5;
 
 % Robot agent 1
 r = agent('robot');
-r.currentPos = [20;10;0]*scale;%[310;30;0]; %[23.5;0.5;0];
+r.currentPos = [5/3;10/3;0];%[20/3;10/3;0]; 
 r.currentV = 1;
 r.a_lb = -3; 
 r.a_ub = 1;
@@ -30,36 +30,60 @@ r.w_lb = -pi/6;
 r.w_ub = pi/6;
 
 %%% Set field %%%
-xLength = 300*scale; 
-yLength = 300*scale; 
+x_dis = 16; % displacement on x direction. x_dis>0 means the original of x moves right
+y_dis = 18; % displacement on y direction. x_dis>0 means the top of y moves downward (e.g., y_dis = 10 means, if the yLength = 100, the maximum y coordiante is 90)
+xLength = 100 - x_dis;
+yLength = 100 - y_dis; 
 xMin = 0;
 yMin = 0;
 
 %%% set way points
-tar_pos = [90,230,210,250,20;60,30,130,230,260]*scale; % target positions
+tar_pos = [30-x_dis,230/3-x_dis,70-x_dis,250/3-x_dis,44-x_dis,44-x_dis;20,10,130/3,230/3,70,35]; % target positions
 step_size = 1;
-% manually pick the way pts for simulated human
-inPara_gwp = struct('tar_pos',tar_pos,'scale',scale,'type','h');
+% manually pick the way pts for simulated human. change wap points directly 
+% in getWayPts.m
+inPara_gwp = struct('tar_pos',tar_pos,'scale',scale,'x_dis',x_dis,'type','h');
 h_way_pts = getWayPts(inPara_gwp);
+
 % apply different human speed between different way points.
 % h_v = [2,3,1,1,1,1,1,1,1,1,3,1.5,2,3,2,1.5,4];
 % apply different acceleration for human speed
 % h_acl = -h.maxA+2*h.maxA*rand(1,300);
 %%%
 
-% define vertices of obstacles. Here use round obstacles
-c_set = [100,65,0,220*scale;33,100,65,40*scale];
-r_set = [20,20,20,10*scale];
-theta_set = {{pi/2:pi/8:3*pi/2;pi:pi/8:2*pi;-pi/2:pi/8:pi/2;0:pi/8:2*pi}};
-inPara_gwp = struct('c_set',c_set,'r_set',r_set,'theta_set',theta_set,'type','obs');
+% define vertices of obstacles. Here use round and rectangular obstacles
+% circle
+c_set = [220/3-x_dis;40/3]; % coordinate of circle center
+r_set = 10/3; % radius of circle
+theta_set = {0:pi/8:2*pi};
+% rectangle
+rec_vert = {[0,36-x_dis;50,55];[44-x_dis,58-x_dis;25,30];[52-x_dis,68-x_dis;50,55];[68-x_dis,100-x_dis;30,34];[84-x_dis,100-x_dis;55,60]}; % vertices of rectangles.[low-left,upper-right]
+inPara_gwp = struct('c_set',c_set,'r_set',r_set,'theta_set',{theta_set},...
+    'rec_vert',{rec_vert},'type','obs');
 obs_pos = getWayPts(inPara_gwp);
+
+% moving obstacles
+obs1.pos = [42;32];
+obs1.v = 1;
+obs1.s_time = 123;
+obs1.dur = 30;
+obs1.traj = obs1.pos;
+obs2.pos = [53;82];
+obs2.v = 1;
+obs2.s_time = 195;
+obs2.dur = 30;
+obs2.traj = obs2.pos;
 
 campus = field([xMin xMin+xLength/step_size yMin yMin+yLength/step_size],tar_pos);
 campus.agentNum = 2;
-campus.obs_info = [c_set;r_set]; % gives the center and radius of each obstacle
+% need to change this part and use ellipsoids to represent rectangle
+% obstacles
+ell_set = ellipseBound(rec_vert); %set of ellipses: [c;a;b]: c is the center of ellipsoid, a and b are the half length of long and short axis
+campus.obs_info = {[c_set;r_set];ell_set}; % gives the center and radius of each round obstacle and vertices of rectangular obstacles
+
 %% Simulation
 % simulation parameters
-kf = 400; % simulation length (/s)
+kf = 350; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon 
 pre_type = 'IMM';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion
@@ -71,6 +95,8 @@ mpc_dt = 0.5; % sampling time for model discretization used in MPC
 
 % initialize variables
 obv_traj = zeros(3,0); % observed human trajectory; first row denotes the time [t,x,y]
+obs1_obv_traj = zeros(3,0); % observed human trajectory; first row denotes the time [t,x,y]
+obs2_obv_traj = zeros(3,0); % observed human trajectory; first row denotes the time [t,x,y]
 est_state = zeros(4,mpc_dt*samp_rate,kf); % estimated human states for every second [x,vx,y,vy];
 pre_traj = zeros(2,hor+1,kf); % current and predicted future human trajectory [x,y]
 plan_state = zeros(4,hor+1,kf); % robot's current and planned future state [x,y,v]
@@ -156,11 +182,53 @@ for k = 1:kf
     r_state = outPara_ams.r_state;
     r_input = outPara_ams.r_input;
     %}
+    
+    %% obstacle moves
+    % 1st obs moves horizontally
+    if (k < obs1.s_time)
+        cur_pos = obs1.pos;
+        next_pos = obs1.pos;
+    elseif (k >= obs1.s_time) && (k<= obs1.s_time+obs1.dur-1)
+        cur_pos = obs1.pos;
+        obs1.pos = obs1.pos+[0;obs1.v]*mpc_dt;
+        next_pos = obs1.pos;
+    else
+        cur_pos = obs1.pos;
+        next_pos = obs1.pos;
+    end
+    obs1.traj = [obs1.traj,obs1.pos];
+    
+    for ii = 1:samp_num
+        % observed obs1 position
+        tmp_t = (k-1)*mpc_dt+(ii-1)/samp_rate;
+        obs1_obv_traj = [obs1_obv_traj,[tmp_t;cur_pos+(next_pos-cur_pos)*(ii-1)/samp_num]];
+    end
+    %}
+    
+    % 2nd obs moves vertically (along -y direction)
+    if (k < obs2.s_time)
+        cur_pos = obs2.pos;
+        next_pos = obs2.pos;
+    elseif (k >= obs2.s_time) && (k<= obs2.s_time+obs2.dur-1)
+        cur_pos = obs2.pos;
+        obs2.pos = obs2.pos-[0;obs2.v]*mpc_dt;
+        next_pos = obs2.pos;
+    else
+        cur_pos = obs2.pos;
+        next_pos = obs2.pos;
+    end
+    obs2.traj = [obs2.traj,obs2.pos];
+    
+    for ii = 1:samp_num
+        % observed obs2 position
+        tmp_t = (k-1)*mpc_dt+(ii-1)/samp_rate;
+        obs2_obv_traj = [obs2_obv_traj,[tmp_t;cur_pos+(next_pos-cur_pos)*(ii-1)/samp_num]];
+    end
     %% plot trajectories
     % Plot future agent positions
     
     % plot specifications
-    color_agent = {'r','g','r','g'};
+    color_agent = {'r','g','k','b','m','b'};
     marker_agent = {'o','^','*','d'};
     line_agent = {'-','-','-','-'};
     line_wid = {2,2,2,2};
@@ -211,6 +279,8 @@ for k = 1:kf
     set(h3,'Marker',marker_agent{3});
     set(h3,'linewidth',line_wid{3});
     hold on
+    % I don't know why I need to repeat this snippet here.
+    %{ 
     c_set = [pre_traj(1,2:end,k);pre_traj(2,2:end,k)];
     r_set = [safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2];
     theta_set1 = {{0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi}};
@@ -220,6 +290,7 @@ for k = 1:kf
         tmp_pos = circle_pos{jj};
         plot(tmp_pos(1,:),tmp_pos(2,:));%,color_agent{3});
     end
+    %}
     
     % planned robot trajectory
     h4 = plot(plan_state(1,:,k),plan_state(2,:,k),color_agent{4},'markers',2);
@@ -229,6 +300,8 @@ for k = 1:kf
     set(h4,'LineStyle',line_agent{4});
     set(h4,'Marker',marker_agent{4});
     set(h1,'linewidth',line_wid{4});
+    % I don't know why I need to repeat this snippet here.
+    %{
     c_set = [plan_state(1,2:end,k);plan_state(2,2:end,k)];
     r_set = [safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2];
     theta_set1 = {{0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi}};
@@ -238,7 +311,19 @@ for k = 1:kf
         tmp_pos = circle_pos{jj};
         plot(tmp_pos(1,:),tmp_pos(2,:));%,color_agent{3});
     end
-       
+    %}
+    
+    % moving obstacles' trajectory
+    %
+    if k >= obs1.s_time
+        h5 = plot(obs1.traj(1,:),obs1.traj(2,:),color_agent{5},'markers',2);
+    end
+    %}
+    if k >= obs2.s_time
+        h6 = plot(obs2.traj(1,:),obs2.traj(2,:),color_agent{6},'markers',2);
+    end    
+    
+    % refine plot
     grid minor
     set(gca,'MinorGridLineStyle','-','XColor',[0.5 0.5 0.5],'YColor',[0.5 0.5 0.5])
     axis equal
@@ -254,7 +339,7 @@ end
 
 % pre_traj = pos_pre_imm;
 %% save simulation result
-%
+%{
 % save data
 % if the data is a decimal, replace the '.' with 'p'
 str_safe_dis = strrep(num2str(safe_dis),'.','p');
@@ -267,6 +352,17 @@ data_name = sprintf('sim_traj_%s_%s_%s_%s_%s_%s.mat',...
     pre_type,plan_type,str_safe_dis,str_safe_marg,str_h_v,str_t);
 file_name = fullfile (folder_path,data_name);
 save(file_name,'obv_traj','est_state','pre_traj','plan_state','r_state','r_input');
+
+% save obstacle trajectories
+data_name = sprintf('sim_obs1_traj_%s_%s_%s_%s_%s_%s.mat',...
+    pre_type,plan_type,str_safe_dis,str_safe_marg,str_h_v,str_t);
+file_name = fullfile (folder_path,data_name);
+save(file_name,'obs1_obv_traj');
+
+data_name = sprintf('sim_obs2_traj_%s_%s_%s_%s_%s_%s.mat',...
+    pre_type,plan_type,str_safe_dis,str_safe_marg,str_h_v,str_t);
+file_name = fullfile (folder_path,data_name);
+save(file_name,'obs2_obv_traj');
 
 % save plot
 folder_path = ('./sim_res');

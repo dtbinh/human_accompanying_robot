@@ -84,6 +84,7 @@ plan_type = inPara.plan_type;
         
         %%  predict human future path
         % prediction by IMM
+        %
         if strcmp(pre_type,'IMM')
             pre_traj(:,:,k) = [[x_est((k-1)*samp_num+1,1);y_est((k-1)*samp_num+1,1)],[x_pos_pre(k,:);y_pos_pre(k,:)]];
 %             pre_traj(:,:,k) = [x_pos_pre_imm(:,k)';y_pos_pre_imm(:,k)'];
@@ -96,15 +97,22 @@ plan_type = inPara.plan_type;
             pre_traj(:,:,k) = predictHumanTraj(agent,inPara_phj);
         end     
 %         pos_pre_imm = inPara.pos_pre_imm;
+        %}
         %% robot path planning
         %
         if strcmp(plan_type,'MPC')
-            inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
-                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',[x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],...
-                'obs_info',campus.obs_info,'safe_marg',safe_marg);
-%             inPara_pp = struct('pre_traj',pos_pre_imm(:,:,k),'hor',hor,...
+            
+            %%% a possible bug: h_v here is a vector while in
+            %%% pathPlanner.m, it is treated as a scalar.
+%             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
 %                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',[x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],...
 %                 'obs_info',campus.obs_info,'safe_marg',safe_marg);
+
+            % assume accurate estimation and prediction
+            load('human_traj.mat','human_traj');
+            inPara_pp = struct('pre_traj',human_traj(1:2,k:k+hor),'hor',hor,...
+                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',1.5,...
+                'obs_info',{campus.obs_info},'safe_marg',safe_marg);
             outPara_pp = pathPlanner(agent,inPara_pp);
             opt_x = outPara_pp.opt_x;
             opt_u = outPara_pp.opt_u;
@@ -114,9 +122,16 @@ plan_type = inPara.plan_type;
             r_input(:,k) = opt_u(:,1);
             plan_state(:,:,k) = opt_x;
         elseif strcmp(plan_type,'greedy1') || strcmp(plan_type,'greedy0')
-            inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
-                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',...
-                [x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],'obs_info',campus.obs_info,...
+%             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
+%                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',...
+%                 [x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],'obs_info',campus.obs_info,...
+%                 'safe_marg',safe_marg,'plan_type',plan_type);
+
+            % assume accurate estimation and prediction
+            load('human_traj.mat','human_traj');
+            inPara_pp = struct('pre_traj',human_traj(1:2,k:k+hor),'hor',hor,...
+                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',1.5,...
+                'obs_info',{campus.obs_info},...
                 'safe_marg',safe_marg,'plan_type',plan_type);
             outPara_pp = pathPlannerGreedy(agent,inPara_pp);
             opt_x = outPara_pp.opt_x;
