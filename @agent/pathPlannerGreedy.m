@@ -165,10 +165,10 @@ end
 %}
 % a better speed change strategy
 %
-if (rh_dis_next >= 1.2*safe_dis) && (rh_dis_next < 3*safe_dis)
+if (rh_dis_next >= 1.2*safe_dis) && (rh_dis_next < 2.5*safe_dis)
     r_v_next = max_v;
 elseif ((rh_dis_next >= 0.8*safe_dis) && (rh_dis_next < 1.2*safe_dis))||...
-        (rh_dis_next >= 3*safe_dis)
+        (rh_dis_next >= 2.5*safe_dis)
     if norm(h_v,2) >= max_v
         r_v_next = max_v;
     elseif norm(h_v,2) <= min_v

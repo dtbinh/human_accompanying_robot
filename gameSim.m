@@ -26,8 +26,8 @@ r.currentPos = [5/3;10/3;0];%[20/3;10/3;0];
 r.currentV = 1;
 r.a_lb = -3; 
 r.a_ub = 1;
-r.w_lb = -pi/6;
-r.w_ub = pi/6;
+r.w_lb = -pi/2;
+r.w_ub = pi/2;
 
 %%% Set field %%%
 x_dis = 16; % displacement on x direction. x_dis>0 means the original of x moves right
@@ -87,11 +87,12 @@ kf = 350; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon 
 pre_type = 'IMM';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion
-plan_type = 'greedy1'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
+plan_type = 'MPC'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
 samp_rate = 20; % sampling rate (/Hz)
-safe_dis = 2; %safe distance between human and robot
-safe_marg = 2; % safety margin between human the the obstacle
+safe_dis = 1; %safe distance between human and robot
+safe_marg = 1; % safety margin between human the the obstacle
 mpc_dt = 0.5; % sampling time for model discretization used in MPC
+cmft_dis = 2; % comfortable distance
 
 % initialize variables
 obv_traj = zeros(3,0); % observed human trajectory; first row denotes the time [t,x,y]
@@ -104,6 +105,8 @@ r_state = [[r.currentPos;r.currentV],zeros(4,kf-1)]; % robot's actual state [x,y
 r_input = zeros(2,kf); % robot's actual control input [w,a]
 wp_cnt = 1; % the waypoint that the human is heading for
 h_tar_wp = h_way_pts(:,wp_cnt); % the way point that the human is heading for
+guess_x = []; % guess of the initial solution of the MPC
+guess_u = []; % guess of the initial solution of the MPC
 
 % the following snippet seems not in use, but only for purpose of the input
 % of agentMove for robot
@@ -155,7 +158,7 @@ for k = 1:kf
         'pre_traj',pre_traj,'plan_state',plan_state,'r_state',r_state,'r_input',r_input,...
         'k',k,'hor',hor,'pre_type',pre_type,'samp_rate',samp_rate,...
         'safe_dis',safe_dis,'mpc_dt',mpc_dt,'safe_marg',safe_marg,...
-        'agentIndex',agentIndex,'plan_type',plan_type);
+        'agentIndex',agentIndex,'plan_type',plan_type,'cmft_dis',cmft_dis);
     [outPara_ams] = agentMove(inPara_ams);
     agents = outPara_ams.agents;
     obv_traj = outPara_ams.obv_traj;
@@ -166,14 +169,16 @@ for k = 1:kf
     agentIndex = 2;
 %     load('obv_traj3_w_time.mat')% Load Tracjectory of Human
     obv_traj1=obv_traj';
-    parameter_IMM_UKF;  % parameter for IMM
+%     parameter_IMM_UKF;  % parameter for IMM
+    parameter_UKF % parameter for IMM
     inPara_ams = struct('campus',campus,'agents',agents,'h_tar_wp',h_tar_wp,...
         'obv_traj',obv_traj1','est_state',est_state,...
         'pre_traj',pre_traj,'plan_state',plan_state,'r_state',r_state,'r_input',r_input,...
         'k',k,'hor',hor,'pre_type',pre_type,'samp_rate',samp_rate,...
         'safe_dis',safe_dis,'mpc_dt',mpc_dt,'safe_marg',safe_marg,...
         'agentIndex',agentIndex,'plan_type',plan_type,'samp_num',samp_num,...
-        'pos_pre_imm',pos_pre_imm);
+        'pos_pre_imm',pos_pre_imm,'guess_u',guess_u,'guess_x',guess_x,...
+        'cmft_dis',cmft_dis);
     [outPara_ams] = agentMove(inPara_ams);
     agents = outPara_ams.agents;
     est_state = outPara_ams.est_state;
@@ -181,6 +186,8 @@ for k = 1:kf
     plan_state = outPara_ams.plan_state; 
     r_state = outPara_ams.r_state;
     r_input = outPara_ams.r_input;
+    guess_x = outPara_ams.guess_x;
+    guess_u = outPara_ams.guess_u;
     %}
     
     %% obstacle moves
@@ -339,7 +346,8 @@ end
 
 % pre_traj = pos_pre_imm;
 %% save simulation result
-%{
+% The following data should be further processed using processData.m
+%
 % save data
 % if the data is a decimal, replace the '.' with 'p'
 str_safe_dis = strrep(num2str(safe_dis),'.','p');
@@ -354,6 +362,7 @@ file_name = fullfile (folder_path,data_name);
 save(file_name,'obv_traj','est_state','pre_traj','plan_state','r_state','r_input');
 
 % save obstacle trajectories
+%{
 data_name = sprintf('sim_obs1_traj_%s_%s_%s_%s_%s_%s.mat',...
     pre_type,plan_type,str_safe_dis,str_safe_marg,str_h_v,str_t);
 file_name = fullfile (folder_path,data_name);
@@ -363,6 +372,7 @@ data_name = sprintf('sim_obs2_traj_%s_%s_%s_%s_%s_%s.mat',...
     pre_type,plan_type,str_safe_dis,str_safe_marg,str_h_v,str_t);
 file_name = fullfile (folder_path,data_name);
 save(file_name,'obs2_obv_traj');
+%}
 
 % save plot
 folder_path = ('./sim_res');

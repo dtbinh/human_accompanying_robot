@@ -1,7 +1,7 @@
 % process simulation result
 %% imm vs single-model
 % load data
-%
+%{
 clear
 addpath('./sim_res');
 load('h_state_1p5.mat');
@@ -98,44 +98,54 @@ saveas(h1,'imm_vs_single','fig')
 saveTightFigure(h1,'imm_vs_single')
 %}
 %% mpc vs reactive
-%{
+%
 % compare the motion planning
 % load data
 %
+str_t = datestr(clock,'dd-mmm-yyyy_HHMMSS');
 addpath('./sim_res');
-load('h_state_1p5.mat');
-sim_len = size(h_state,2); % simulation time
-h_traj = h_state(1:2,:); % h_state contains [x;y;heading]
-safe_dist = 2; % safe_dist for imm
+load('human_traj.mat'); %h_state_1p5
+sim_len = size(human_traj,2); % simulation time
+h_traj = human_traj(1:2,:); % h_state contains [x;y;heading]
+safe_dist = 1; % safe_dist for imm
 h_v = 1.5;
 
 % mpc
-load('sim_traj_IMM_MPC_2_2_1p5_25-Apr-2015_224736','pre_traj','r_state','plan_state');
+load('sim_traj_IMM_MPC_1_1_1p5_03-Jun-2015_130001','pre_traj','r_state','plan_state');
 mpc_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 mpc_r_plan_pos = plan_state(1:2,:,:);
 mpc_r_pos = r_state(1:2,1:sim_len);
 mpc_r_v = r_state(4,1:sim_len);
 % greedy
+%{
 load('sim_traj_IMM_greedy1_2_2_1p5_25-Apr-2015_215112','r_state','plan_state');
 grd_pre_traj = pre_traj(:,:,1:sim_len);
 grd_r_plan_pos = plan_state(1:2,:,:);
 grd_r_pos = r_state(1:2,1:sim_len);
 grd_r_v = r_state(4,1:sim_len);
+%}
 
+ % position difference between human and robot. 
+ % Four elements: 
+ % 1. diff between actual positions of h and r for mpc
+ % 2. diff between actual positions of h and r for greedy
+ % 3. diff between predicted positions of h and actual positions of r for mpc
+ % 4. diff between predicted positions of h and actual positions of r for mpc
 pos_dif = zeros(4,sim_len-1);
+% velocity difference
 v_dif = zeros(2,sim_len-1);
-mpc_plan_pos_dif = zeros(6,sim_len-1); % difference between human estimated positon and robot planned position
-grd_plan_pos_dif = zeros(6,sim_len-1); % difference between human estimated positon and robot planned position
+mpc_plan_pos_dif = zeros(6,sim_len-1); % difference between human estimated positon and robot planned positions in the prediction horizon
+% grd_plan_pos_dif = zeros(6,sim_len-1); % difference between human estimated positon and robot planned positions in the prediction horizon
 
 for ii = 1:sim_len-2
     dif_vec1 = mpc_r_pos(:,ii)-h_traj(:,ii);
-    dif_vec2 = grd_r_pos(:,ii)-h_traj(:,ii);
+%     dif_vec2 = grd_r_pos(:,ii)-h_traj(:,ii);
     pos_dif(1,ii) = norm(dif_vec1,2)-safe_dist;
-    pos_dif(2,ii) = norm(dif_vec2,2)-safe_dist;
+%     pos_dif(2,ii) = norm(dif_vec2,2)-safe_dist;
     dif_vec3 = mpc_r_pos(:,ii)-mpc_pre_traj(:,1,ii);
-    dif_vec4 = grd_r_pos(:,ii)-grd_pre_traj(:,1,ii);
+%     dif_vec4 = grd_r_pos(:,ii)-grd_pre_traj(:,1,ii);
     pos_dif(3,ii) = norm(dif_vec3,2)-safe_dist;
-    pos_dif(4,ii) = norm(dif_vec4,2)-safe_dist;
+%     pos_dif(4,ii) = norm(dif_vec4,2)-safe_dist;
     dif_vec5 = mpc_r_plan_pos(:,:,ii)-mpc_pre_traj(:,:,ii);
 %     dif_vec6 = grd_r_plan_pos(:,2:end,ii)-grd_pre_traj(:,2:end,ii);
     mpc_plan_pos_dif(:,ii) = sqrt((sum(dif_vec5.*dif_vec5,1))');
@@ -148,16 +158,19 @@ max_pos_dif = max(abs(pos_dif),[],2);
 h2 = figure;
 hold on
 box on
-plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2)
+% plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2)
 plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',2)
-legend('reactive','mpc')
+% legend('reactive','mpc')
 grid on
 title('Distance difference')
 xlabel('time [sec]')
 ylabel('distance [m]')
 xlim([0,160])
-saveas(h2,'mpc_vs_reac_dis_diff','fig')
-fig2Pdf('mpc_vs_reac_dis_diff',300,h2)
+% saveas(h2,'mpc_vs_reac_dis_diff','fig')
+% fig2Pdf('mpc_vs_reac_dis_diff',300,h2)
+saveas(h2,sprintf('sim_res/mpc_dis_diff_%s',str_t),'fig')
+fig2Pdf(sprintf('sim_res/mpc_dis_diff_%s',str_t),300,h2)
+
 
 %{
 h3 = figure;
@@ -175,22 +188,24 @@ saveas(h3,'mpc_vs_reac_dis_diff','fig')
 %}
 
 v_dif(1,:) = mpc_r_v(1:end-1)-h_v;
-v_dif(2,:) = grd_r_v(1:end-1)-h_v;
+% v_dif(2,:) = grd_r_v(1:end-1)-h_v;
 ave_v_dif = mean(v_dif,2);
 max_v_dif = max(abs(v_dif),[],2);
 h4 = figure;
 hold on
 box on
-plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r','LineWidth',2)
+% plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r','LineWidth',2)
 plot((1:size(v_dif,2))*0.5,v_dif(1,:),'b','LineWidth',2)
-legend('reactive','mpc')
+% legend('reactive','mpc')
 grid on
 title('Velocity difference')
 xlabel('time[sec]')
 ylabel('speed [m/s]')
 xlim([0,160])
-saveas(h4,'mpc_vs_reac_vel_diff','fig')
-fig2Pdf('mpc_vs_reac_vel_diff',300,h4)
+% saveas(h4,'mpc_vs_reac_vel_diff','fig')
+% fig2Pdf('mpc_vs_reac_vel_diff',300,h4)
+saveas(h4,sprintf('sim_res/mpc_vel_diff_%s',str_t),'fig')
+fig2Pdf(sprintf('sim_res/mpc_vel_diff_%s',str_t),300,h4)
  
 % save('sim_res.mat','ave_pred_err','max_pred_err',...
 %     'ave_pos_dif','max_pos_dif','ave_v_dif','max_v_dif');

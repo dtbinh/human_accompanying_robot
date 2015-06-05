@@ -22,7 +22,7 @@ mpc_dt = inPara.mpc_dt;
 safe_marg = inPara.safe_marg;
 agentIndex = inPara.agentIndex;
 plan_type = inPara.plan_type;
-
+cmft_dis = inPara.cmft_dis;
 %% agents move 
 % for agentIndex = 1:length(agents)
     agent = agents(agentIndex);
@@ -66,12 +66,16 @@ plan_type = inPara.plan_type;
         
     %% robot predicts and moves
     elseif strcmp(agent.type,'robot')  
+        guess_u = inPara.guess_u;
+        guess_x = inPara.guess_x;
+        
         samp_num = inPara.samp_num;
         h = agents(1);
         cur_hd = h.currentPos(3);
         %% estimate human position
         %
-        [x_est,y_est,x_pos_pre,y_pos_pre] = IMM_UKF_run();
+%         [x_est,y_est,x_pos_pre,y_pos_pre] = IMM_UKF_run();
+        [x_est,y_est,x_pos_pre,y_pos_pre] = UKF_run();
         est_state([1,2],:,k) = x_est((k-1)*samp_num+1:end-1,:)';
         est_state([3,4],:,k) = y_est((k-1)*samp_num+1:end-1,:)';
         %}
@@ -100,19 +104,23 @@ plan_type = inPara.plan_type;
         %}
         %% robot path planning
         %
-        if strcmp(plan_type,'MPC')
-            
+        if strcmp(plan_type,'MPC')           
             %%% a possible bug: h_v here is a vector while in
             %%% pathPlanner.m, it is treated as a scalar.
-%             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
-%                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',[x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],...
-%                 'obs_info',campus.obs_info,'safe_marg',safe_marg);
+            inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
+                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',...
+                [x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],...
+                'obs_info',campus.obs_info,'safe_marg',safe_marg,...
+                'guess_u',guess_u,'guess_x',guess_x,'cmft_dis',cmft_dis);
 
             % assume accurate estimation and prediction
+            %{
             load('human_traj.mat','human_traj');
             inPara_pp = struct('pre_traj',human_traj(1:2,k:k+hor),'hor',hor,...
                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',1.5,...
-                'obs_info',{campus.obs_info},'safe_marg',safe_marg);
+                'obs_info',{campus.obs_info},'safe_marg',safe_marg,...
+                'guess_u',guess_u,'guess_x',guess_x);
+            %}
             outPara_pp = pathPlanner(agent,inPara_pp);
             opt_x = outPara_pp.opt_x;
             opt_u = outPara_pp.opt_u;
@@ -121,6 +129,9 @@ plan_type = inPara.plan_type;
             r_state(:,k+1) = opt_x(:,2);
             r_input(:,k) = opt_u(:,1);
             plan_state(:,:,k) = opt_x;
+            
+            guess_u = [opt_u(:,2:end),zeros(size(opt_u,1),1)];
+            guess_x = [opt_x(:,2:end),opt_x(:,end)];
         elseif strcmp(plan_type,'greedy1') || strcmp(plan_type,'greedy0')
 %             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
 %                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',...
@@ -163,6 +174,12 @@ plan_type = inPara.plan_type;
 outPara = struct('agents',agents,'obv_traj',obv_traj,'est_state',est_state,...
     'pre_traj',pre_traj,'plan_state',plan_state,'r_state',r_state,'r_input',r_input,...
     'samp_num',samp_num);
+if exist('guess_u', 'var')
+    outPara.guess_u = guess_u;
+end  
+if exist('guess_x', 'var')
+    outPara.guess_x = guess_x;
+end 
 end
 
 function next_act = getNextActionWithFixedHeading(a_pos,t_pos,v,deg_dev,mpc_dt)
