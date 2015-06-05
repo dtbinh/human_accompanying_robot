@@ -274,14 +274,14 @@ hold on
 box on
 plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',2)
 plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2)
-legend('imm-ukf','ukf')
+legend('reactiv','ukf')
 grid on
 title('Distance difference')
 xlabel('time [sec]')
 ylabel('distance [m]')
 xlim([0,160])
-saveas(h2,sprintf('sim_res/imm_vs_ukf_dis_diff_%s',str_t),'fig')
-fig2Pdf(sprintf('sim_res/imm_vs_ukf_dis_diff_%s',str_t),300,h2)
+saveas(h2,sprintf('imm_vs_ukf_dis_diff_%s',str_t),'fig')
+fig2Pdf(sprintf('imm_vs_ukf_dis_diff_%s',str_t),300,h2)
 % saveas(h2,sprintf('sim_res/ukf_mpc_dis_diff_%s',str_t),'fig')
 % fig2Pdf(sprintf('sim_res/ukf_mpc_dis_diff_%s',str_t),300,h2)
 
@@ -310,14 +310,14 @@ hold on
 box on
 plot((1:size(v_dif,2))*0.5,v_dif(1,:),'b','LineWidth',2)
 plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r','LineWidth',2)
-legend('imm-ukf','ukf')
+% legend('reactive','mpc')
 grid on
 title('Velocity difference')
 xlabel('time[sec]')
 ylabel('speed [m/s]')
 xlim([0,160])
-saveas(h4,sprintf('sim_res/imm_vs_ukf_vel_diff_%s',str_t),'fig')
-fig2Pdf(sprintf('sim_res/imm_vs_ukf_vel_diff_%s',str_t),300,h4)
+saveas(h4,sprintf('imm_vs_ukf_vel_diff_%s',str_t),'fig')
+fig2Pdf(sprintf('imm_vs_ukf_vel_diff_%s',str_t),300,h4)
 % saveas(h4,sprintf('sim_res/ukf_mpc_vel_diff_%s',str_t),'fig')
 % fig2Pdf(sprintf('sim_res/ukf_mpc_vel_diff_%s',str_t),300,h4)
  
