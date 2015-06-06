@@ -103,7 +103,7 @@ cmft_dis = inPara.cmft_dis;
 %         pos_pre_imm = inPara.pos_pre_imm;
         %}
         %% robot path planning
-        %
+        %{
         if strcmp(plan_type,'MPC')           
             %%% a possible bug: h_v here is a vector while in
             %%% pathPlanner.m, it is treated as a scalar.

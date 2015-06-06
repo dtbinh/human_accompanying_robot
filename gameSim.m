@@ -232,62 +232,62 @@ for k = 1:kf
         obs2_obv_traj = [obs2_obv_traj,[tmp_t;cur_pos+(next_pos-cur_pos)*(ii-1)/samp_num]];
     end
     %% plot trajectories
-    % Plot future agent positions
-    
-    % plot specifications
-    color_agent = {'r','g','k','b','m','b'};
-    marker_agent = {'o','^','*','d'};
-    line_agent = {'-','-','-','-'};
-    line_wid = {2,2,2,2};
-    orange = [1 204/255 0];
-    color_target = {'m','b',orange};
-    figure;
-    hold on
-
-    % draw targets
-    for jj = 1:campus.targetNum
-        h = plot(campus.targetPos(1,jj),campus.targetPos(2,jj),'MarkerSize',15);
-        set(h,'Marker','p');
-        set(h,'linewidth',2);
-    end
-    
-    % draw obstacles
-    for jj = 1:size(obs_pos)
-        tmp_pos = obs_pos{jj};
-        fill(tmp_pos(1,:),tmp_pos(2,:),'b');
-    end
-    
-    xlim([0,campus.endpoints(2)]);
-    ylim([0,campus.endpoints(4)]);
-    
-    % draw agent trajectory
-    for ii = 1:length(agents)
-        tmp_agent = agents(ii);
-        h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',2);
-        set(h1,'MarkerFaceColor',color_agent{ii});
-        set(h1,'MarkerEdgeColor',color_agent{ii});
-        set(h1,'Color',color_agent{ii});
-        set(h1,'LineStyle',line_agent{ii});
-        set(h1,'Marker',marker_agent{ii});
-        set(h1,'linewidth',line_wid{ii});
-        h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',2);
-        set(h2,'MarkerFaceColor',color_agent{ii});
-        set(h2,'MarkerEdgeColor',color_agent{ii});
-        set(h2,'Color',color_agent{ii});
-        set(h2,'LineStyle',line_agent{ii});
-        set(h2,'Marker',marker_agent{ii});
-    end
-    % predicted human positions
-    h3 = plot(pre_traj(1,:,k),pre_traj(2,:,k),color_agent{3},'markers',2);
-    set(h3,'MarkerFaceColor',color_agent{3});
-    set(h3,'MarkerEdgeColor',color_agent{3});
-    set(h3,'Color',color_agent{3});
-    set(h3,'LineStyle',line_agent{3});
-    set(h3,'Marker',marker_agent{3});
-    set(h3,'linewidth',line_wid{3});
-    hold on
-    % I don't know why I need to repeat this snippet here.
-    %{ 
+    % draw under certain conditions
+    if (k == 1) || (k == obs1.s_time) || (k == obs2.s_time)
+        % plot specifications
+        color_agent = {'r','g','k','b','m','b'};
+        marker_agent = {'o','^','*','d'};
+        line_agent = {'-','-','-','-'};
+        line_wid = {2,2,2,2};
+        orange = [1 204/255 0];
+        color_target = {'m','b',orange};
+        figure;
+        hold on
+        
+        % draw targets
+        for jj = 1:campus.targetNum
+            h = plot(campus.targetPos(1,jj),campus.targetPos(2,jj),'MarkerSize',15);
+            set(h,'Marker','p');
+            set(h,'linewidth',2);
+        end
+        
+        % draw obstacles
+        for jj = 1:size(obs_pos)
+            tmp_pos = obs_pos{jj};
+            fill(tmp_pos(1,:),tmp_pos(2,:),'b');
+        end
+        
+        xlim([0,campus.endpoints(2)]);
+        ylim([0,campus.endpoints(4)]);
+        
+        % draw agent trajectory
+        for ii = 1:length(agents)
+            tmp_agent = agents(ii);
+            h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',2);
+            set(h1,'MarkerFaceColor',color_agent{ii});
+            set(h1,'MarkerEdgeColor',color_agent{ii});
+            set(h1,'Color',color_agent{ii});
+            set(h1,'LineStyle',line_agent{ii});
+            set(h1,'Marker',marker_agent{ii});
+            set(h1,'linewidth',line_wid{ii});
+            h2 = plot(tmp_agent.currentPos(1),tmp_agent.currentPos(2),color_agent{ii},'markers',2);
+            set(h2,'MarkerFaceColor',color_agent{ii});
+            set(h2,'MarkerEdgeColor',color_agent{ii});
+            set(h2,'Color',color_agent{ii});
+            set(h2,'LineStyle',line_agent{ii});
+            set(h2,'Marker',marker_agent{ii});
+        end
+        % predicted human positions
+        h3 = plot(pre_traj(1,:,k),pre_traj(2,:,k),color_agent{3},'markers',2);
+        set(h3,'MarkerFaceColor',color_agent{3});
+        set(h3,'MarkerEdgeColor',color_agent{3});
+        set(h3,'Color',color_agent{3});
+        set(h3,'LineStyle',line_agent{3});
+        set(h3,'Marker',marker_agent{3});
+        set(h3,'linewidth',line_wid{3});
+        hold on
+        % I don't know why I need to repeat this snippet here.
+        %{
     c_set = [pre_traj(1,2:end,k);pre_traj(2,2:end,k)];
     r_set = [safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2];
     theta_set1 = {{0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi}};
@@ -297,18 +297,18 @@ for k = 1:kf
         tmp_pos = circle_pos{jj};
         plot(tmp_pos(1,:),tmp_pos(2,:));%,color_agent{3});
     end
-    %}
-    
-    % planned robot trajectory
-    h4 = plot(plan_state(1,:,k),plan_state(2,:,k),color_agent{4},'markers',2);
-    set(h4,'MarkerFaceColor',color_agent{4});
-    set(h4,'MarkerEdgeColor',color_agent{4});
-    set(h4,'Color',color_agent{4});
-    set(h4,'LineStyle',line_agent{4});
-    set(h4,'Marker',marker_agent{4});
-    set(h1,'linewidth',line_wid{4});
-    % I don't know why I need to repeat this snippet here.
-    %{
+        %}
+        
+        % planned robot trajectory
+        h4 = plot(plan_state(1,:,k),plan_state(2,:,k),color_agent{4},'markers',2);
+        set(h4,'MarkerFaceColor',color_agent{4});
+        set(h4,'MarkerEdgeColor',color_agent{4});
+        set(h4,'Color',color_agent{4});
+        set(h4,'LineStyle',line_agent{4});
+        set(h4,'Marker',marker_agent{4});
+        set(h1,'linewidth',line_wid{4});
+        % I don't know why I need to repeat this snippet here.
+        %{
     c_set = [plan_state(1,2:end,k);plan_state(2,2:end,k)];
     r_set = [safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2;safe_dis/2];
     theta_set1 = {{0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi;0:pi/8:2*pi}};
@@ -318,28 +318,29 @@ for k = 1:kf
         tmp_pos = circle_pos{jj};
         plot(tmp_pos(1,:),tmp_pos(2,:));%,color_agent{3});
     end
-    %}
-    
-    % moving obstacles' trajectory
-    %
-    if k >= obs1.s_time
-        h5 = plot(obs1.traj(1,:),obs1.traj(2,:),color_agent{5},'markers',2);
-    end
-    %}
-    if k >= obs2.s_time
-        h6 = plot(obs2.traj(1,:),obs2.traj(2,:),color_agent{6},'markers',2);
-    end    
-    
-    % refine plot
-    grid minor
-    set(gca,'MinorGridLineStyle','-','XColor',[0.5 0.5 0.5],'YColor',[0.5 0.5 0.5])
-    axis equal
-    xlim([0,xLength]);ylim([0,yLength]);
-    
-    % close plots when there are too many plots
-    h5 = gcf;
-    if h5 > 50 
-        close all;
+        %}
+        
+        % moving obstacles' trajectory
+        %
+        if k >= obs1.s_time
+            h5 = plot(obs1.traj(1,:),obs1.traj(2,:),color_agent{5},'markers',2);
+        end
+        %}
+        if k >= obs2.s_time
+            h6 = plot(obs2.traj(1,:),obs2.traj(2,:),color_agent{6},'markers',2);
+        end
+        
+        % refine plot
+        grid minor
+        set(gca,'MinorGridLineStyle','-','XColor',[0.5 0.5 0.5],'YColor',[0.5 0.5 0.5])
+        axis equal
+        xlim([0,xLength]);ylim([0,yLength]);
+        
+        % close plots when there are too many plots
+        h5 = gcf;
+        if h5 > 50
+            close all;
+        end
     end
     %}
 end
