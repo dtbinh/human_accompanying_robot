@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  6 JUN 2015 09:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  10 JUN 2015 10:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -101,8 +101,8 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
 \c@biography=\count90
 \@IEEEtranrubishbin=\box26
 )
-** ATTENTION: Overriding command lockouts (line 11).
-** ATTENTION: Overriding IEEE standard margins (line 14).
+** ATTENTION: Overriding command lockouts (line 5).
+** ATTENTION: Overriding IEEE standard margins (line 8).
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2013/01/14 v2.14 AMS math features
 \@mathmargin=\skip47
@@ -203,7 +203,43 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen122
 \Gin@req@width=\dimen123
 )
-(/usr/local/texlive/2014/texmf-dist/tex/latex/tools/indentfirst.sty
+(/usr/local/texlive/2014/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2013/02/03 v1.1-62 Sub-captions (AR)
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 57.
+\captionmargin=\dimen124
+\captionmargin@=\dimen125
+\captionwidth=\dimen126
+\caption@tempdima=\dimen127
+\caption@indent=\dimen128
+\caption@parindent=\dimen129
+\caption@hangindent=\dimen130
+Package caption Info: Unknown document class (or package),
+(caption)             standard defaults will be used.
+)
+
+Package caption Warning: Unsupported document class (or package) detected,
+(caption)                usage of the caption package is not recommended.
+See the caption package documentation for explanation.
+
+Package caption Info: \@makecaption = \long macro:#1#2->\ifx \@captype \@IEEEta
+blestring \begin {center}{\footnotesize #1}\\{\footnotesize \scshape #2}\end {c
+enter}\@IEEEtablecaptionsepspace \else \@IEEEfigurecaptionsepspace \setbox \@te
+mpboxa \hbox {\footnotesize #1.~~ #2}\ifdim \wd \@tempboxa >\hsize \setbox \@te
+mpboxa \hbox {\footnotesize #1.~~ }\parbox [t]{\hsize }{\footnotesize \noindent
+ \unhbox \@tempboxa #2}\else \ifcenterfigcaptions \hbox to\hsize {\footnotesize
+ \hfil \box \@tempboxa \hfil }\else \hbox to\hsize {\footnotesize \box \@tempbo
+xa \hfil }\fi \fi \fi .
+\c@ContinuedFloat=\count104
+)
+\c@subfigure=\count105
+\c@subtable=\count106
+) (/usr/local/texlive/2014/texmf-dist/tex/latex/tools/indentfirst.sty
 Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
 )
 (/usr/local/texlive/2014/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
@@ -216,15 +252,15 @@ Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count104
-\c@ALG@rem=\count105
-\c@ALG@nested=\count106
+\c@ALG@line=\count107
+\c@ALG@rem=\count108
+\c@ALG@nested=\count109
 \ALG@tlm=\skip50
 \ALG@thistlm=\skip51
-\c@ALG@Lnr=\count107
-\c@ALG@blocknr=\count108
-\c@ALG@storecount=\count109
-\c@ALG@tmpcounter=\count110
+\c@ALG@Lnr=\count110
+\c@ALG@blocknr=\count111
+\c@ALG@storecount=\count112
+\c@ALG@tmpcounter=\count113
 \ALG@tmplength=\skip52
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
@@ -234,14 +270,14 @@ nment
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count111
+\c@float@type=\count114
 \float@exts=\toks21
 \float@box=\box29
 \@float@everytoks=\toks22
 \@floatcapt=\box30
 )
 \@float@every@algorithm=\toks23
-\c@algorithm=\count112
+\c@algorithm=\count115
 )
 (/usr/local/texlive/2014/texmf-dist/tex/latex/cite/cite.sty
 LaTeX Info: Redefining \cite on input line 302.
@@ -270,7 +306,7 @@ Package: xkeyval 2014/05/09 v2.6d package option processing (HA)
 (/usr/local/texlive/2014/texmf-dist/tex/generic/xkeyval/xkeyval.tex
 \XKV@toks=\toks24
 \XKV@tempa@toks=\toks25
-\XKV@depth=\count113
+\XKV@depth=\count116
 File: xkeyval.tex 2014/05/09 v2.6d key=value parser (HA)
 ))
 (/usr/local/texlive/2014/texmf-dist/tex/latex/xcolor/xcolor.sty
@@ -296,8 +332,8 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.te
 x
 \pgfutil@everybye=\toks26
-\pgfutil@tempdima=\dimen124
-\pgfutil@tempdimb=\dimen125
+\pgfutil@tempdima=\dimen131
+\pgfutil@tempdimb=\dimen132
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-li
 sts.tex))
@@ -322,20 +358,20 @@ Package: pgfsys 2013/11/30 v3.0.0 (rcs-revision 1.47)
 ode.tex
 \pgfkeys@tmptoks=\toks29
 ))
-\pgf@x=\dimen126
-\pgf@y=\dimen127
-\pgf@xa=\dimen128
-\pgf@ya=\dimen129
-\pgf@xb=\dimen130
-\pgf@yb=\dimen131
-\pgf@xc=\dimen132
-\pgf@yc=\dimen133
+\pgf@x=\dimen133
+\pgf@y=\dimen134
+\pgf@xa=\dimen135
+\pgf@ya=\dimen136
+\pgf@xb=\dimen137
+\pgf@yb=\dimen138
+\pgf@xc=\dimen139
+\pgf@yc=\dimen140
 \w@pgf@writea=\write4
 \r@pgf@reada=\read1
-\c@pgf@counta=\count114
-\c@pgf@countb=\count115
-\c@pgf@countc=\count116
-\c@pgf@countd=\count117
+\c@pgf@counta=\count117
+\c@pgf@countb=\count118
+\c@pgf@countc=\count119
+\c@pgf@countd=\count120
 \t@pgf@toka=\toks30
 \t@pgf@tokb=\toks31
 \t@pgf@tokc=\toks32
@@ -356,8 +392,8 @@ File: pgfsys-common-pdf.def 2013/10/10  (rcs-revision 1.13)
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.
 code.tex
 File: pgfsyssoftpath.code.tex 2013/09/09  (rcs-revision 1.9)
-\pgfsyssoftpath@smallbuffer@items=\count118
-\pgfsyssoftpath@bigbuffer@items=\count119
+\pgfsyssoftpath@smallbuffer@items=\count121
+\pgfsyssoftpath@bigbuffer@items=\count122
 )
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.
 code.tex
@@ -369,8 +405,8 @@ Package: pgfcore 2010/04/11 v3.0.0 (rcs-revision 1.7)
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex)
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
-\pgfmath@dimen=\dimen134
-\pgfmath@count=\count120
+\pgfmath@dimen=\dimen141
+\pgfmath@count=\count123
 \pgfmath@box=\box32
 \pgfmath@toks=\toks33
 \pgfmath@stack@operand=\toks34
@@ -395,37 +431,37 @@ code.tex)
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integ
 erarithmetics.code.tex)))
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
-\c@pgfmathroundto@lastzeros=\count121
+\c@pgfmathroundto@lastzeros=\count124
 ))
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.co
 de.tex
 File: pgfcorepoints.code.tex 2013/10/07  (rcs-revision 1.27)
-\pgf@picminx=\dimen135
-\pgf@picmaxx=\dimen136
-\pgf@picminy=\dimen137
-\pgf@picmaxy=\dimen138
-\pgf@pathminx=\dimen139
-\pgf@pathmaxx=\dimen140
-\pgf@pathminy=\dimen141
-\pgf@pathmaxy=\dimen142
-\pgf@xx=\dimen143
-\pgf@xy=\dimen144
-\pgf@yx=\dimen145
-\pgf@yy=\dimen146
-\pgf@zx=\dimen147
-\pgf@zy=\dimen148
+\pgf@picminx=\dimen142
+\pgf@picmaxx=\dimen143
+\pgf@picminy=\dimen144
+\pgf@picmaxy=\dimen145
+\pgf@pathminx=\dimen146
+\pgf@pathmaxx=\dimen147
+\pgf@pathminy=\dimen148
+\pgf@pathmaxy=\dimen149
+\pgf@xx=\dimen150
+\pgf@xy=\dimen151
+\pgf@yx=\dimen152
+\pgf@yy=\dimen153
+\pgf@zx=\dimen154
+\pgf@zy=\dimen155
 )
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconst
 ruct.code.tex
 File: pgfcorepathconstruct.code.tex 2013/10/07  (rcs-revision 1.29)
-\pgf@path@lastx=\dimen149
-\pgf@path@lasty=\dimen150
+\pgf@path@lastx=\dimen156
+\pgf@path@lasty=\dimen157
 )
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage
 .code.tex
 File: pgfcorepathusage.code.tex 2013/12/13  (rcs-revision 1.23)
-\pgf@shorten@end@additional=\dimen151
-\pgf@shorten@start@additional=\dimen152
+\pgf@shorten@end@additional=\dimen158
+\pgf@shorten@start@additional=\dimen159
 )
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.co
 de.tex
@@ -433,19 +469,19 @@ File: pgfcorescopes.code.tex 2013/10/09  (rcs-revision 1.44)
 \pgfpic=\box33
 \pgf@hbox=\box34
 \pgf@layerbox@main=\box35
-\pgf@picture@serial@count=\count122
+\pgf@picture@serial@count=\count125
 )
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicst
 ate.code.tex
 File: pgfcoregraphicstate.code.tex 2013/09/19  (rcs-revision 1.11)
-\pgflinewidth=\dimen153
+\pgflinewidth=\dimen160
 )
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransform
 ations.code.tex
 File: pgfcoretransformations.code.tex 2013/10/10  (rcs-revision 1.17)
-\pgf@pt@x=\dimen154
-\pgf@pt@y=\dimen155
-\pgf@pt@temp=\dimen156
+\pgf@pt@x=\dimen161
+\pgf@pt@y=\dimen162
+\pgf@pt@temp=\dimen163
 )
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.cod
 e.tex
@@ -462,13 +498,13 @@ File: pgfcorepathprocessing.code.tex 2013/09/09  (rcs-revision 1.9)
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.co
 de.tex
 File: pgfcorearrows.code.tex 2013/11/07  (rcs-revision 1.40)
-\pgfarrowsep=\dimen157
+\pgfarrowsep=\dimen164
 )
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.cod
 e.tex
 File: pgfcoreshade.code.tex 2013/07/15  (rcs-revision 1.15)
-\pgf@max=\dimen158
-\pgf@sys@shading@range@num=\count123
+\pgf@max=\dimen165
+\pgf@sys@shading@range@num=\count126
 )
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.cod
 e.tex
@@ -503,8 +539,8 @@ File: pgfmoduleplot.code.tex 2013/07/31  (rcs-revision 1.12)
 (/usr/local/texlive/2014/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version
 -0-65.sty
 Package: pgfcomp-version-0-65 2007/07/03 v3.0.0 (rcs-revision 1.7)
-\pgf@nodesepstart=\dimen159
-\pgf@nodesepend=\dimen160
+\pgf@nodesepstart=\dimen166
+\pgf@nodesepend=\dimen167
 )
 (/usr/local/texlive/2014/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version
 -1-18.sty
@@ -519,8 +555,8 @@ Package: pgfcomp-version-1-18 2007/07/23 v3.0.0 (rcs-revision 1.1)
 Package: pgffor 2013/12/13 v3.0.0 (rcs-revision 1.25)
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)
-\pgffor@iter=\dimen161
-\pgffor@skip=\dimen162
+\pgffor@iter=\dimen168
+\pgffor@skip=\dimen169
 \pgffor@stack=\toks36
 \pgffor@toks=\toks37
 ))
@@ -531,32 +567,32 @@ Package: tikz 2013/12/13 v3.0.0 (rcs-revision 1.142)
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothan
 dlers.code.tex
 File: pgflibraryplothandlers.code.tex 2013/08/31 v3.0.0 (rcs-revision 1.20)
-\pgf@plot@mark@count=\count124
-\pgfplotmarksize=\dimen163
+\pgf@plot@mark@count=\count127
+\pgfplotmarksize=\dimen170
 )
-\tikz@lastx=\dimen164
-\tikz@lasty=\dimen165
-\tikz@lastxsaved=\dimen166
-\tikz@lastysaved=\dimen167
-\tikzleveldistance=\dimen168
-\tikzsiblingdistance=\dimen169
+\tikz@lastx=\dimen171
+\tikz@lasty=\dimen172
+\tikz@lastxsaved=\dimen173
+\tikz@lastysaved=\dimen174
+\tikzleveldistance=\dimen175
+\tikzsiblingdistance=\dimen176
 \tikz@figbox=\box38
 \tikz@figbox@bg=\box39
 \tikz@tempbox=\box40
 \tikz@tempbox@bg=\box41
-\tikztreelevel=\count125
-\tikznumberofchildren=\count126
-\tikznumberofcurrentchild=\count127
-\tikz@fig@count=\count128
+\tikztreelevel=\count128
+\tikznumberofchildren=\count129
+\tikznumberofcurrentchild=\count130
+\tikz@fig@count=\count131
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.cod
 e.tex
 File: pgfmodulematrix.code.tex 2013/09/17  (rcs-revision 1.8)
-\pgfmatrixcurrentrow=\count129
-\pgfmatrixcurrentcolumn=\count130
-\pgf@matrix@numberofcolumns=\count131
+\pgfmatrixcurrentrow=\count132
+\pgfmatrixcurrentcolumn=\count133
+\pgf@matrix@numberofcolumns=\count134
 )
-\tikz@expandcount=\count132
+\tikz@expandcount=\count135
 
 (/usr/local/texlive/2014/texmf-dist/tex/generic/pgf/frontendlayer/tikz/librarie
 s/tikzlibrarytopaths.code.tex
@@ -568,18 +604,18 @@ File: tikzlibrarypositioning.code.tex 2008/10/06 v3.0.0 (rcs-revision 1.7)
 )
 (/usr/local/texlive/2014/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count133
-\calc@Bcount=\count134
-\calc@Adimen=\dimen170
-\calc@Bdimen=\dimen171
+\calc@Acount=\count136
+\calc@Bcount=\count137
+\calc@Adimen=\dimen177
+\calc@Bdimen=\dimen178
 \calc@Askip=\skip53
 \calc@Bskip=\skip54
 LaTeX Info: Redefining \setlength on input line 75.
 LaTeX Info: Redefining \addtolength on input line 76.
-\calc@Ccount=\count135
+\calc@Ccount=\count138
 \calc@Cskip=\skip55
 )
-\c@@todonotes@numberoftodonotes=\count136
+\c@@todonotes@numberoftodonotes=\count139
 )
 (/usr/local/texlive/2014/texmf-dist/tex/latex/soul/soul.sty
 Package: soul 2003/11/17 v2.4 letterspacing/underlining (mf)
@@ -589,9 +625,9 @@ Package: soul 2003/11/17 v2.4 letterspacing/underlining (mf)
 \SOUL@buffer=\toks41
 \SOUL@token=\toks42
 \SOUL@spaceskip=\skip56
-\SOUL@ttwidth=\dimen172
-\SOUL@uldp=\dimen173
-\SOUL@ulht=\dimen174
+\SOUL@ttwidth=\dimen179
+\SOUL@uldp=\dimen180
+\SOUL@ulht=\dimen181
 )
 (/usr/local/texlive/2014/texmf-dist/tex/latex/was/gensymb.sty
 Package: gensymb 2003/07/02 v1.0 (WaS)
@@ -611,30 +647,30 @@ LaTeX Warning: Label `eqn:meas_noise@cref' multiply defined.
 )
 \openout1 = `SSRR2015.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 68.
+LaTeX Font Info:    ... okay on input line 68.
  (/usr/local/texlive/2014/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count137
-\scratchdimen=\dimen175
+\scratchcounter=\count140
+\scratchdimen=\dimen182
 \scratchbox=\box42
-\nofMPsegments=\count138
-\nofMParguments=\count139
+\nofMPsegments=\count141
+\nofMParguments=\count142
 \everyMPshowfont=\toks43
-\MPscratchCnt=\count140
-\MPscratchDim=\dimen176
-\MPnumerator=\count141
-\makeMPintoPDFobject=\count142
+\MPscratchCnt=\count143
+\MPscratchDim=\dimen183
+\MPnumerator=\count144
+\makeMPintoPDFobject=\count145
 \everyMPtoPDFconversion=\toks44
 ) (/usr/local/texlive/2014/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
@@ -684,41 +720,45 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
+Package caption Info: End \AtBeginDocument code.
+
 ABD: EveryShipout initializing macros
-LaTeX Info: Redefining \celsius on input line 79.
-Package gensymb Info: Faking symbols for \degree and \celsius on input line 79.
+LaTeX Info: Redefining \celsius on input line 68.
+Package gensymb Info: Faking symbols for \degree and \celsius on input line 68.
 
 
 
 Package gensymb Warning: Not defining \perthousand.
 
-LaTeX Info: Redefining \ohm on input line 79.
-Package gensymb Info: Using \Omega for \ohm on input line 79.
+LaTeX Info: Redefining \ohm on input line 68.
+Package gensymb Info: Using \Omega for \ohm on input line 68.
 
 Package gensymb Warning: Not defining \micro.
 
-LaTeX Font Info:    Calculating math sizes for size <11> on input line 81.
-LaTeX Font Info:    Try loading font information for U+msa on input line 81.
+LaTeX Font Info:    Calculating math sizes for size <11> on input line 70.
+LaTeX Font Info:    Try loading font information for U+msa on input line 70.
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 81.
+LaTeX Font Info:    Try loading font information for U+msb on input line 70.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 81.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 70.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-Underfull \hbox (badness 5726) in paragraph at lines 81--81
+Underfull \hbox (badness 5726) in paragraph at lines 70--70
 [][][]$[]$\OT1/ptm/m/n/8 J. Karl Hedrick is with Fac-ulty of Me-chan-i-cal En-g
 i-neer-ing,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 81--81
+Underfull \hbox (badness 10000) in paragraph at lines 70--70
 \OT1/ptm/m/n/8 Uni-ver-sity of Cal-i-for-nia at Berke-ley, Cal-i-for-nia 94720,
  USA
  []
@@ -727,89 +767,118 @@ Underfull \hbox (badness 10000) in paragraph at lines 81--81
 
 
 ]
-<figures/sim_field.pdf, id=15, 341.89343pt x 331.80019pt>
-File: figures/sim_field.pdf Graphic file (type pdf)
 
-<use figures/sim_field.pdf>
-Package pdftex.def Info: figures/sim_field.pdf used on input line 192.
-(pdftex.def)             Requested size: 166.94463pt x 162.01646pt.
+LaTeX Warning: Reference `fig:sim_field' on page 1 undefined on input line 174.
 
-Underfull \vbox (badness 2285) has occurred while \output is active []
 
- [2 <./figures/sim_field.pdf>] [3]
-Overfull \hbox (40.6779pt too wide) in paragraph at lines 500--500
+<figures/ref_traj_init.pdf, id=15, 592.13194pt x 577.01466pt>
+File: figures/ref_traj_init.pdf Graphic file (type pdf)
+
+<use figures/ref_traj_init.pdf>
+Package pdftex.def Info: figures/ref_traj_init.pdf used on input line 190.
+(pdftex.def)             Requested size: 101.17645pt x 98.59305pt.
+
+<figures/ref_traj_obs1.pdf, id=16, 417.55336pt x 406.86989pt>
+File: figures/ref_traj_obs1.pdf Graphic file (type pdf)
+
+<use figures/ref_traj_obs1.pdf>
+Package pdftex.def Info: figures/ref_traj_obs1.pdf used on input line 196.
+(pdftex.def)             Requested size: 101.17645pt x 98.58821pt.
+
+<figures/ref_traj_obs2.pdf, id=17, 606.42526pt x 591.30806pt>
+File: figures/ref_traj_obs2.pdf Graphic file (type pdf)
+
+<use figures/ref_traj_obs2.pdf>
+Package pdftex.def Info: figures/ref_traj_obs2.pdf used on input line 202.
+(pdftex.def)             Requested size: 101.17645pt x 98.65335pt.
+
+<figures/ref_traj_end.pdf, id=18, 606.42526pt x 591.30806pt>
+File: figures/ref_traj_end.pdf Graphic file (type pdf)
+
+<use figures/ref_traj_end.pdf>
+Package pdftex.def Info: figures/ref_traj_end.pdf used on input line 208.
+(pdftex.def)             Requested size: 101.17645pt x 98.65335pt.
+ [2]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [3 <./figures/ref_traj_init.pdf> <./figures/ref_traj_obs1.pdf
+
+pdfTeX warning: /usr/texbin/pdflatex (file ./figures/ref_traj_obs1.pdf): PDF in
+clusion: multiple pdfs with page group included in a single page
+> <./figures/ref_traj_obs2.pdf
+
+pdfTeX warning: /usr/texbin/pdflatex (file ./figures/ref_traj_obs2.pdf): PDF in
+clusion: multiple pdfs with page group included in a single page
+> <./figures/ref_traj_end.pdf
+
+pdfTeX warning: /usr/texbin/pdflatex (file ./figures/ref_traj_end.pdf): PDF inc
+lusion: multiple pdfs with page group included in a single page
+>]
+Overfull \hbox (40.6779pt too wide) in paragraph at lines 519--519
 [] 
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-<figures/full_sim_traj.pdf, id=41, 341.89343pt x 331.80019pt>
-File: figures/full_sim_traj.pdf Graphic file (type pdf)
-
-<use figures/full_sim_traj.pdf>
-Package pdftex.def Info: figures/full_sim_traj.pdf used on input line 524.
-(pdftex.def)             Requested size: 166.94463pt x 162.01646pt.
-
+ [4]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [4]
-<figures/pos_error.pdf, id=47, 418.56375pt x 328.22626pt>
+
+<figures/pos_error.pdf, id=279, 418.56375pt x 328.22626pt>
 File: figures/pos_error.pdf Graphic file (type pdf)
 
 <use figures/pos_error.pdf>
-Package pdftex.def Info: figures/pos_error.pdf used on input line 571.
+Package pdftex.def Info: figures/pos_error.pdf used on input line 583.
 (pdftex.def)             Requested size: 202.3529pt x 158.67868pt.
 
-<figures/VelocityComp.pdf, id=48, 418.56375pt x 328.22626pt>
+<figures/VelocityComp.pdf, id=280, 418.56375pt x 328.22626pt>
 File: figures/VelocityComp.pdf Graphic file (type pdf)
 
 <use figures/VelocityComp.pdf>
-Package pdftex.def Info: figures/VelocityComp.pdf used on input line 578.
+Package pdftex.def Info: figures/VelocityComp.pdf used on input line 590.
 (pdftex.def)             Requested size: 202.3529pt x 158.67868pt.
 
-<figures/mode_prob.pdf, id=49, 418.56375pt x 342.27875pt>
+<figures/mode_prob.pdf, id=281, 418.56375pt x 342.27875pt>
 File: figures/mode_prob.pdf Graphic file (type pdf)
 
 <use figures/mode_prob.pdf>
-Package pdftex.def Info: figures/mode_prob.pdf used on input line 585.
+Package pdftex.def Info: figures/mode_prob.pdf used on input line 597.
 (pdftex.def)             Requested size: 192.24066pt x 157.19943pt.
- [5 <./figures/full_sim_traj.pdf> <./figures/pos_error.pdf> <./figures/Velocity
-Comp.pdf> <./figures/mode_prob.pdf>]
-<figures/imm_vs_single.pdf, id=72, 301.125pt x 225.84375pt>
+ [5 <./figures/pos_error.pdf>]
+Underfull \vbox (badness 1454) has occurred while \output is active []
+
+
+<figures/imm_vs_single.pdf, id=291, 301.125pt x 225.84375pt>
 File: figures/imm_vs_single.pdf Graphic file (type pdf)
 
 <use figures/imm_vs_single.pdf>
-Package pdftex.def Info: figures/imm_vs_single.pdf used on input line 616.
+Package pdftex.def Info: figures/imm_vs_single.pdf used on input line 628.
 (pdftex.def)             Requested size: 212.47287pt x 159.36115pt.
 
-<figures/sim_traj.pdf, id=73, 114.82399pt x 108.37576pt>
-File: figures/sim_traj.pdf Graphic file (type pdf)
+<figures/r_accomp.pdf, id=292, 735.8249pt x 717.52907pt>
+File: figures/r_accomp.pdf Graphic file (type pdf)
 
-<use figures/sim_traj.pdf>
-Package pdftex.def Info: figures/sim_traj.pdf used on input line 661.
-(pdftex.def)             Requested size: 187.17682pt x 176.68231pt.
+<use figures/r_accomp.pdf>
+Package pdftex.def Info: figures/r_accomp.pdf used on input line 673.
+(pdftex.def)             Requested size: 187.17682pt x 182.52406pt.
 
-<figures/dis_diff.pdf, id=74, 301.125pt x 241.90375pt>
+<figures/dis_diff.pdf, id=293, 301.125pt x 241.90375pt>
 File: figures/dis_diff.pdf Graphic file (type pdf)
 
 <use figures/dis_diff.pdf>
-Package pdftex.def Info: figures/dis_diff.pdf used on input line 667.
+Package pdftex.def Info: figures/dis_diff.pdf used on input line 679.
 (pdftex.def)             Requested size: 187.17682pt x 150.37003pt.
 
-<figures/vel_diff.pdf, id=75, 301.125pt x 241.90375pt>
+<figures/vel_diff.pdf, id=294, 301.125pt x 241.90375pt>
 File: figures/vel_diff.pdf Graphic file (type pdf)
 
 <use figures/vel_diff.pdf>
-Package pdftex.def Info: figures/vel_diff.pdf used on input line 674.
+Package pdftex.def Info: figures/vel_diff.pdf used on input line 686.
 (pdftex.def)             Requested size: 187.17682pt x 150.37003pt.
- [6 <./figures/imm_vs_single.pdf> <./figures/sim_traj.pdf
-
-pdfTeX warning: /usr/texbin/pdflatex (file ./figures/sim_traj.pdf): PDF inclusi
-on: multiple pdfs with page group included in a single page
-> <./figures/dis_diff.pdf>]
-Underfull \hbox (badness 1571) in paragraph at lines 706--714
+ [6 <./figures/VelocityComp.pdf> <./figures/mode_prob.pdf> <./figures/imm_vs_si
+ngle.pdf>]
+Underfull \hbox (badness 1571) in paragraph at lines 718--726
 \OT1/ptm/m/n/10 based mo-tion plan-ning ap-proach for human-companion
  []
 
@@ -817,9 +886,10 @@ Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no “ in font ptmr7t!
 
-LaTeX Warning: Reference `eqn:h_c_dyn' on page 1 undefined on input line 732.
+LaTeX Warning: Reference `eqn:h_c_dyn' on page 1 undefined on input line 744.
 
-[7 <./figures/vel_diff.pdf>] (./SSRR2015.bbl)
+[7 <./figures/r_accomp.pdf> <./figures/dis_diff.pdf> <./figures/vel_diff.pdf>]
+(./SSRR2015.bbl)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -831,9 +901,7 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the US letter (8.5in X 11in) paper size.
 
-[8
-
-] (./SSRR2015.aux)
+[8] (./SSRR2015.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -842,13 +910,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 15923 strings out of 493117
- 312278 string characters out of 6135433
- 372193 words of memory out of 5000000
- 19058 multiletter control sequences out of 15000+600000
- 47374 words of font info for 108 fonts, out of 8000000 for 9000
+ 17045 strings out of 493117
+ 332931 string characters out of 6135433
+ 392201 words of memory out of 5000000
+ 20169 multiletter control sequences out of 15000+600000
+ 48452 words of font info for 109 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,15n,81p,1113b,599s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,15n,81p,1114b,821s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/te
 xlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/local/texl
@@ -868,10 +936,10 @@ ts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2014/texmf-dist/fonts
 rw/times/utmb8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/u
 tmbi8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmr8a.pfb
 ></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on SSRR2015.pdf (8 pages, 522213 bytes).
+Output written on SSRR2015.pdf (8 pages, 626303 bytes).
 PDF statistics:
- 249 PDF objects out of 1000 (max. 8388607)
- 175 compressed objects within 2 object streams
+ 489 PDF objects out of 1000 (max. 8388607)
+ 333 compressed objects within 4 object streams
  0 named destinations out of 1000 (max. 500000)
- 58 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 68 words of extra memory for PDF output out of 10000 (max. 10000000)
 

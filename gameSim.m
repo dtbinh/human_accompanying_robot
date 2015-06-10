@@ -233,9 +233,9 @@ for k = 1:kf
     end
     %% plot trajectories
     % draw under certain conditions
-    if (k == 1) || (k == obs1.s_time) || (k == obs2.s_time)
+    if (k == 1) || (k == obs1.s_time) || (k == obs2.s_time) || (k >= 300)
         % plot specifications
-        color_agent = {'r','g','k','b','m','b'};
+        color_agent = {'r','g','k','b','m','m'};
         marker_agent = {'o','^','*','d'};
         line_agent = {'-','-','-','-'};
         line_wid = {2,2,2,2};
@@ -248,7 +248,7 @@ for k = 1:kf
         for jj = 1:campus.targetNum
             h = plot(campus.targetPos(1,jj),campus.targetPos(2,jj),'MarkerSize',15);
             set(h,'Marker','p');
-            set(h,'linewidth',2);
+            set(h,'linewidth',1);
         end
         
         % draw obstacles
@@ -306,7 +306,7 @@ for k = 1:kf
         set(h4,'Color',color_agent{4});
         set(h4,'LineStyle',line_agent{4});
         set(h4,'Marker',marker_agent{4});
-        set(h1,'linewidth',line_wid{4});
+        set(h4,'linewidth',line_wid{4});
         % I don't know why I need to repeat this snippet here.
         %{
     c_set = [plan_state(1,2:end,k);plan_state(2,2:end,k)];
@@ -323,11 +323,13 @@ for k = 1:kf
         % moving obstacles' trajectory
         %
         if k >= obs1.s_time
-            h5 = plot(obs1.traj(1,:),obs1.traj(2,:),color_agent{5},'markers',2);
+            h5 = plot(obs1.traj(1,:),obs1.traj(2,:),color_agent{5},'markers',2,...
+                'MarkerSize',2,'linewidth',2);
         end
         %}
         if k >= obs2.s_time
-            h6 = plot(obs2.traj(1,:),obs2.traj(2,:),color_agent{6},'markers',2);
+            h6 = plot(obs2.traj(1,:),obs2.traj(2,:),color_agent{6},'markers',2,...
+                'MarkerSize',2,'linewidth',2);
         end
         
         % refine plot
@@ -337,8 +339,8 @@ for k = 1:kf
         xlim([0,xLength]);ylim([0,yLength]);
         
         % close plots when there are too many plots
-        h5 = gcf;
-        if h5 > 50
+        h7 = gcf;
+        if h7 > 50
             close all;
         end
     end
