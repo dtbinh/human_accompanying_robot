@@ -92,14 +92,23 @@
 	
 	\section{INTRODUCTION} \label{sec:intro}
 	The application of autonomous robots for search and rescue missions have received considerable attentions in last decades.
-	One particular scenario that is interesting to us is allowing autonomous robots to accompany humans in the search and rescue process.
-	Robots can follow and assist humans by carrying heavy apparatus, exploring dangerous areas and detecting signals of survivors.
+	One particular scenario that is interesting to us is allowing autonomous robots to accompany humans in the search and rescue mission.
+	Robot companions can follow and assist humans by carrying heavy apparatus, exploring dangerous areas or detecting signals of survivors.
 	% Motion planning of human-companion robots is a challenging problem and its solution has numerous applications, such as for accompanying elderlies at home and guiding visitors in museums. 
-	To enable socially desirable companion behavior, certain requirements needs to be satisfied, which includes safety, comfortableness and naturalness. 
-	Safety serves as the fundamental requirement for companion robots that collision with humans should be avoided. 
+	
+	To enable socially desirable companion behavior, certain requirements need to be satisfied, including safety, comfort, naturalness and sociability \cite{kruse2013human}.
+	Among these requirements, safety serves as the fundamental guideline, requiring that robots avoid collision with accompanied humans under all circumstances.
+	Safety is usually enforced by preventing robots from entering a 'safe region' within humans \cite{,,,}.
 	\todohere{use lit from the survey paper. explain many aspects of social navigation. However, in problem formulation, just list what is done in this paper: focus on comfortableness (distance using proxemics and velocity similarity)}
-	Comfortableness and naturalness compose constraints on the social aspects of robots;
-	the former requires robots to pose little annoyance and stress for the accompanied humans and the latter emphasizes the similarity between robots and humans in low-level behavior patterns \cite{kruse2013human}.
+	Comfort requirement composes the social constraint on the robot behavior, which requires robots to pose little annoyance and stress for the accompanied humans \cite{kruse2013human}.
+	It is mostly formulated regarding the distance that a robot needs to keep from persons.
+	For example, \cite{E. T. Hall, The hidden Dimension: Man’s Use of Space in Public and Private. 1966} proposed the concept of ''Proxemics" to denote the virtual zone around a person that a robot should avoiding entering in order to prevent the discomfort the person may feel.
+	\todohere{rephrase the following sentence:}
+	In \cite{Takayama: Influences on proxemic behaviors in human–robot interaction} extract robot design principles for approaching distance and gaze depending on social context.
+		
+	\todohere{move the following sentence to the method review section}
+	In \cite{kirby Companion: A constraintoptimizing method for person acceptable navigation} a generalized framework for representing social conventions as components of a constrained optimization problem was presented and it was used for path planning and navigation.
+	
 	% the former requires robots to maintain appropriate distance from humans and the latter emphasizes on the similarity in motion speeds between robots and humans. 
 	% This requires robots to stay within a proper distance from the accompanied person while avoiding collision with him/her.
 	% In fact, aside from the traditional requirement of robot path planning that focuses on obtaining the optimal path from one position to another in real-time, the human-aware robot motion planning needs to take the existence of humans into account.
@@ -116,7 +125,7 @@
 	Potential field method is utilized for predicting human motion and the expansive-spaces trees method is utilized for motion planning.
 	In \cite{wu2012path}, Wu et al. specifically focuses on the human motion estimation and prediction for robot motion planning.
 	It develops an effective \todohere{describe what the filter actually is} filter for human motion estimation that can deal with abrupt human direction change when he/she makes turns. 
-%	Artificial Neural Network (ANN) is adopted for human motion prediction. 
+	%	Artificial Neural Network (ANN) is adopted for human motion prediction. 
 	
 	An effective motion planner that generates socially desirable motion behavior necessitates accurate human motion estimation and prediction, which is then utilized for robot motion planning.
 	% We divide the human-accompanying motion planning into three steps.
@@ -176,7 +185,7 @@
 	The robot has no knowledge about the positions of destinations.
 	However, it can measure human positions in real-time from a GPS sensor via cellphone communication.\todonote{dh: sensors like GPS or Camera}
 	There exist several obstacles in the field, the positions of which are known and are shown as the blue circle and semicircles.\todonote{dh: I guess we need to explain more detailed about obstacles in the sceniario to show the effort that mimic the real environment. for example, we can say that there are two moving and six stationay obstacles in the scenario}
-%	Neither the human nor the robot can step into or cross these obstacles. 
+	%	Neither the human nor the robot can step into or cross these obstacles. 
 	To make socially desirable behavior, the robot should satisfy the aforementioned safety, comfortableness and naturalness requirements\todohere{add formal definitions for these concepts}.
 	In this scenario, the safety concern requires the robot to avoid colliding with either the human or any obstacles.
 	Comfortableness requires that the robot maintain a proper distance from the human and naturalness necessitates that the robot keep the velocity similar to that of the human.
@@ -243,25 +252,25 @@
 	Two different dynamic models are used in the IMM framework. One is the coordinated turn motion model and the other is the uniform motion model. The equation of motion for the both the coordinated turn motion and uniform motion model becomes the following
 	\begin{subequations}
 		\begin{align}
-			x^h(k+1)&= f(x^h(k))+Gw(k)\\
-			%Q(k)&=E[w(k)w(k)^\top]
-			f(x^h(k))&=\left[
-			\begin{array}{c}
-				p^h_1+\frac{\sin(\omega^h T)}{\omega^h}v^h_1-\frac{1-\cos(\omega^h T)}{\omega^h}v^h_2\\
-				\cos(\omega^h T)v^h_1-\sin(\omega^h T)v^h_2\\
-				p^h_2+\frac{1-\cos(\omega^h T)}{\omega^h}v^h_1+\frac{\sin(\omega^h T)}{\omega^h}v^h_2\\
-				\sin(\omega^h T)v^h_1+\cos(\omega^h T)v^h_2\\
-				\omega^h 
-			\end{array}\right]\\
-			G &= \left[
-			\begin{array}{ccc}
-				\frac{T^2}{2}& 0& 0\\
-				T& 0& 0\\
-				0& \frac{T^2}{2}& 0\\
-				0& T& 0\\
-				0& 0& 1\\
-			\end{array}\right]\\
-			w&\sim\mathcal{N}(0,Q)
+		x^h(k+1)&= f(x^h(k))+Gw(k)\\
+		%Q(k)&=E[w(k)w(k)^\top]
+		f(x^h(k))&=\left[
+		\begin{array}{c}
+		p^h_1+\frac{\sin(\omega^h T)}{\omega^h}v^h_1-\frac{1-\cos(\omega^h T)}{\omega^h}v^h_2\\
+		\cos(\omega^h T)v^h_1-\sin(\omega^h T)v^h_2\\
+		p^h_2+\frac{1-\cos(\omega^h T)}{\omega^h}v^h_1+\frac{\sin(\omega^h T)}{\omega^h}v^h_2\\
+		\sin(\omega^h T)v^h_1+\cos(\omega^h T)v^h_2\\
+		\omega^h 
+		\end{array}\right]\\
+		G &= \left[
+		\begin{array}{ccc}
+		\frac{T^2}{2}& 0& 0\\
+		T& 0& 0\\
+		0& \frac{T^2}{2}& 0\\
+		0& T& 0\\
+		0& 0& 1\\
+		\end{array}\right]\\
+		w&\sim\mathcal{N}(0,Q)
 		\end{align}
 	\end{subequations}
 	where $x^h(k)$ represents the human motion state including five elements : $p^h_1,v^h_1,p^h_2,v^h_2,\omega^h$, where $p^h_1,p^h_2$ denote the longitudinal and lateral position of the human, $v^h_1,v^h_2$ the corresponding velocity and $\omega^h$ the turn rate of the human; $w(k)$ represents process noise; $T$ represents the sampling time; Q is the covariance matrix of the process noise.\\
@@ -302,30 +311,30 @@
 	The equation of the uniform motion model is shown as follows:  
 	\begin{subequations}
 		\begin{align}
-			\dot{x^h}(k+1)= Ax^h(k)+Bw(k)\label{eqn:h_d_dyn}\\
-			A=\left[
-			\begin{array}{ccccc}
-				1& T& 0& 0& 0\\
-				0& 1& 0& 0& 0\\
-				0& 0& 1& T& 0\\
-				0& 0& 0& 1& 0\\
-				0& 0& 0& 0& 0\\
-			\end{array}\right]
-			B=\left[
-			\begin{array}{ccc}
-				\frac{T^2}{2}& 0& 0\\
-				T& 0& 0\\
-				0& \frac{T^2}{2}& 0\\
-				0& T& 0\\
-				0& 0& 1\\
-			\end{array}\right]
+		\dot{x^h}(k+1)= Ax^h(k)+Bw(k)\label{eqn:h_d_dyn}\\
+		A=\left[
+		\begin{array}{ccccc}
+		1& T& 0& 0& 0\\
+		0& 1& 0& 0& 0\\
+		0& 0& 1& T& 0\\
+		0& 0& 0& 1& 0\\
+		0& 0& 0& 0& 0\\
+		\end{array}\right]
+		B=\left[
+		\begin{array}{ccc}
+		\frac{T^2}{2}& 0& 0\\
+		T& 0& 0\\
+		0& \frac{T^2}{2}& 0\\
+		0& T& 0\\
+		0& 0& 1\\
+		\end{array}\right]
 		\end{align}
 	\end{subequations}
 	
 	The observation equation is represented as : 
 	\begin{subequations}
 		\begin{align}
-			y^h(k)=Cx^h(k)+v(k)\label{eqn:n_observation}
+		y^h(k)=Cx^h(k)+v(k)\label{eqn:n_observation}
 		\end{align}
 	\end{subequations}
 	where $y^h(k)$ denotes the human motion observation at the time step $k$; $v(k)$ stands for measurement noise 
@@ -334,13 +343,13 @@
 	Therefore, the parameters in observation model \cref{eqn:n_observation} can be defined as:
 	\begin{subequations}
 		\begin{align}
-			C&=\left[
-			\begin{array}{ccccc}
-				1& 0& 0& 0& 0\\
-				0& 0& 1& 0& 0
-			\end{array}\right],\label{eqn:C}\\
-			v&\sim\mathcal{N}(0,V)\label{eqn:meas_noise}
-			%V(k)&=E[v(k)v(k)^\top] 
+		C&=\left[
+		\begin{array}{ccccc}
+		1& 0& 0& 0& 0\\
+		0& 0& 1& 0& 0
+		\end{array}\right],\label{eqn:C}\\
+		v&\sim\mathcal{N}(0,V)\label{eqn:meas_noise}
+		%V(k)&=E[v(k)v(k)^\top] 
 		\end{align}
 	\end{subequations}
 	where $V$ is the convariance matrix of the measurement noise.
@@ -401,11 +410,11 @@
 	Given an $L$-dimensional Gaussian Random Vector (GRV) $x$ with mean $\hat{x}$ and covariance $P_x$, the statistics of $z=f(x)$ are approximated by the selection of $2L+1$ discrete sample points $\left\{\chi^{(i)} \right\}_{i=0}^{2L}=\left\{ \hat{x}\ \text{and}\  \hat{x} \pm \sigma_j, j=1,...,L\right \}$ where $\sigma_i$ is the $i^{th}$ column of the matrix $\sqrt{(L+\lambda)P_x}$. $\lambda$ is a scaling parameter, defined below.  
 	\begin{subequations}
 		\begin{align}
-			\lambda&=\alpha^2(L+\kappa)-L\\
-			W_0^{(m)}&=\frac{\lambda}{L+\lambda}\\
-			W_0^{(c)}&=\frac{\lambda}{L+\lambda}+1-\alpha^2+\beta\\
-			W_i^{(m)}&=W_i^{(c)}=\frac{1}{L+\lambda},\quad i=1,...,2L 
-			%\gamma&=\sqrt{L+\lambda}
+		\lambda&=\alpha^2(L+\kappa)-L\\
+		W_0^{(m)}&=\frac{\lambda}{L+\lambda}\\
+		W_0^{(c)}&=\frac{\lambda}{L+\lambda}+1-\alpha^2+\beta\\
+		W_i^{(m)}&=W_i^{(c)}=\frac{1}{L+\lambda},\quad i=1,...,2L 
+		%\gamma&=\sqrt{L+\lambda}
 		\end{align}
 	\end{subequations}
 	where $\alpha$ determines the spread of sigma points about the mean $\hat{x}$; $\kappa$ is a secondary scaling parameter; $\beta$ is used to incorporate prior knowledge of the distribution. (our simulation uses $L=5,\alpha=0.001, \kappa=0, \beta=2$)  
@@ -420,11 +429,11 @@
 	To be specific, the prediction procedure works as follows:
 	\begin{subequations}\label{eqn:motion_pred_imm}
 		\begin{align}
-			\tilde{x}^h(k+l+1|k)&=\sum\limits_{j=1}^{r}\mu_j \tilde{x}^{h,j}(k+l+1|k)\\ l&=0,\dots,N-1\\
-			\tilde{x}^{h,j}(k+l+1|k)&=\hat{x}^{h,j}(k+l+1|k) \quad j=1,\dots, r\\
-			&=\Sigma_{i=0}^{2L}W_i^{(m)} \chi_{k+l+1|k}^{(i)} \\
-			\chi_{k+l+1|k}^{(i)}&=f(\chi_{k+l|k}^{(i)}) \quad i=0,\dots, 2L
-			%\tilde{x}^{h,j}(k|k)&=\hat{x}^{h,j}(k|k),\quad j=1,\dots r
+		\tilde{x}^h(k+l+1|k)&=\sum\limits_{j=1}^{r}\mu_j \tilde{x}^{h,j}(k+l+1|k)\\ l&=0,\dots,N-1\\
+		\tilde{x}^{h,j}(k+l+1|k)&=\hat{x}^{h,j}(k+l+1|k) \quad j=1,\dots, r\\
+		&=\Sigma_{i=0}^{2L}W_i^{(m)} \chi_{k+l+1|k}^{(i)} \\
+		\chi_{k+l+1|k}^{(i)}&=f(\chi_{k+l|k}^{(i)}) \quad i=0,\dots, 2L
+		%\tilde{x}^{h,j}(k|k)&=\hat{x}^{h,j}(k|k),\quad j=1,\dots r
 		\end{align}
 	\end{subequations}
 	where $N$ denotes the prediction horizon; $r$ represents the number of models; $L$ is the dimension of $x^{h,j}$.
@@ -494,28 +503,28 @@
 	The robot motion planning problem is formulated as an MPC problem that incorporates the kinematics of the robot and the aforementioned requirements:
 	\begin{subequations}\label{eqn:path_plan_mpc}
 		\begin{align}
-			\min_{\mathbf{A}_k,\mathbf{\Theta}_k} \quad &\sum\limits_{i=1}^{N} q_1||\bar{p}^r(k+i|k)-\tilde{p}^h(k+i|k)||^2_2+ \notag\\
-			& q_2|\bar{v}^r(k+i|k)-\tilde{v}^h(k+i|k)|^2\label{eqn:obj}\\
-			\text{subject to} \quad & \bar{p}^r(k+i+1|k)=\bar{p}^r(k+i|k)\notag\\
-			&+\bar{v}^r(k+i|k)
-			\left[ 
-			\begin{array}{c}
-				\cos \bar{\theta}(k+i|k)\\
-				\sin \bar{\theta}(k+i|k)\\
-			\end{array}
-			\right]T\label{eqn:constr:dyn_pre_motion}\\
-			& \bar{v}^r(k+i+1|k)=\bar{v}^r(k+i|k)+\bar{a}(k+i|k)T\label{eqn:constr:dyn_pre_v}\\
-			& \bar{\theta}^r(k+i+1|k)=\bar{\theta}^r(k+i|k)+\bar{w}(k+i|k)T\label{eqn:constr:dyn_pre_theta}\\
-			& a_{lb}\le \bar{a^r}(k+i|k)\le a_{ub}\label{eqn:constr:a}\\
-			& w_{lb}\le \bar{\omega^r}(k+i|k)\le w_{ub}\label{eqn:constr:w}\\
-			% & ||\bar{p}^r(k+i+1|k)-\tilde{p}^h(k+i+1|k)||_2\geq d_c\label{eqn:constr:comfort}\\
-			& ||\bar{p}^r(k+i+1|k)-\tilde{p}^h(k+i+1|k)||_2\geq d_s\label{eqn:constr:safety}\\
-			& ||\bar{p}^r(k+i+1|k)-p^{obs}_l||_2\geq r^{obs}_l\label{eqn:constr:obs1}\\
-			& ||\lambda \bar{p}^r(k+i|k)+(1-\lambda)\bar{p}^r(k+i+1|k)-p^{obs}_l||_2\geq r^{obs}_l,\notag\\
-			& \, \forall l=1,\dots,m,\, 0\le \lambda\le 1\label{eqn:constr:obs2}\\
-			& \bar{p}^r(k|k)=p^r(k)\label{eqn:constr:init_z}\\
-			& \bar{v}^r(k|k)=v^r(k)\label{eqn:constr:init_v}\\
-			& \bar{\theta}^r(k|k)=\theta^r(k)\label{eqn:constr:init_theta}
+		\min_{\mathbf{A}_k,\mathbf{\Theta}_k} \quad &\sum\limits_{i=1}^{N} q_1||\bar{p}^r(k+i|k)-\tilde{p}^h(k+i|k)||^2_2+ \notag\\
+		& q_2|\bar{v}^r(k+i|k)-\tilde{v}^h(k+i|k)|^2\label{eqn:obj}\\
+		\text{subject to} \quad & \bar{p}^r(k+i+1|k)=\bar{p}^r(k+i|k)\notag\\
+		&+\bar{v}^r(k+i|k)
+		\left[ 
+		\begin{array}{c}
+		\cos \bar{\theta}(k+i|k)\\
+		\sin \bar{\theta}(k+i|k)\\
+		\end{array}
+		\right]T\label{eqn:constr:dyn_pre_motion}\\
+		& \bar{v}^r(k+i+1|k)=\bar{v}^r(k+i|k)+\bar{a}(k+i|k)T\label{eqn:constr:dyn_pre_v}\\
+		& \bar{\theta}^r(k+i+1|k)=\bar{\theta}^r(k+i|k)+\bar{w}(k+i|k)T\label{eqn:constr:dyn_pre_theta}\\
+		& a_{lb}\le \bar{a^r}(k+i|k)\le a_{ub}\label{eqn:constr:a}\\
+		& w_{lb}\le \bar{\omega^r}(k+i|k)\le w_{ub}\label{eqn:constr:w}\\
+		% & ||\bar{p}^r(k+i+1|k)-\tilde{p}^h(k+i+1|k)||_2\geq d_c\label{eqn:constr:comfort}\\
+		& ||\bar{p}^r(k+i+1|k)-\tilde{p}^h(k+i+1|k)||_2\geq d_s\label{eqn:constr:safety}\\
+		& ||\bar{p}^r(k+i+1|k)-p^{obs}_l||_2\geq r^{obs}_l\label{eqn:constr:obs1}\\
+		& ||\lambda \bar{p}^r(k+i|k)+(1-\lambda)\bar{p}^r(k+i+1|k)-p^{obs}_l||_2\geq r^{obs}_l,\notag\\
+		& \, \forall l=1,\dots,m,\, 0\le \lambda\le 1\label{eqn:constr:obs2}\\
+		& \bar{p}^r(k|k)=p^r(k)\label{eqn:constr:init_z}\\
+		& \bar{v}^r(k|k)=v^r(k)\label{eqn:constr:init_v}\\
+		& \bar{\theta}^r(k|k)=\theta^r(k)\label{eqn:constr:init_theta}
 		\end{align}
 	\end{subequations}
 	where $\bar{p}^r(k+i|k)$, $\bar{v}^r(k+i|k)$ and $\bar{\theta}(k+i|k),\, 0\le i\le N$ represent the planned positions, velocities and heading angles of the robot at time $k+i$, respectively;
@@ -617,7 +626,7 @@
 	To evaluate the IMM-based prediction approaches, the average prediction error over the prediction horizon is computed and compared with the single-model approaches. 
 	At time $k$, the prediction error is defined as:
 	\begin{equation}
-		\Delta_p(k)=\frac{1}{N}\sum\limits_{i=1}^{N}||\tilde{p}^h(k+i|k)-p^h(k+i)||_2\label{eqn:pred_err}
+	\Delta_p(k)=\frac{1}{N}\sum\limits_{i=1}^{N}||\tilde{p}^h(k+i|k)-p^h(k+i)||_2\label{eqn:pred_err}
 	\end{equation}
 	
 	Different from the IMM-based prediction approaches that extrapolate the human position by a weighted sum of the predicted positions from each model, the single-model methods only utilize the uniform motion model for prediction.
@@ -660,8 +669,8 @@
 	At time $k$, they can be defined as:
 	\begin{subequations}
 		\begin{align}
-			\Delta_d(k)&=||z^r(k)-z^h(k)||_2-d_s\label{eqn:err_d}\\
-			\Delta_v(k)&=|v^r(k)-v^h(k)|\label{eqn:err_v}
+		\Delta_d(k)&=||z^r(k)-z^h(k)||_2-d_s\label{eqn:err_d}\\
+		\Delta_v(k)&=|v^r(k)-v^h(k)|\label{eqn:err_v}
 		\end{align}
 	\end{subequations}
 	To evaluate the accompanying performance using single-model predictor and multiple-model predictor, the UKF and IMM-UKF are used in conjunction with MPC to generate two sets of simulation, the results of which are compared.
@@ -744,8 +753,8 @@
 	Similar to IMM-UKF, IMM-LKF works with two dynamic models: one is the uniform motion model; the other is the coordinated turn motion model. If the turn rate is a known constant in the coordinated turn motion model in \cref{eqn:h_c_dyn}, the human estimation procedure can be modeled with the discrete time linear state space system as follows:
 	\begin{subequations}
 		\begin{align}
-			x^h(k+1) = Ax^h(k)+B_ww(k)\label{eqn:h_dyn}\\
-			y^h(k)=Cx^h(k)+v(k)\label{eqn:observation}
+		x^h(k+1) = Ax^h(k)+B_ww(k)\label{eqn:h_dyn}\\
+		y^h(k)=Cx^h(k)+v(k)\label{eqn:observation}
 		\end{align}
 	\end{subequations}
 	where $x^h(k)$ and $y^h(k)$ represent the human motion state and the observation, respectively, at the time step $k$; $w(k)$ and $v(k)$ represent process noise and measurement noise, respectively.
@@ -755,26 +764,26 @@
 	In particular, we define the matrices as follows:
 	\begin{subequations}
 		\begin{align}
-			A_U&=\left[
-			\begin{array}{cccc}
-				1& T& 0& 0\\
-				0& 1& 0& 0\\
-				0& 0& 1& T\\
-				0& 0& 0& 1
-			\end{array}\right],\label{eqn:A_U}\\
-			A_T&=\left[
-			\begin{array}{cccc}
-				1& \frac{\sin(\omega T)}{\omega}& 0& \frac{1-\cos(\omega T)}{\omega}\\
-				0& \cos(\omega T)& 0& -\sin(\omega T)\\
-				0& \frac{1-\cos(\omega T)}{\omega}& 1& \frac{\sin(\omega T)}{\omega}\\
-				0& \sin(\omega T)& 0& \cos(\omega T)
-			\end{array}\right],\label{eqn:A_T}\\
-			B_w&=\left[
-			\begin{array}{cccc}
-				T& 1& 0& 0\\
-				0& 0& T& 1
-			\end{array}\right],\label{eqn:B_w}\\
-			w_U&\sim\mathcal{N}(0,Q_U)\; w_T\sim\mathcal{N}(0,Q_T)\label{eqn:pro_noise}
+		A_U&=\left[
+		\begin{array}{cccc}
+		1& T& 0& 0\\
+		0& 1& 0& 0\\
+		0& 0& 1& T\\
+		0& 0& 0& 1
+		\end{array}\right],\label{eqn:A_U}\\
+		A_T&=\left[
+		\begin{array}{cccc}
+		1& \frac{\sin(\omega T)}{\omega}& 0& \frac{1-\cos(\omega T)}{\omega}\\
+		0& \cos(\omega T)& 0& -\sin(\omega T)\\
+		0& \frac{1-\cos(\omega T)}{\omega}& 1& \frac{\sin(\omega T)}{\omega}\\
+		0& \sin(\omega T)& 0& \cos(\omega T)
+		\end{array}\right],\label{eqn:A_T}\\
+		B_w&=\left[
+		\begin{array}{cccc}
+		\frac{T^2}{2}& T& 0& 0\\
+		0& 0& \frac{T^2}{2}& T
+		\end{array}\right],\label{eqn:B_w}\\
+		w_U&\sim\mathcal{N}(0,Q_U)\; w_T\sim\mathcal{N}(0,Q_T)\label{eqn:pro_noise}
 		\end{align}
 	\end{subequations}
 	where $A_U$ and $A_T$ stand for the $A$ matrices of the uniform motion model and turn motion model, respectively; $w_U$ and $w_T$ denote the process noise of the uniform motion model and turn motion model, respectively; $T$ represents the sampling time; $\omega$ represents the constant turn rate.
@@ -783,12 +792,12 @@
 	Therefore, the parameters in observation model \cref{eqn:observation} can be defined as:
 	\begin{subequations}
 		\begin{align}
-			C&=\left[
-			\begin{array}{cccc}
-				1& 0& 0& 0\\
-				0& 0& 1& 0
-			\end{array}\right],\label{eqn:C}\\
-			v&\sim\mathcal{N}(0,V)\label{eqn:meas_noise}
+		C&=\left[
+		\begin{array}{cccc}
+		1& 0& 0& 0\\
+		0& 0& 1& 0
+		\end{array}\right],\label{eqn:C}\\
+		v&\sim\mathcal{N}(0,V)\label{eqn:meas_noise}
 		\end{align}
 	\end{subequations}
 	Above linear state space models are used in LKF and IMM-LKF in this paper.

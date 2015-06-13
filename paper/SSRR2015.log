@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  10 JUN 2015 10:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  11 JUN 2015 12:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -763,45 +763,69 @@ Underfull \hbox (badness 10000) in paragraph at lines 70--70
  USA
  []
 
+
+LaTeX Warning: Citation `' on page 1 undefined on input line 101.
+
+
+LaTeX Warning: Citation `' on page 1 undefined on input line 101.
+
+
+LaTeX Warning: Citation `' on page 1 undefined on input line 101.
+
+
+LaTeX Warning: Citation `' on page 1 undefined on input line 101.
+
+
+LaTeX Warning: Citation `E.T.Hall' on page 1 undefined on input line 105.
+
+
+LaTeX Warning: Citation `ThehiddenDimension:Manâ€™sUseofSpaceinPublicandPrivate
+.1966' on page 1 undefined on input line 105.
+
+
+LaTeX Warning: Citation `Takayama:Influencesonproxemicbehaviorsinhumanâ€“roboti
+nteraction' on page 1 undefined on input line 107.
+
+
+LaTeX Warning: Citation `kirbyCompanion:Aconstraintoptimizingmethodforpersonacc
+eptablenavigation' on page 1 undefined on input line 110.
+
 [1{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
 
-LaTeX Warning: Reference `fig:sim_field' on page 1 undefined on input line 174.
+LaTeX Warning: Reference `fig:sim_field' on page 1 undefined on input line 183.
 
 
 <figures/ref_traj_init.pdf, id=15, 592.13194pt x 577.01466pt>
 File: figures/ref_traj_init.pdf Graphic file (type pdf)
 
 <use figures/ref_traj_init.pdf>
-Package pdftex.def Info: figures/ref_traj_init.pdf used on input line 190.
+Package pdftex.def Info: figures/ref_traj_init.pdf used on input line 199.
 (pdftex.def)             Requested size: 101.17645pt x 98.59305pt.
 
 <figures/ref_traj_obs1.pdf, id=16, 417.55336pt x 406.86989pt>
 File: figures/ref_traj_obs1.pdf Graphic file (type pdf)
 
 <use figures/ref_traj_obs1.pdf>
-Package pdftex.def Info: figures/ref_traj_obs1.pdf used on input line 196.
+Package pdftex.def Info: figures/ref_traj_obs1.pdf used on input line 205.
 (pdftex.def)             Requested size: 101.17645pt x 98.58821pt.
 
 <figures/ref_traj_obs2.pdf, id=17, 606.42526pt x 591.30806pt>
 File: figures/ref_traj_obs2.pdf Graphic file (type pdf)
 
 <use figures/ref_traj_obs2.pdf>
-Package pdftex.def Info: figures/ref_traj_obs2.pdf used on input line 202.
+Package pdftex.def Info: figures/ref_traj_obs2.pdf used on input line 211.
 (pdftex.def)             Requested size: 101.17645pt x 98.65335pt.
 
 <figures/ref_traj_end.pdf, id=18, 606.42526pt x 591.30806pt>
 File: figures/ref_traj_end.pdf Graphic file (type pdf)
 
 <use figures/ref_traj_end.pdf>
-Package pdftex.def Info: figures/ref_traj_end.pdf used on input line 208.
+Package pdftex.def Info: figures/ref_traj_end.pdf used on input line 217.
 (pdftex.def)             Requested size: 101.17645pt x 98.65335pt.
- [2]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [3 <./figures/ref_traj_init.pdf> <./figures/ref_traj_obs1.pdf
+ [2] [3 <./figures/ref_traj_init.pdf> <./figures/ref_traj_obs1.pdf
 
 pdfTeX warning: /usr/texbin/pdflatex (file ./figures/ref_traj_obs1.pdf): PDF in
 clusion: multiple pdfs with page group included in a single page
@@ -814,7 +838,7 @@ clusion: multiple pdfs with page group included in a single page
 pdfTeX warning: /usr/texbin/pdflatex (file ./figures/ref_traj_end.pdf): PDF inc
 lusion: multiple pdfs with page group included in a single page
 >]
-Overfull \hbox (40.6779pt too wide) in paragraph at lines 519--519
+Overfull \hbox (40.6779pt too wide) in paragraph at lines 528--528
 [] 
  []
 
@@ -829,21 +853,21 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 File: figures/pos_error.pdf Graphic file (type pdf)
 
 <use figures/pos_error.pdf>
-Package pdftex.def Info: figures/pos_error.pdf used on input line 583.
+Package pdftex.def Info: figures/pos_error.pdf used on input line 592.
 (pdftex.def)             Requested size: 202.3529pt x 158.67868pt.
 
 <figures/VelocityComp.pdf, id=280, 418.56375pt x 328.22626pt>
 File: figures/VelocityComp.pdf Graphic file (type pdf)
 
 <use figures/VelocityComp.pdf>
-Package pdftex.def Info: figures/VelocityComp.pdf used on input line 590.
+Package pdftex.def Info: figures/VelocityComp.pdf used on input line 599.
 (pdftex.def)             Requested size: 202.3529pt x 158.67868pt.
 
 <figures/mode_prob.pdf, id=281, 418.56375pt x 342.27875pt>
 File: figures/mode_prob.pdf Graphic file (type pdf)
 
 <use figures/mode_prob.pdf>
-Package pdftex.def Info: figures/mode_prob.pdf used on input line 597.
+Package pdftex.def Info: figures/mode_prob.pdf used on input line 606.
 (pdftex.def)             Requested size: 192.24066pt x 157.19943pt.
  [5 <./figures/pos_error.pdf>]
 Underfull \vbox (badness 1454) has occurred while \output is active []
@@ -853,32 +877,32 @@ Underfull \vbox (badness 1454) has occurred while \output is active []
 File: figures/imm_vs_single.pdf Graphic file (type pdf)
 
 <use figures/imm_vs_single.pdf>
-Package pdftex.def Info: figures/imm_vs_single.pdf used on input line 628.
+Package pdftex.def Info: figures/imm_vs_single.pdf used on input line 637.
 (pdftex.def)             Requested size: 212.47287pt x 159.36115pt.
 
 <figures/r_accomp.pdf, id=292, 735.8249pt x 717.52907pt>
 File: figures/r_accomp.pdf Graphic file (type pdf)
 
 <use figures/r_accomp.pdf>
-Package pdftex.def Info: figures/r_accomp.pdf used on input line 673.
+Package pdftex.def Info: figures/r_accomp.pdf used on input line 682.
 (pdftex.def)             Requested size: 187.17682pt x 182.52406pt.
 
 <figures/dis_diff.pdf, id=293, 301.125pt x 241.90375pt>
 File: figures/dis_diff.pdf Graphic file (type pdf)
 
 <use figures/dis_diff.pdf>
-Package pdftex.def Info: figures/dis_diff.pdf used on input line 679.
+Package pdftex.def Info: figures/dis_diff.pdf used on input line 688.
 (pdftex.def)             Requested size: 187.17682pt x 150.37003pt.
 
 <figures/vel_diff.pdf, id=294, 301.125pt x 241.90375pt>
 File: figures/vel_diff.pdf Graphic file (type pdf)
 
 <use figures/vel_diff.pdf>
-Package pdftex.def Info: figures/vel_diff.pdf used on input line 686.
+Package pdftex.def Info: figures/vel_diff.pdf used on input line 695.
 (pdftex.def)             Requested size: 187.17682pt x 150.37003pt.
  [6 <./figures/VelocityComp.pdf> <./figures/mode_prob.pdf> <./figures/imm_vs_si
 ngle.pdf>]
-Underfull \hbox (badness 1571) in paragraph at lines 718--726
+Underfull \hbox (badness 1571) in paragraph at lines 727--735
 \OT1/ptm/m/n/10 based mo-tion plan-ning ap-proach for human-companion
  []
 
@@ -886,7 +910,7 @@ Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no “ in font ptmr7t!
 
-LaTeX Warning: Reference `eqn:h_c_dyn' on page 1 undefined on input line 744.
+LaTeX Warning: Reference `eqn:h_c_dyn' on page 1 undefined on input line 753.
 
 [7 <./figures/r_accomp.pdf> <./figures/dis_diff.pdf> <./figures/vel_diff.pdf>]
 (./SSRR2015.bbl)
@@ -910,10 +934,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 17045 strings out of 493117
- 332931 string characters out of 6135433
- 392201 words of memory out of 5000000
- 20169 multiletter control sequences out of 15000+600000
+ 17050 strings out of 493117
+ 333143 string characters out of 6135433
+ 394201 words of memory out of 5000000
+ 20174 multiletter control sequences out of 15000+600000
  48452 words of font info for 109 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  62i,15n,81p,1114b,821s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -936,7 +960,7 @@ ts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2014/texmf-dist/fonts
 rw/times/utmb8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/u
 tmbi8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmr8a.pfb
 ></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on SSRR2015.pdf (8 pages, 626303 bytes).
+Output written on SSRR2015.pdf (8 pages, 627718 bytes).
 PDF statistics:
  489 PDF objects out of 1000 (max. 8388607)
  333 compressed objects within 4 object streams
