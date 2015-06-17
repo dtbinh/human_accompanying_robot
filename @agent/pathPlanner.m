@@ -272,12 +272,8 @@ cmft_dis = inPara.cmft_dis;
 for ii = 1:hor
     % objective
     hr_dis = sum(abs(sum((x(1:2,ii+1)-x_h(:,ii+1)).^2)-cmft_dis^2)); % square of the Euclidean distance between human and robot
-    if ii == 1
-        obj = obj+hr_dis+2*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
-    else
-        obj = obj+hr_dis+2*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(u(1,ii-1)))^2;
-    end
-    
+    obj = obj+hr_dis+2*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
+  
     % constraints
     % constraints on robot dynamics
     constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(4,ii)*[cos(x(3,ii));sin(x(3,ii))]*mpc_dt,...

@@ -17,7 +17,10 @@ dt = 0.05; % time interval for sampling the points on the line of the robot's pa
 safe_marg2 = 0.1; % margin for the robot's path line from the obstacle
 h_v_value = norm(h_v,2);
 
+% adjust the robot's heading towards the vector pointing to the human
+% position from the robot position
 init_state = [agent.currentPos;agent.currentV];
+hr_angle = calAngle(x_h - agent.currentPos(1:2));
 
 % define MPC
 x = sdpvar(4,hor+1); %[x,y,theta,v]
@@ -31,7 +34,7 @@ inPara_cg = struct('hor',hor,'x',x,'u',u,'h_v',h_v_value,'mpc_dt',mpc_dt,...
     'safe_dis',safe_dis,'safe_marg',safe_marg,'x_h',x_h,'obs_info',obs_info,...
     'non_intersect_flag',non_intersect_flag,'obj',0,'constr',constr,...
     'agent',agent,'dt',dt,'safe_marg2',safe_marg2,'init_state',init_state,...
-    'cmft_dis',cmft_dis);
+    'cmft_dis',cmft_dis,'hr_angle',hr_angle);
 [obj,constr] = genMPC(inPara_cg); % generate constraints. contain a parameter that decides whether using the non-intersection constraints
 
 % in this mpc part, the strategy for dealing with infeasibility come from
@@ -266,17 +269,15 @@ agent = inPara.agent;
 dt = inPara.dt;
 safe_marg2 = inPara.safe_marg2;
 cmft_dis = inPara.cmft_dis;
+hr_angle = inPara.hr_angle;
 % init_state = inPara.init_state;
 
 % [A,B,c] = linearize_model(init_state,mpc_dt);
+
 for ii = 1:hor
     % objective
     hr_dis = abs(sum((x(1:2,ii+1)-x_h).^2)-cmft_dis^2); % square of the Euclidean distance between human and robot
-    if ii == 1
-        obj = obj+hr_dis+2*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
-    else
-        obj = obj+hr_dis+2*(x(4,ii+1)-h_v)^2;%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(u(1,ii-1)))^2;
-    end
+    obj = obj+hr_dis+2*(x(4,ii+1)-h_v)^2;%+abs(x(3,ii+1)-hr_angle);%-0.1*log(hr_dis-safe_dis^2);%+(sin(u(1,ii))-sin(r_hd))^2;%+0.5*u(2,ii)^2
     
     % constraints
     % constraints on robot dynamics

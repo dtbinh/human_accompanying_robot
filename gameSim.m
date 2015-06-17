@@ -22,7 +22,7 @@ h.currentV = 1.5;
 
 % Robot agent 1
 r = agent('robot');
-r.currentPos = [5/3;10/3;pi/4];%[20/3;10/3;0]; 
+r.currentPos = [5/3;10/3;0];%[20/3;10/3;0]; 
 r.currentV = 1;
 r.a_lb = -3; 
 r.a_ub = 1;
@@ -87,7 +87,7 @@ kf = 350; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon 
 pre_type = 'IMM';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion
-plan_type = 'MPC'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
+plan_type = 'greedy0'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
 samp_rate = 20; % sampling rate (/Hz)
 safe_dis = 1; %safe distance between human and robot
 safe_marg = 1; % safety margin between human the the obstacle
