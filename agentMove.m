@@ -139,11 +139,12 @@ cmft_dis = inPara.cmft_dis;
 %                 'safe_marg',safe_marg,'plan_type',plan_type);
 
             % assume accurate estimation and prediction
-            load('human_traj.mat','human_traj');
-            inPara_pp = struct('pre_traj',human_traj(1:2,k:k+hor),'hor',hor,...
-                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',1.5,...
-                'obs_info',{campus.obs_info},...
-                'safe_marg',safe_marg,'plan_type',plan_type);
+%             load('human_traj.mat','human_traj');
+            inPara_pp = struct('pre_traj',pre_traj(:,1,k),'hor',1,...
+                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',...
+                [x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],...
+                'obs_info',campus.obs_info,'safe_marg',safe_marg,...
+                'guess_u',guess_u,'guess_x',guess_x,'cmft_dis',cmft_dis);
             outPara_pp = pathPlannerGreedy(agent,inPara_pp);
             opt_x = outPara_pp.opt_x;
             opt_u = outPara_pp.opt_u;
@@ -151,7 +152,7 @@ cmft_dis = inPara.cmft_dis;
             agent.currentV = opt_x(4,2); % robot updates its speed
             r_state(:,k+1) = opt_x(:,2);
             r_input(:,k) = opt_u(:,1);
-            plan_state(:,:,k) = opt_x;
+            plan_state(:,1:size(opt_x,2),k) = opt_x;
         end
         %}
         if k == 1

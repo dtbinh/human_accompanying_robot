@@ -22,7 +22,7 @@ h.currentV = 1.5;
 
 % Robot agent 1
 r = agent('robot');
-r.currentPos = [5/3;10/3;0];%[20/3;10/3;0]; 
+r.currentPos = [5/3;10/3;pi/4];%[20/3;10/3;0]; 
 r.currentV = 1;
 r.a_lb = -3; 
 r.a_ub = 1;
@@ -233,7 +233,7 @@ for k = 1:kf
     end
     %% plot trajectories
     % draw under certain conditions
-    if (k == 1) || (k == obs1.s_time) || (k == obs2.s_time) || (k >= 300)
+    if true %(k == 1) || (k == obs1.s_time) || (k == obs2.s_time) || (k >= 300)
         % plot specifications
         color_agent = {'r','g','k','b','m','m'};
         marker_agent = {'o','^','*','d'};
