@@ -193,16 +193,16 @@
 	%\end{figure}
 	
 	\section{PROBLEM FORMULATION}\label{sec:formulation}
-	Consider\todonote{dh: Considering?} a scenario (\cref{fig:sim_field}) in which a companion robot, denoted as the red dot, needs to accompany a human, represented by the green triangle, who will move sequentially to several destinations, shown as blue hollow stars, in the field.
+	Considering a search-and-rescue scenario (\cref{fig:sim_field}) in which a human first responder needs to deliver medical treatment to several destinations that contain injured people in a planar field. 
+	A companion robot that carries medical apparatus will accompany the human and sequentially move to these destinations.
 	% The red circle and the green triangle at the lower-left corner denote the human and the robot, respectively. 
 	The robot has no knowledge about the positions of destinations.
-	However, it can measure human positions in real-time from a GPS sensor via cellphone communication.\todonote{dh: sensors like GPS or Camera}
-	There exist several obstacles in the field, the positions of which are known and are shown as the blue circle and semicircles.\todonote{dh: I guess we need to explain more detailed about obstacles in the sceniario to show the effort that mimic the real environment. for example, we can say that there are two moving and six stationay obstacles in the scenario}
+	However, it can measure human positions in real-time from measurement equipments such as a camera or a portable GPS sensor that the target human carries.
+	Several obstacles exist in the field, including five stationary ones and two moving ones, representing unmovable obstructions, such as buildings or plants, and mobile objects, such as pedestrians or vehicles, respectively.
+	The positions of stationary obstacles are known to both the human and the companion robot while the moving obstacles are measured using same measurement tools for tracking the human rescuer.
 	%	Neither the human nor the robot can step into or cross these obstacles. 
-	To make socially desirable behavior, the robot should satisfy the aforementioned safety, comfortableness and naturalness requirements\todohere{add formal definitions for these concepts}.
-	In this scenario, the safety concern requires the robot to avoid colliding with either the human or any obstacles.
-	Comfortableness requires that the robot maintain a proper distance from the human and naturalness necessitates that the robot keep the velocity similar to that of the human.
-	\todohere{make it clear that how these requirements are instantiated in this paper.}
+	To make socially desirable behavior, the robot should satisfy the aforementioned safety and comfort requirements, which requires the robot to avoid colliding with either the human or any obstacles and maintain a proper distance from the accompanied human.
+	To be specific, \todohere{make it clear that how these requirements are instantiated in this paper.}
 	%We apply our method to the robot so that it can track the human motion and plan its own behavior.
 	%The performance of the robot will be evaluated based on these three requirements.
 	
@@ -245,9 +245,10 @@
 	\subsection{Human Motion Estimation}\label{subsec:human_track}
 	The Interacting Multiple Model (IMM) approach are applied for estimating the human motion from the noisy sensor data.
 	The IMM approach has been generally considered as the mainstream method for maneuvering target estimation. 
-	It utilizes a bank of $r$ number of filters, each designed to model a different dynamics.
+	It utilizes a bank of $r$ number of filters, each (designed to model) \todohere{corresponding to} a different dynamics.
 	% IMM algorithm is a sub-optimal algorithm based on the minimum mean square error criterion. 
-	In the IMM estimator, state estimate at time $k$ is computed with mode probability and state estimates from each possible current model associated with one of the $r$ filters, using the following formula:
+%	State estimate at time $k$ is computed with mode probabilities and state estimates from each possible current model associated with one of the $r$ filters, using the following formula:
+	State estimate at time $k$ is computed as a weighted sum of estimates from each filter, as shown in the following formula:
 	\[
 	\hat{x}(k|k)=\sum\limits_{j=1}^{r}\mu_j(k)\hat{x}^j(k|k)
 	\]
@@ -258,16 +259,17 @@
 	where $c$ denotes the normalizing factor; $L_{ij}(k)$ stands for the likelihood function and $p_{ij}$ represents the mode transition probability from the $i^\text{th}$ to the $j^\text{th}$ model. 
 	Each filter uses the mixed initial state estimate and covariance from different combination of the previous model. 
 	Readers interested in the details of the IMM approach can refer to \cite{yaakov2002estimation}.
-	
+	The IMM approach offers the benefits of incorporating multiple motion models in the estimation process, which makes it suitable for human state estimation since when a person moves, it usually involves multiple motion patterns.
 	% We now motivate the use if nonlinear models in the IMM by introducing a popular nonlinear model used in target tracking. It is the Coordinated Turn model, whose name is derived from the aerospace industry. A coordinated turn is a turn in which the turn rate and speed are constant. If the turn rate is a known constant the model is linear. \cite {derek_phd_dissertation} 
 	
 	% Unfortunately, the turn rate of the human is rarely constant. Thus the coordinated turn model will be augmented with the turn rate as additional state. Therefore it is necessary to use an nonlinear system.
-	Two different dynamic models are used in the IMM framework. One is the coordinated turn motion model and the other is the uniform motion model. The equation of motion for the both the coordinated turn motion and uniform motion model becomes the following
+	In this work, two different dynamic models are used in the IMM framework: one is the coordinated turn motion model, reflecting the action of making turns, and the other is the uniform motion model, representing the straight-line movement behavior. 
+	The equation of motion for the both the coordinated turn motion and uniform motion model becomes the following \todohere{is this the equation of turn motion model only?}
 	\begin{subequations}
 		\begin{align}
-		x^h(k+1)&= f(x^h(k))+Gw(k)\\
+		x^{h,1}(k+1)&= f(x^{h,1}(k))+Gw(k)\\
 		%Q(k)&=E[w(k)w(k)^\top]
-		f(x^h(k))&=\left[
+		f(x^{h,1}(k))&=\left[
 		\begin{array}{c}
 		p^h_1+\frac{\sin(\omega^h T)}{\omega^h}v^h_1-\frac{1-\cos(\omega^h T)}{\omega^h}v^h_2\\
 		\cos(\omega^h T)v^h_1-\sin(\omega^h T)v^h_2\\
@@ -286,11 +288,18 @@
 		w&\sim\mathcal{N}(0,Q)
 		\end{align}
 	\end{subequations}
-	where $x^h(k)$ represents the human motion state including five elements : $p^h_1,v^h_1,p^h_2,v^h_2,\omega^h$, where $p^h_1,p^h_2$ denote the longitudinal and lateral position of the human, $v^h_1,v^h_2$ the corresponding velocity and $\omega^h$ the turn rate of the human; $w(k)$ represents process noise; $T$ represents the sampling time; Q is the covariance matrix of the process noise.\\
-	The uniform motion model is nothing more than the limiting case of the coordinated turn motion model as turn rate, $\omega$, gose to zero while the coordinated turn motion model consider that turn rate is modeled as time-varying. If all motions are covered by a single model, the need for the IMM is eliminated. Although computations are reduced by using a single model, it happens to lose the ability to quickly detect the change of motions. This trade-off between computation and motion-change detection is main argument when choosing a single or a multiple model approach. The decision is a bit clearer in linear case since the turn rate is fixed in linear dynamic models. With a single nonlinear model, it is possible to provide accurate state estimates. However, it is common to include one uniform motion model and one coordinated turn motion model for quick motion-change detection. Since human motion usually involves different motions in the real world, the ability to quickly dectect the change of the motion is one of the important properties for the estimation and prediction.          
+	where $x^h(k)$ represents the human motion state including five elements : $p^h_1,v^h_1,p^h_2,v^h_2,\omega^h$, where $p^h_1,p^h_2$ denote the longitudinal and lateral position of the human, $v^h_1,v^h_2$ the corresponding velocity and $\omega^h$ the turn rate of the human; $w(k)$ represents process noise; $T$ represents the sampling time; Q is the covariance matrix of the process noise.
 	
-	
-	
+	The uniform motion model is nothing more than a special case of the coordinated turn motion model with the turn rate $\omega$ being fixed to zero.
+%	while the coordinated turn motion model considers the turn rate as a time-varying value.
+%	If the human motion can be covered by a single model, the need for the IMM is eliminated.
+%	Though the uniform motion model is a special case of the coordinated turn motion model and thus it seems to be sufficient to only consider the coordinated turn motion model, 
+	It seems that only considering the coordinated turn motion model suffices to estimate human motion states, in addition to the benefits of reduced computations by using the single model.
+	However, including two models are necessary since this allows the estimator for fast detection of change of motions. 
+%	This trade-off between computation and motion-change detection is main argument when choosing a single or a multiple model approach. 
+	\todonote{May need to make the point clearer in the following sentences.}
+	The decision is a bit clearer in linear case since the turn rate is fixed in linear dynamic models. With a single nonlinear model, it is possible to provide accurate state estimates. However, it is common to include one uniform motion model and one coordinated turn motion model for quick motion-change detection. 
+	Since human motion usually involves different motions in the real world, the ability to quickly detect the change of the motion is one of the important properties for the estimation and prediction.          	
 	
 	% In continuous time domain, the equations of the coordinated turn motion model can be written as 
 	% \begin{subequations}
@@ -321,10 +330,11 @@
 	
 	% With a single nonlinear model, accurate state estimates are possible over all target motions and maneuvers may be inferred from the state estimates themselves. However, in nonlinear multiple model approach, it is common to include one uniform motion model and one coordinated turn model for quick maneuver detection\cite {derek_phd_dissertation}. 
 	
+	\todohere{may present the uniform motion model before commenting on it}
 	The equation of the uniform motion model is shown as follows:  
 	\begin{subequations}
 		\begin{align}
-		\dot{x^h}(k+1)= Ax^h(k)+Bw(k)\label{eqn:h_d_dyn}\\
+		\dot{x}^{h,2}(k+1)&= Ax^{h,2}(k)+Bw(k)\label{eqn:h_d_dyn}\\
 		A=\left[
 		\begin{array}{ccccc}
 		1& T& 0& 0& 0\\
@@ -332,7 +342,7 @@
 		0& 0& 1& T& 0\\
 		0& 0& 0& 1& 0\\
 		0& 0& 0& 0& 0\\
-		\end{array}\right]
+		\end{array}\right]&,\;
 		B=\left[
 		\begin{array}{ccc}
 		\frac{T^2}{2}& 0& 0\\
@@ -350,10 +360,10 @@
 		y^h(k)=Cx^h(k)+v(k)\label{eqn:n_observation}
 		\end{align}
 	\end{subequations}
-	where $y^h(k)$ denotes the human motion observation at the time step $k$; $v(k)$ stands for measurement noise 
+	where $y^h(k)$ denotes the observed human state at the time step $k$; $v(k)$ stands for measurement noise. 
 	
-	We assume that only the human position can be measured.
-	Therefore, the parameters in observation model \cref{eqn:n_observation} can be defined as:
+	By using GPS sensors or cameras, the human positions can be measured.
+	Therefore, the parameters in observation model \cref{eqn:n_observation} is defined as:
 	\begin{subequations}
 		\begin{align}
 		C&=\left[
@@ -366,7 +376,7 @@
 		\end{align}
 	\end{subequations}
 	where $V$ is the convariance matrix of the measurement noise.
-	The above two models are used for human motion state estimation using the Unscented Kalman Filter.
+	The above two models are utilized for human motion state estimation, in combination with the Unscented Kalman Filter.
 	
 	% Two models differ in the $A$ matrix and $w$ in \cref{eqn:hn_dyn} while sharing the same $B_w$.
 	% In particular, we define the matrices as follows:
@@ -417,10 +427,10 @@
 	% We select the Unscented Kalman Filter (UKF) among the nonlinear estimation methods since the UKF is a versatile engineering tool that once understood can provide good nonlinear estimation results for many practical problems. Due to lack of Jacobian matrix calculation, the UKF can also be constructed and altered more easily than the Exteded Kalman Filter (EKF) in the prototyping stages of filter design. 
 	% In other words, the UKF circumvents the first-order linearization by implementing the Unscented Transformation (UT), which calculates the statistics of a random vector that undergoes a nonlinear transformation\cite {KalmanFiltering}.
 	% The Unscented Kalman Filter (UKF) circumvents the first-order linearization by implementing the Unscented Transformation (UT), which calculates the statistics of a random vector that undergoes a nonlinear transformation\cite {KalmanFiltering}
-	The Unscented Kalman Filter (UKF) is an effective state estimation technique for nonlinear systems by implementing the Unscented Transformation (UT) to calculate the statistics of a random vector that undergoes a nonlinear transformation\cite {KalmanFiltering}
+	The Unscented Kalman Filter (UKF) is an effective state estimation technique for nonlinear systems by implementing the Unscented Transformation (UT) to calculate the statistics of a random vector that undergoes a nonlinear transformation\cite {KalmanFiltering}.
 	% The UT is the central technique of the UKF which is used to handle the non-linearity in a nonlinear transformation. 
 	% This method provides the mean and covariance of the Gaussian Random Vector (GRV) at least second-order accuracy(Taylor Series Expansion) through use a set of sample points. 
-	Given an $L$-dimensional Gaussian Random Vector (GRV) $x$ with mean $\hat{x}$ and covariance $P_x$, the statistics of $z=f(x)$ are approximated by the selection of $2L+1$ discrete sample points $\left\{\chi^{(i)} \right\}_{i=0}^{2L}=\left\{ \hat{x}\ \text{and}\  \hat{x} \pm \sigma_j, j=1,...,L\right \}$ where $\sigma_i$ is the $i^{th}$ column of the matrix $\sqrt{(L+\lambda)P_x}$. $\lambda$ is a scaling parameter, defined below.  
+	Given an arbitrary nonlinear dynamic model $z=f(x)$ and as $L$-dimensional Gaussian Random Vector (GRV) $x$ with mean $\hat{x}$ and covariance $P_x$\todohere{how to choose the mean and Covariance}, the statistics of $z=f(x)$ can be approximated by the selection of $2L+1$ discrete sample points $\left\{\chi^{(i)} \right\}_{i=0}^{2L}=\left\{ \hat{x}\ \text{and}\  \hat{x} \pm \sigma_j, j=1,...,L\right \}$, where $\sigma_i$ is the $i^{th}$ column of the matrix $\sqrt{(L+\lambda)P_x}$. $\lambda$ is a scaling parameter, as defined below:
 	\begin{subequations}
 		\begin{align}
 		\lambda&=\alpha^2(L+\kappa)-L\\
@@ -430,16 +440,16 @@
 		%\gamma&=\sqrt{L+\lambda}
 		\end{align}
 	\end{subequations}
-	where $\alpha$ determines the spread of sigma points about the mean $\hat{x}$; $\kappa$ is a secondary scaling parameter; $\beta$ is used to incorporate prior knowledge of the distribution. (our simulation uses $L=5,\alpha=0.001, \kappa=0, \beta=2$)  
+	where $\alpha$ determines the spread of sigma points\todohere{May need to give the definition here} about the mean $\hat{x}$; $\kappa$ is a secondary scaling parameter; $\beta$ is used to incorporate prior knowledge of the distribution. \todohere{move this to the simulation section}(our simulation uses $L=5,\alpha=0.001, \kappa=0, \beta=2$)  
 	
-	Once the discrete sample points $\left\{\chi^{(i)} \right\}_{i=0}^{2L}$, called \textit{sigma points}, have been generated, each point is passed through the nonlinear function $z=f(x)$, i.e. each column of the sigma points is propagated through the non-linearity, as in $\zeta=f(\chi), i=0,...,2L$. The mean $\hat{z}$ and the covariance $P_z$ are approximated as $\hat{z}\simeq \Sigma_{i=0}^{2L}W_i^{(m)} \zeta^{(i)}$ and $P_z \simeq  \Sigma_{i=0}^{2L}W_i^{(c)}(\zeta^{(i)}-\hat{z})(\zeta^{(i)}-\hat{z})^\mathsf{T}$, are calculated as given in above equations of the weights and parameters\cite{Hong}. Readers can refer to \cite {KalmanFiltering} for more details of UKF algorithm. 
+	Once the discrete sample points $\left\{\chi^{(i)} \right\}_{i=0}^{2L}$, called \textit{sigma points}, have been generated, each point is passed through the nonlinear function $z=f(x)$, i.e. each column of the sigma points is propagated through the non-linearity, as in $\zeta=f(\chi), i=0,...,2L$. The mean $\hat{z}$ and the covariance $P_z$ are approximated as $\hat{z}\simeq \Sigma_{i=0}^{2L}W_i^{(m)} \zeta^{(i)}$ and $P_z \simeq  \Sigma_{i=0}^{2L}W_i^{(c)}(\zeta^{(i)}-\hat{z})(\zeta^{(i)}-\hat{z})^\mathsf{T}$, \todohere{some typo?}are calculated as given in above equations of the weights and parameters\cite{Hong}. Readers can refer to \cite {KalmanFiltering} for more details of the UKF algorithm. 
 	
 	\subsection{Human Motion Prediction}\label{subsec:motion_pred}
 	The estimated human motion states and the mode probabilities are utilized for predicting human future states.
+	To be specific, using the uniform motion model and the turn motion model, human positions for each model can be extrapolated and the combined with the mode probabilities to obtain the predicted positions.
 	%Let $\mu_i$ denote the mode probability of the $i^{\text{th}}$ model.
-	Let $\hat{x}^{h,j}(k|k)$ and $\tilde{x}^{h,j}(k+i|k)$ represent the estimated and predicted human states associated with the $j^{th}$ model at time $k$ and $k+i\,(i\ge 0)$, respectively, based on the observation up to time $k$.
-	Using the uniform motion model and the turn motion model, human positions for each model can be extrapolated and combined with the mode probabilities.
-	To be specific, the prediction procedure works as follows:
+	Let $\hat{x}^{h,j}(k|k)$ and $\tilde{x}^{h,j}(k+i|k)$ represent the estimated and predicted human states associated with the $j^{th}$ model at time $k$ and $k+i\,(i\ge 0)$, respectively, based on the observations up to time $k$.
+	The prediction procedure works as follows:
 	\begin{subequations}\label{eqn:motion_pred_imm}
 		\begin{align}
 		\tilde{x}^h(k+l+1|k)&=\sum\limits_{j=1}^{r}\mu_j \tilde{x}^{h,j}(k+l+1|k)\\ l&=0,\dots,N-1\\
@@ -478,9 +488,9 @@
 	%%where x ̃(0)=x ̂,y ̃(0)=y ̂, Δt denotes the sampling time and N represents the prediction horizon.
 	
 	\subsection{Robot Path Planning}\label{subsec:robot_path_plan}
-	The model predictive control (MPC) method provides an effective framework for incorporating the safety, comfortableness and naturalness requirements into the robot motion planning.
+	The model predictive control (MPC) method provides an effective framework for incorporating the safety and comfort requirements into the robot motion planning.
 	MPC iteratively solves a finite time constrained optimal control problem.
-	After obtaining the optimal series of control inputs at current state, it implements the first input and then computes for a new series of control inputs, starting from the new state.
+	After obtaining the optimal finite control inputs, it implements the first input and then computes for a new set of control inputs, starting from the updated state.
 	Use $(p^r(k),v^r(k),\theta^r(k))$ to denote the robot state at time $k$, representing the position, speed and heading angle, respectively.
 	The control input consists of the acceleration $a^r(k)$ and the angular velocity $\omega^r(k)$.
 	%\todonote{consider removing the following part as it is included in MPC formulation}
@@ -513,11 +523,12 @@
 	% \end{subequations}
 	%We discretize the above model using Euler discretization method with the sampling time $\Delta t$.
 	%Considering the time step $k$, we formulate the MPC problem that incorporates the dynamics of the robot and the requirements for robot motion:
-	The robot motion planning problem is formulated as an MPC problem that incorporates the kinematics of the robot and the aforementioned requirements:
+	The robot motion planning problem is formulated as a nonlinear programming problem that incorporates the kinematics of the robot and the safety and comfort requirements:
+	\todohere{add the constrait on avoiding moving obstacles}
 	\begin{subequations}\label{eqn:path_plan_mpc}
 		\begin{align}
-		\min_{\mathbf{A}_k,\mathbf{\Theta}_k} \quad &\sum\limits_{i=1}^{N} q_1||\bar{p}^r(k+i|k)-\tilde{p}^h(k+i|k)||^2_2+ \notag\\
-		& q_2|\bar{v}^r(k+i|k)-\tilde{v}^h(k+i|k)|^2\label{eqn:obj}\\
+		\min_{\mathbf{A}_k,\mathbf{\Theta}_k} \quad &\sum\limits_{i=1}^{N} q_1\left| \left\|\bar{p}^r(k+i|k)-\tilde{p}^h(k+i|k)\right\|^2_2-d^2_{c}\right| + \notag\\
+		& q_2\left|\bar{v}^r(k+i|k)-\tilde{v}^h(k+i|k)\right|^2\label{eqn:obj}\\
 		\text{subject to} \quad & \bar{p}^r(k+i+1|k)=\bar{p}^r(k+i|k)\notag\\
 		&+\bar{v}^r(k+i|k)
 		\left[ 
@@ -533,25 +544,29 @@
 		% & ||\bar{p}^r(k+i+1|k)-\tilde{p}^h(k+i+1|k)||_2\geq d_c\label{eqn:constr:comfort}\\
 		& ||\bar{p}^r(k+i+1|k)-\tilde{p}^h(k+i+1|k)||_2\geq d_s\label{eqn:constr:safety}\\
 		& ||\bar{p}^r(k+i+1|k)-p^{obs}_l||_2\geq r^{obs}_l\label{eqn:constr:obs1}\\
-		& ||\lambda \bar{p}^r(k+i|k)+(1-\lambda)\bar{p}^r(k+i+1|k)-p^{obs}_l||_2\geq r^{obs}_l,\notag\\
-		& \, \forall l=1,\dots,m,\, 0\le \lambda\le 1\label{eqn:constr:obs2}\\
+		& ||\lambda \bar{p}^r(k+i|k)+(1-\lambda)\bar{p}^r(k+i+1|k)-p^{obs}_l||_2\notag\\
+		& \geq r^{obs}_l,\, \forall l=1,\dots,m,\, 0\le \lambda\le 1\label{eqn:constr:obs2}\\
 		& \bar{p}^r(k|k)=p^r(k)\label{eqn:constr:init_z}\\
 		& \bar{v}^r(k|k)=v^r(k)\label{eqn:constr:init_v}\\
 		& \bar{\theta}^r(k|k)=\theta^r(k)\label{eqn:constr:init_theta}
 		\end{align}
 	\end{subequations}
-	where $\bar{p}^r(k+i|k)$, $\bar{v}^r(k+i|k)$ and $\bar{\theta}(k+i|k),\, 0\le i\le N$ represent the planned positions, velocities and heading angles of the robot at time $k+i$, respectively;
+	where $\bar{p}^r(k+i|k)$, $\bar{v}^r(k+i|k)$ and $\bar{\theta}(k+i|k),\, 0\le i\le N$ represent the planned position, speed and heading angle at time $k+i$, respectively;
 	$m$ is the number of obstacles and $p^{\text{obs}}_l$ and $r^{\text{obs}}_l$ denote the position and the radius of the $l^{\text{th}}$ obstacle;
 	$(\mathbf{A}_k,\mathbf{\Theta}_k)$ stand for the set of optimal acceleration and angular velocity in the prediction  horizon $[k,k+N-1]$, obtained by solving the MPC problem at time $k$.
 	
-	The objective function \cref{eqn:obj} consists of two terms, standing for the square sum of position and velocity differences between planned robot states and predicted human states over the horizon $N$.
-	This reflects the comfortableness and naturalness requirements that the robot stay close to the accompanied human and keep similar pace.
+	The objective function \cref{eqn:obj} consists of two terms: the first one standing for the difference between the squared human-robot distances and the comfort distance; the second one representing the velocity differences between the robot and the accompanied human.
+	This reflects the comfort requirement that the robot stay around the comfort distance from the the human and keep similar pace at the same time.
 	$q_1$ and $q_2$ denote the weights for these two terms.
 	\cref{eqn:constr:dyn_pre_motion,eqn:constr:dyn_pre_v,eqn:constr:dyn_pre_theta,eqn:constr:a,eqn:constr:w} represent the roboot's discrete-time kinematic model with limited acceleration and angular velocity, with $a_{lb},w_{lb}$ being the corresponding lower bounds and $a_{ub},w_{ub}$ the upper bounds.
 	% \cref{eqn:constr:comfort} imposes the comfortableness requirement that the robot keep a distance $d_c$ from the predicted human position within the prediction horizon $N$.
-	\cref{eqn:constr:safety} imposes the safety constraints that the robot should maintain a minimum distance $d_s$ from the human in order to avoid collision.
-	\cref{eqn:constr:obs1,eqn:constr:obs2} enforces the requirements on collision avoidance with obstacles.
-	In particular, \cref{eqn:constr:obs1} demands that each way point of the robot be kept outside of obstacles and \cref{eqn:constr:obs2} requires that the trajectory connecting the adjacent way points not intersect with obstacles.
+	The safety constraints is imposed in \cref{eqn:constr:safety}, by regulating that the robot maintain at least the safety distance $d_s$ from the human in order to avoid collision.
+	In addition, \cref{eqn:constr:obs1,eqn:constr:obs2} enforces the collision avoidance with obstacles.
+	To be specific, \cref{eqn:constr:obs1} demands that each way point of the robot be kept outside of static obstacles.
+	Rectangular obstacles are approximated by ellipsis, the details of which are described in the Appendix.
+	\cref{eqn:constr:obs2} requires that the trajectory connecting the adjacent way points not intersect with obstacles, which eliminates the waypoints that leads the robot across obstacles.
+	To avoid moving obstacles, the same motion prediction method described in \cref{subsec:motion_pred}is applied, resulting in predicted positions \todohere{define notations}.
+	\cref{key} requires the robot to stay away from the moving obstacles by distance $d_s$.
 	\cref{eqn:constr:init_z,eqn:constr:init_v,eqn:constr:init_theta} shows the constraints on robot's initial state at time $k$.
 	
 	%At every time step, the robot solves this MPC problem with a finite horizon $N$ and obtains the optimal inputs.
