@@ -74,8 +74,11 @@ cmft_dis = inPara.cmft_dis;
         cur_hd = h.currentPos(3);
         %% estimate human position
         %
-%         [x_est,y_est,x_pos_pre,y_pos_pre] = IMM_UKF_run();
-        [x_est,y_est,x_pos_pre,y_pos_pre] = UKF_run();
+        if strcmp(pre_type,'IMM-UKF')
+            [x_est,y_est,x_pos_pre,y_pos_pre] = IMM_UKF_run();
+        elseif strcmp(pre_type,'UKF')
+            [x_est,y_est,x_pos_pre,y_pos_pre] = UKF_run();
+        end
         est_state([1,2],:,k) = x_est((k-1)*samp_num+1:end-1,:)';
         est_state([3,4],:,k) = y_est((k-1)*samp_num+1:end-1,:)';
         %}
@@ -89,7 +92,7 @@ cmft_dis = inPara.cmft_dis;
         %%  predict human future path
         % prediction by IMM
         %
-        if strcmp(pre_type,'IMM')
+        if strcmp(pre_type,'IMM-UKF') || strcmp(pre_type,'UKF')
             pre_traj(:,:,k) = [[x_est((k-1)*samp_num+1,1);y_est((k-1)*samp_num+1,1)],[x_pos_pre(k,:);y_pos_pre(k,:)]];
 %             pre_traj(:,:,k) = [x_pos_pre_imm(:,k)';y_pos_pre_imm(:,k)'];
         % prediction by extrapolation
@@ -140,7 +143,7 @@ cmft_dis = inPara.cmft_dis;
 
             % assume accurate estimation and prediction
 %             load('human_traj.mat','human_traj');
-            inPara_pp = struct('pre_traj',pre_traj(:,1,k),'hor',hor,...
+            inPara_pp = struct('pre_traj',pre_traj(:,1,k),'hor',2,...
                 'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',...
                 [x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],...
                 'obs_info',campus.obs_info,'safe_marg',safe_marg,...

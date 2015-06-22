@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  20 JUN 2015 22:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  21 JUN 2015 02:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -902,32 +902,32 @@ File: figures/r_accomp.pdf Graphic file (type pdf)
 Package pdftex.def Info: figures/r_accomp.pdf used on input line 710.
 (pdftex.def)             Requested size: 187.17682pt x 182.52406pt.
 
-<figures/dis_diff.pdf, id=293, 301.125pt x 241.90375pt>
+<figures/dis_diff.pdf, id=293, 301.125pt x 225.84375pt>
 File: figures/dis_diff.pdf Graphic file (type pdf)
 
 <use figures/dis_diff.pdf>
 Package pdftex.def Info: figures/dis_diff.pdf used on input line 716.
-(pdftex.def)             Requested size: 187.17682pt x 150.37003pt.
+(pdftex.def)             Requested size: 187.17682pt x 140.38695pt.
  [6 <./figures/VelocityComp.pdf> <./figures/mode_prob.pdf> <./figures/imm_vs_si
 ngle.pdf>]
-<figures/vel_diff.pdf, id=340, 301.125pt x 241.90375pt>
+<figures/vel_diff.pdf, id=340, 301.125pt x 225.84375pt>
 File: figures/vel_diff.pdf Graphic file (type pdf)
 
 <use figures/vel_diff.pdf>
 Package pdftex.def Info: figures/vel_diff.pdf used on input line 723.
-(pdftex.def)             Requested size: 187.17682pt x 150.37003pt.
+(pdftex.def)             Requested size: 187.17682pt x 140.38695pt.
 
-Underfull \hbox (badness 1571) in paragraph at lines 755--763
+Underfull \hbox (badness 1571) in paragraph at lines 760--772
 \OT1/ptm/m/n/10 based mo-tion plan-ning ap-proach for human-companion
  []
 
 Missing character: There is no â in font ptmr7t!
 Missing character: There is no € in font ptmr7t!
 Missing character: There is no “ in font ptmr7t!
+[7 <./figures/r_accomp.pdf> <./figures/dis_diff.pdf> <./figures/vel_diff.pdf>]
 
 LaTeX Warning: Reference `eqn:h_c_dyn' on page 1 undefined on input line 781.
 
-[7 <./figures/r_accomp.pdf> <./figures/dis_diff.pdf> <./figures/vel_diff.pdf>]
 (./SSRR2015.bbl)
 
 ** Conference Paper **
@@ -951,7 +951,7 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  17049 strings out of 493117
  333055 string characters out of 6135433
- 402201 words of memory out of 5000000
+ 402200 words of memory out of 5000000
  20173 multiletter control sequences out of 15000+600000
  48452 words of font info for 109 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -975,7 +975,7 @@ ts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2014/texmf-dist/fonts
 rw/times/utmb8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/u
 tmbi8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmr8a.pfb
 ></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on SSRR2015.pdf (8 pages, 632320 bytes).
+Output written on SSRR2015.pdf (8 pages, 633593 bytes).
 PDF statistics:
  489 PDF objects out of 1000 (max. 8388607)
  333 compressed objects within 4 object streams

@@ -86,8 +86,8 @@ campus.obs_info = {[c_set;r_set];ell_set}; % gives the center and radius of each
 kf = 350; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon 
-pre_type = 'IMM';%'extpol'; % 'extpol','IMM'. specify the method for predicting human motion
-plan_type = 'greedy0'; % 'MPC','greedy1','greedy0'. specify the method for robot controller
+pre_type = 'IMM-UKF';%'extpol'; % 'extpol','IMM-UKF','UKF'. specify the method for predicting human motion
+plan_type = 'greedy0'; % 'MPC','greedy1','greedy0'. specify the method for robot controller. Note: greedy0 has been modified to use MPC framework, not hand-made planner.
 samp_rate = 20; % sampling rate (/Hz)
 safe_dis = 1; %safe distance between human and robot
 safe_marg = 1; % safety margin between human the the obstacle
@@ -169,8 +169,11 @@ for k = 1:kf
     agentIndex = 2;
 %     load('obv_traj3_w_time.mat')% Load Tracjectory of Human
     obv_traj1=obv_traj';
-%     parameter_IMM_UKF;  % parameter for IMM
-    parameter_UKF % parameter for IMM
+    if strcmp(pre_type,'IMM-UKF')
+        parameter_IMM_UKF;  % parameter for IMM
+    elseif strcmp(pre_type,'UKF')
+        parameter_UKF % parameter for IMM
+    end
     inPara_ams = struct('campus',campus,'agents',agents,'h_tar_wp',h_tar_wp,...
         'obv_traj',obv_traj1','est_state',est_state,...
         'pre_traj',pre_traj,'plan_state',plan_state,'r_state',r_state,'r_input',r_input,...
@@ -233,7 +236,7 @@ for k = 1:kf
     end
     %% plot trajectories
     % draw under certain conditions
-    if true %(k == 1) || (k == obs1.s_time) || (k == obs2.s_time) || (k >= 300)
+    if (k == 1) || (k >= 300) %true %|| (k == obs1.s_time) || (k == obs2.s_time) 
         % plot specifications
         color_agent = {'r','g','k','b','m','m'};
         marker_agent = {'o','^','*','d'};

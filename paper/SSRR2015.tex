@@ -576,21 +576,21 @@
 	\section{SIMULATION RESULTS \& DISCUSSION}\label{sec:results}
 	\subsection{Simulation setup}
 	Simulations have been run to evaluate the proposed robot motion planning approach. 
-	There are one human and one robot with five targets and four obstacles in a $84 m\times 82 m$ field. 
-	The human speed in the simulation is set to be constant at $1.5m/s$. 
+	One human rescuer will move sequentially to five targets in a $84 m\times 82 m$ field, accompanied by a robot companion.
+	The human speed is set to be constant at $1.5m/s$. 
 	The human will follow the trajectory shown in \cref{fig:ref_traj_end}.
 	However, this trajectory is unrevealed to the robot.
-	The safety distance $d_s$ is chosen as $2m$.
+	The safety distance $d_s$ is chosen as $1m$ and the comfort distance $d_c$ as $2m$.
 	The sampling rate of GPS sensor is $20Hz$ and the variance of sensor measurement noise is considered as $2m$. 
-	The robot's maximum acceleration and deceleration are set to be $1 m/s^2$ and $-3 m/s^2$ respectively and the angular velocity range is chosen to be $[-30\degree/s,30\degree/s]$.
+	The robot's maximum acceleration and deceleration are set to be $1 m/s^2$ and $-3 m/s^2$ respectively and the angular velocity range is chosen to be $[-90\degree/s,90\degree/s]$.
 	In the IMM estimator, the process noise and the measurement noise are set to be $1.5\times 10^{-2}$ and $1.5$, respectively.
 	The prediction horizon for the human motion is chosen as $500ms$ and the robot recomputes the MPC problem every $500ms$.
 	% The weight in the objective function, $q_1$ and $q_2$ are set to be 1 and 0.2, reflecting that we associate higher priority with the minimization of the distance than the velocity difference.
 	
 	\subsection{Simulation results}
-	We evaluate the performance of human motion estimation and prediction and robot motion planning methods, respectively.
+	We evaluate the performance of human motion estimation and prediction and the robot motion planning method, respectively.
 	\subsubsection{Human motion estimation}\label{subsubsec:motion_est}
-	The error between the estimated and the actual human position and velocity at each time step are compared to evaluate the estimation accuracy.
+	The error between the estimated and the actual human position and speed at each time step are compared to evaluate the estimation accuracy.
 	The position error vector can be formulated as:
 	\[
 	\Delta^{t}_p(k)=p^h(k)-\hat{p}^h(k|k)\label{eqn:track_err_pos}\\
@@ -691,17 +691,17 @@
 	%However, since the human keeps constant speed and moves in straight lines without changes in heading for a large portion of the trajectory, the single-model approach can achieve similar prediction performance as the IMM-based method.
 	
 	\subsubsection{Robot motion planning}\label{subsubsec:motion_plan}
-	\cref{fig:robot_accom} shows a screenshot of the simulation that the robot accompanies the target person moving in the field.
-	The performance of the robot motion planning is evaluated using the criterion of safety, comfortableness and naturalness.
-	To be specific, we measure the distance and speed difference between the robot and the human at each time step.
-	At time $k$, they can be defined as:
+	\cref{fig:robot_accom} shows a screenshot of the simulation that the robot accompanies the target person moving in the field, using the proposed MPC motion planner.
+	The performance of the motion planning is evaluated using the criterion of safety and comfort.
+	To be specific, the distance and speed differences between the robot and the human at each time step are measured.
+	At time $k$, they are defined as:
 	\begin{subequations}
 		\begin{align}
 		\Delta_d(k)&=||z^r(k)-z^h(k)||_2-d_s\label{eqn:err_d}\\
 		\Delta_v(k)&=|v^r(k)-v^h(k)|\label{eqn:err_v}
 		\end{align}
 	\end{subequations}
-	To evaluate the accompanying performance using single-model predictor and multiple-model predictor, the UKF and IMM-UKF are used in conjunction with MPC to generate two sets of simulation, the results of which are compared.
+	Three different prediction strategies are compared using the same MPC planning approach, which includes IMM-UKF predictor, UKF predictor and no predictor.
 	%We compare the MPC-based motion planning with a commonly used reactive motion planning method. %using \cref{eqn:err_d,eqn:err_v}.
 	%With the reactive method, the robot uses one-step prediction of human position and heads for it while keeping the safe distance from the human and matching up with the human speed.
 	%Both methods utilize the predicted human states from the IMM-UKF estimation and prediction methods.
@@ -724,12 +724,18 @@
 		\caption{Comparison of velocity difference between the human and the robot using the MPC and the reactive methods}
 		\label{fig:err_v}
 	\end{figure}
-	\cref{fig:err_d} compares the distances between the human and the robot using these two predictors.
+	\cref{fig:err_d} compares the distances between the human and the robot using these three predictors.
 	Notice that the distances in the plot has been substracted by the safety distance $d_s$.
 	Therefore, the ideal distance is zero at each time step.
-	We can notice that the IMM-UKF predictor generates smaller distance difference than the UKF predictor.
+	We can notice that, by incorporating human motion prediction the robot improves its companion performance by keeping proper distances from the human. 
+	Besides, the IMM-UKF predictor results in smaller distance difference than other predictors while maintaining the safety distance.
 	%On the contrary, the reactive method results in distances greater than $1$ for xxx\% of time while the smallest distance drops to $-xxx$ at time xxx.
-	\textbf{Table xxx shows the statistics of the performance. The IMM-UKF method achieves xxx\% improvement on average distance, xxx\% on maximum distance and also minimum distance. In addition, the robot using IMM-UKF as the predictor can achieve less unsafe distance than the UKF method. Such improvement is desirable for an accompanying robot as it keeps proper distance from the human and only moves within the unsafe distance for xxx long. Such unsafty is caused when the human makes sharp turns and the prediction deviates from the actual positions, which has been discussed in \cref{subsubsec:motion_est,subsubsec:motion_pred}}.
+	\todohere{need to add table}
+	Table xxx shows the statistics of the performance. 
+	The IMM-UKF method achieves xxx\% improvement on average distance, xxx\% on maximum distance and also minimum distance. 
+	In addition, the robot using IMM-UKF as the predictor can achieve less unsafe distance than the other two approaches. 
+	Such improvement is desirable for an accompanying robot as it keeps proper distance from the human and only moves within the unsafe distance for xxx long. 
+	Such unsafty is caused when the human makes sharp turns and the prediction deviates from the actual positions, which has been discussed in \cref{subsubsec:motion_est,subsubsec:motion_pred}.
 	%Specifically, when the human makes a sharp turn at $103 s$, the MPC approach generates distance differences up to 8 while the reactive method results in almost 14.
 	%% Due to the robot's limited angular velocity, the distance difference becomes large, with the peak values being $7.288$ for the MPC method at time $109.5s$ and $7.844$ for the reactive method at time $110.5$.
 	%% The distance difference drops to $0.060$ at time 113 using the MPC method, showing that the robot accelerates to catch up with the human.
@@ -744,40 +750,34 @@
 	%In contrast, designing a reactive method that considers different requirements becomes time-consuming and even infeasible when the complexity of requirements increases.
 	%\cref{fig:err_v} compares the velocity differences between the human and the robot using these two methods.
 	%It can be noticed that both approaches result in comparable velocity differences.
-	\textbf{The UKF and IMM-UKF predictor result in similar velocity behavior, as shown in \cref{fig:err_v}. The statistics also shows smaller velocity difference using the IMM-UKF predictor}.
-	
+	The UKF and IMM-UKF predictor result in similar velocity behavior while the non-prediction case leads to large velocity difference, as shown in \cref{fig:err_v}. The statistics also shows smaller velocity difference using the IMM-UKF predictor.	
 	The simulation results shows the superiority of using the MPC approach for motion planning.
 	% This makes sense as we explicitly requires the robot to match up with the human speed using the reactive method while in MPC method the velocity difference only composes one term in the objective function with a smaller weight than the distance term.
 	% However, in spite of the small speed difference using the reactive method, the resultant large human-robot distance, as shown in \cref{fig:err_d}, renders such closeness on speed less attractive.
 	% In fact, the proper distance between the human and the robot composes the core part of a human-accompanying robot.
 	
 	\section{CONCLUSION}\label{sec:conclusion}
-	We have developed a model predictve control (MPC)-based motion planning approach for human-companion robots to accompany a target person in a socially desirable manner, which considers the safety, comfortableness and naturalness.
+	We have developed a model predictve control (MPC)-based motion planning approach for human-companion robots to accompany a target person in a socially desirable manner, which considers the safety and comfort of the behavior.
+	Such companion robot can be useful for search and rescue scenarios by carrying apparatus, exploring dangerous areas and detecting survivors.
 	The IMM-UKF approach that incorporates the uniform motion model and the coordinated turn motion models is developed for human position estimation and prediction.
-	Based on the predicted human positions, an MPC problem is formulated for robot motion planning.
-	The estimation and prediction accuracy using IMM-UKF is compared with two single-model methods (LFK and UKF) and IMM-LKF.
+	Such multiple-model approach captures different motion patterns, thus improving the estimation and prediction accuracy than other single-model approaches.
+	Based on the predicted human positions, the model predictive control (MPC) approach is formulated for planning socially desirable motion trajectory.
+	The estimation and prediction accuracy using IMM-UKF is compared with IMM-LKF and two single-model methods (LFK and UKF).
 	Comparison results show superior accuracy and response in estimation and prediction using IMM-UKF approach, especially when the human makes circular motion or sharp turns.
-	The MPC motion planning approach is compared with a reactive method and shows that the MPC method achieves better performance in generating smaller human-robot distance while similar performance in the velocity difference.
+	Moreover, the MPC planner using IMM-UKF predictor, UKF predictor and no predictor are compared.
+	The IMM-UKF predictor improves the robot motion behavior that keeps human-robot distances around the comfort distance and similar velocity.
+%	The MPC motion planning approach is compared with a reactive method and shows that the MPC method achieves better performance in generating smaller human-robot distance while similar performance in the velocity difference.
 	% The reactive policy achieves smaller velocity differences than the MPC method.
 	% However, this becomes less attractive as the resultant human-robot distance becomes very large.
 	
 	In the future work, we plan to investigate other motion prediction methods, such as the autoregressive–moving-average method, to compare with IMM-UKF method.
 	Besides,  enabling the robot to learn human motion model in real time is an attractive topic and may provide more accurate human motion prediction and results in better human-companion behaviors.
 	
-	
-	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	
-	
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	
-	
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 	%\appendix
 	\section{APPENDIX}
-	
+	\subsection{IMM-LKF Predictor}
 	Similar to IMM-UKF, IMM-LKF works with two dynamic models: one is the uniform motion model; the other is the coordinated turn motion model. If the turn rate is a known constant in the coordinated turn motion model in \cref{eqn:h_c_dyn}, the human estimation procedure can be modeled with the discrete time linear state space system as follows:
 	\begin{subequations}
 		\begin{align}
@@ -830,6 +830,8 @@
 	\end{subequations}
 	Above linear state space models are used in LKF and IMM-LKF in this paper.
 	Moreover, we set the turn rate $\omega$ to be $0.1$ rad/s as a known constant, in the turn motion model in IMM-LKF. 
+	
+	\subsection{Approximating Obstacles}
 	
 	\addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
 	% on the last page of the document manually. It shortens

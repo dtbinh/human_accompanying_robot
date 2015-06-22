@@ -322,6 +322,7 @@ v_dif(1,:) = imm_r_v(1:end-1)-h_v;
 v_dif(2,:) = ufk_r_v(1:end-1)-h_v;
 v_dif(3,:) = nop_r_v(1:end-1)-h_v;
 ave_v_dif = mean(v_dif,2);
+std_v_dif = std(v_dif,0,2);
 max_v_dif = max(abs(v_dif),[],2);
 h4 = figure;
 hold on
