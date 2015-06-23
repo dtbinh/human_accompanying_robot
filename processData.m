@@ -265,15 +265,15 @@ for ii = 1:sim_len-2
     dif_vec1 = imm_r_pos(:,ii)-h_traj(:,ii);
     dif_vec2 = ufk_r_pos(:,ii)-h_traj(:,ii);
     dif_vec3 = nop_r_pos(:,ii)-h_traj(:,ii);
-    pos_dif(1,ii) = norm(dif_vec1,2)-safe_dist;
-    pos_dif(2,ii) = norm(dif_vec2,2)-safe_dist;
-    pos_dif(3,ii) = norm(dif_vec3,2)-safe_dist;
+    pos_dif(1,ii) = norm(dif_vec1,2);
+    pos_dif(2,ii) = norm(dif_vec2,2);
+    pos_dif(3,ii) = norm(dif_vec3,2);
     dif_vec4 = imm_r_pos(:,ii)-imm_pre_traj(:,1,ii);
     dif_vec5 = ufk_r_pos(:,ii)-ufk_pre_traj(:,1,ii);
     dif_vec6 = nop_r_pos(:,ii)-nop_pre_traj(:,1,ii);
-    pos_dif(4,ii) = norm(dif_vec4,2)-safe_dist;
-    pos_dif(5,ii) = norm(dif_vec5,2)-safe_dist;
-    pos_dif(6,ii) = norm(dif_vec6,2)-safe_dist;
+    pos_dif(4,ii) = norm(dif_vec4,2);
+    pos_dif(5,ii) = norm(dif_vec5,2);
+    pos_dif(6,ii) = norm(dif_vec6,2);
     dif_vec7 = imm_r_plan_pos(:,:,ii)-imm_pre_traj(:,:,ii);
     dif_vec8 = ufk_r_plan_pos(:,:,ii)-ufk_pre_traj(:,:,ii);
     dif_vec9 = nop_r_plan_pos(:,:,ii)-nop_pre_traj(:,:,ii);
@@ -291,7 +291,7 @@ box on
 plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',2)
 plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2)
 plot((1:size(pos_dif,2))*0.5,pos_dif(3,:),'k','LineWidth',2)
-legend('imm-ukf','ukf','no-pred')
+legend('IMM-UKF','UKF','NOP')
 grid on
 title('Distance difference')
 xlabel('time [sec]')
@@ -322,6 +322,7 @@ v_dif(1,:) = imm_r_v(1:end-1)-h_v;
 v_dif(2,:) = ufk_r_v(1:end-1)-h_v;
 v_dif(3,:) = nop_r_v(1:end-1)-h_v;
 ave_v_dif = mean(v_dif,2);
+std_v_dif = std(v_dif,0,2);
 max_v_dif = max(abs(v_dif),[],2);
 h4 = figure;
 hold on
@@ -329,7 +330,7 @@ box on
 plot((1:size(v_dif,2))*0.5,v_dif(1,:),'b','LineWidth',2)
 plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r','LineWidth',2)
 plot((1:size(v_dif,2))*0.5,v_dif(3,:),'k','LineWidth',2)
-legend('imm-ukf','ukf','no-pred')
+legend('IMM-UKF','UKF','NOP')
 grid on
 title('Velocity difference')
 xlabel('time[sec]')

@@ -5,57 +5,58 @@ T.~Kruse, A.~K. Pandey, R.~Alami, and A.~Kirsch, ``Human-aware robot
   navigation: A survey,'' {\em Robotics and Autonomous Systems}, vol.~61,
   no.~12, pp.~1726--1743, 2013.
 
-\bibitem{welch1995introduction}
-G.~Welch and G.~Bishop, ``An introduction to the kalman filter,'' 1995.
-
-\bibitem{thrun2005probabilistic}
-S.~Thrun, W.~Burgard, and D.~Fox, {\em Probabilistic robotics}.
-\newblock MIT press, 2005.
-
-\bibitem{trautman2012probabilistic}
-P.~Trautman, ``Probabilistic tools for human-robot cooperation,'' in {\em Human
-  Agent Robot Teamwork Workshop HRI}, 2012.
-
-\bibitem{vasquez2014inverse}
-D.~Vasquez, B.~Okal, and K.~O. Arras, ``Inverse reinforcement learning
-  algorithms and features for robot navigation in crowds: An experimental
-  comparison,'' in {\em Intelligent Robots and Systems (IROS 2014), 2014
-  IEEE/RSJ International Conference on}, pp.~1341--1346, IEEE, 2014.
-
-\bibitem{wu2012path}
-Z.~Wu, M.~Hashimoto, B.~Guo, and K.~Takahashi, ``A path prediction method for
-  human-accompanying mobile robot based on neural network,'' in {\em
-  Intelligent Science and Intelligent Data Engineering}, pp.~35--42, Springer,
-  2012.
-
-\bibitem{khatib1986real}
-O.~Khatib, ``Real-time obstacle avoidance for manipulators and mobile robots,''
-  {\em The international journal of robotics research}, vol.~5, no.~1,
-  pp.~90--98, 1986.
-
-\bibitem{cosgun2013autonomous}
-A.~Cosgun, D.~A. Florencio, and H.~I. Christensen, ``Autonomous person
-  following for telepresence robots,'' in {\em Robotics and Automation (ICRA),
-  2013 IEEE International Conference on}, pp.~4335--4342, IEEE, 2013.
-
 \bibitem{hoeller2007accompanying}
 F.~Hoeller, D.~Schulz, M.~Moors, and F.~E. Schneider, ``Accompanying persons
   with a mobile robot using motion prediction and probabilistic roadmaps,'' in
   {\em Intelligent Robots and Systems, 2007. IROS 2007. IEEE/RSJ International
   Conference on}, pp.~1260--1265, IEEE, 2007.
 
-\bibitem{yaakov2002estimation}
-B.-S. Yaakov, K.~Thiagalingam, and L.~Rong, ``Estimation with applications to
-  tracking and navigation,'', 2002.
+\bibitem{fox1997dynamic}
+D.~Fox, W.~Burgard, S.~Thrun, {\em et~al.}, ``The dynamic window approach to
+  collision avoidance,'' {\em IEEE Robotics \& Automation Magazine}, vol.~4,
+  no.~1, pp.~23--33, 1997.
 
-\bibitem{derek_phd_dissertation}
-D.S.Caveney, "Multiple Model Techniques in Automotive Estimation and Control", 
-Thesis (Ph.D.)--University of California, Berkeley, pp.~42--50, 2004 
+\bibitem{svenstrup2010trajectory}
+M.~Svenstrup, T.~Bak, and H.~J. Andersen, ``Trajectory planning for robots in
+  dynamic human environments,'' in {\em Intelligent Robots and Systems (IROS),
+  2010 IEEE/RSJ International Conference on}, pp.~4293--4298, IEEE, 2010.
 
-\bibitem{KalmanFiltering}
-S. Haykin, "Kalman Filtering and Neural Networks". John WileySons, Apr. 2004.
+\bibitem{hall1968proxemics}
+E.~T. Hall, R.~L. Birdwhistell, B.~Bock, P.~Bohannan, A.~R. Diebold~Jr,
+  M.~Durbin, M.~S. Edmonson, J.~Fischer, D.~Hymes, S.~T. Kimball, {\em et~al.},
+  ``Proxemics [and comments and replies],'' {\em Current anthropology},
+  pp.~83--108, 1968.
 
-\bibitem{Hong}
-S.Hong, T.Smith, F.Borrelli and J.K.Hedrick, "Vehicle Inertial Parameter Identification using Extended and Unscented Kalman Filters" in{\em Intelligent Transportation Systems, 2013. ITSC 2013}, pp.~1436--1441, IEEE, 2013. 
+\bibitem{barnaud2014proxemics}
+M.-L. Barnaud, N.~Morgado, R.~Palluel-Germain, J.~Diard, and A.~Spalanzani,
+  ``Proxemics models for human-aware navigation in robotics: Grounding
+  interaction and personal space models in experimental data from psychology,''
+  in {\em Proceedings of the 3rd IROS’2014 workshop “Assistance and Service
+  Robotics in a Human Environment”}, 2014.
+
+\bibitem{cosgun2013autonomous}
+A.~Cosgun, D.~Florencio, H.~I. Christensen, {\em et~al.}, ``Autonomous person
+  following for telepresence robots,'' in {\em Robotics and Automation (ICRA),
+  2013 IEEE International Conference on}, pp.~4335--4342, IEEE, 2013.
+
+\bibitem{thrun2005probabilistic}
+S.~Thrun, W.~Burgard, and D.~Fox, {\em Probabilistic robotics}.
+\newblock MIT press, 2005.
+
+\bibitem{bennewitz2005learning}
+M.~Bennewitz, W.~Burgard, G.~Cielniak, and S.~Thrun, ``Learning motion patterns
+  of people for compliant robot motion,'' {\em The International Journal of
+  Robotics Research}, vol.~24, no.~1, pp.~31--48, 2005.
+
+\bibitem{fulgenzi2008probabilistic}
+C.~Fulgenzi, C.~Tay, A.~Spalanzani, and C.~Laugier, ``Probabilistic navigation
+  in dynamic environment using rapidly-exploring random trees and gaussian
+  processes,'' in {\em Intelligent Robots and Systems, 2008. IROS 2008.
+  IEEE/RSJ International Conference on}, pp.~1056--1062, IEEE, 2008.
+
+\bibitem{foka2010probabilistic}
+A.~F. Foka and P.~E. Trahanias, ``Probabilistic autonomous robot navigation in
+  dynamic environments with human motion prediction,'' {\em International
+  Journal of Social Robotics}, vol.~2, no.~1, pp.~79--94, 2010.
 
 \end{thebibliography}
