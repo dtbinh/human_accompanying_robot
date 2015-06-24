@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  23 JUN 2015 20:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  23 JUN 2015 21:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -817,111 +817,111 @@ Package pdftex.def Info: figures/sim_traj_init.pdf used on input line 248.
  [2]
 
 LaTeX Warning: Citation `yaakov2002estimation' on page 3 undefined on input lin
-e 279.
+e 277.
 
 [3 <./figures/sim_traj_init.pdf>]
 
-LaTeX Warning: Citation `KalmanFiltering' on page 4 undefined on input line 450
+LaTeX Warning: Citation `KalmanFiltering' on page 4 undefined on input line 448
 .
 
 
-LaTeX Warning: Citation `Hong' on page 4 undefined on input line 465.
+LaTeX Warning: Citation `Hong' on page 4 undefined on input line 463.
 
 
-LaTeX Warning: Citation `KalmanFiltering' on page 4 undefined on input line 465
+LaTeX Warning: Citation `KalmanFiltering' on page 4 undefined on input line 463
 .
 
 
-Overfull \hbox (2.20273pt too wide) in paragraph at lines 564--564
+Overfull \hbox (2.20273pt too wide) in paragraph at lines 562--562
 [] 
  []
 
 [4]
 
 LaTeX Warning: Reference `eqn:constr:obs2' on page 1 undefined on input line 57
-9.
+7.
 
 
 LaTeX Warning: Reference `eqn:constr:obs1' on page 1 undefined on input line 57
-9.
+7.
 
 
 LaTeX Warning: Reference `eqn:constr:obs1' on page 1 undefined on input line 58
-2.
+0.
 
 
 LaTeX Warning: Reference `eqn:constr:obs2' on page 1 undefined on input line 58
-3.
+1.
 
 <figures/pos_error.pdf, id=102, 418.56375pt x 328.22626pt>
 File: figures/pos_error.pdf Graphic file (type pdf)
 
 <use figures/pos_error.pdf>
-Package pdftex.def Info: figures/pos_error.pdf used on input line 642.
+Package pdftex.def Info: figures/pos_error.pdf used on input line 640.
 (pdftex.def)             Requested size: 202.3529pt x 158.67868pt.
 
 <figures/VelocityComp.pdf, id=103, 418.56375pt x 328.22626pt>
 File: figures/VelocityComp.pdf Graphic file (type pdf)
 
 <use figures/VelocityComp.pdf>
-Package pdftex.def Info: figures/VelocityComp.pdf used on input line 649.
+Package pdftex.def Info: figures/VelocityComp.pdf used on input line 647.
 (pdftex.def)             Requested size: 202.3529pt x 158.67868pt.
 
 <figures/mode_prob.pdf, id=104, 418.56375pt x 342.27875pt>
 File: figures/mode_prob.pdf Graphic file (type pdf)
 
 <use figures/mode_prob.pdf>
-Package pdftex.def Info: figures/mode_prob.pdf used on input line 656.
+Package pdftex.def Info: figures/mode_prob.pdf used on input line 654.
 (pdftex.def)             Requested size: 192.24066pt x 157.19943pt.
  [5 <./figures/pos_error.pdf> <./figures/VelocityComp.pdf>] <figures/imm_vs_sin
 gle.pdf, id=117, 301.125pt x 225.84375pt>
 File: figures/imm_vs_single.pdf Graphic file (type pdf)
 
 <use figures/imm_vs_single.pdf>
-Package pdftex.def Info: figures/imm_vs_single.pdf used on input line 687.
+Package pdftex.def Info: figures/imm_vs_single.pdf used on input line 685.
 (pdftex.def)             Requested size: 212.47287pt x 159.36115pt.
 
 <figures/ref_traj_end.pdf, id=118, 954.5543pt x 930.72069pt>
 File: figures/ref_traj_end.pdf Graphic file (type pdf)
 
 <use figures/ref_traj_end.pdf>
-Package pdftex.def Info: figures/ref_traj_end.pdf used on input line 738.
+Package pdftex.def Info: figures/ref_traj_end.pdf used on input line 736.
 (pdftex.def)             Requested size: 101.17645pt x 98.64456pt.
 
 <figures/sim_traj_obs1.pdf, id=119, 954.5543pt x 930.72069pt>
 File: figures/sim_traj_obs1.pdf Graphic file (type pdf)
 
 <use figures/sim_traj_obs1.pdf>
-Package pdftex.def Info: figures/sim_traj_obs1.pdf used on input line 744.
+Package pdftex.def Info: figures/sim_traj_obs1.pdf used on input line 742.
 (pdftex.def)             Requested size: 101.17645pt x 98.64456pt.
 
 <figures/sim_traj_obs2.pdf, id=120, 954.5543pt x 932.97931pt>
 File: figures/sim_traj_obs2.pdf Graphic file (type pdf)
 
 <use figures/sim_traj_obs2.pdf>
-Package pdftex.def Info: figures/sim_traj_obs2.pdf used on input line 750.
+Package pdftex.def Info: figures/sim_traj_obs2.pdf used on input line 748.
 (pdftex.def)             Requested size: 101.17645pt x 98.88394pt.
 
 <figures/sim_traj_end.pdf, id=121, 954.5543pt x 932.97931pt>
 File: figures/sim_traj_end.pdf Graphic file (type pdf)
 
 <use figures/sim_traj_end.pdf>
-Package pdftex.def Info: figures/sim_traj_end.pdf used on input line 756.
+Package pdftex.def Info: figures/sim_traj_end.pdf used on input line 754.
 (pdftex.def)             Requested size: 101.17645pt x 98.88394pt.
 
-<figures/dis_diff.pdf, id=122, 1215.54124pt x 697.60625pt>
+<figures/dis_diff.pdf, id=122, 1027.6088pt x 815.11343pt>
 File: figures/dis_diff.pdf Graphic file (type pdf)
 
 <use figures/dis_diff.pdf>
-Package pdftex.def Info: figures/dis_diff.pdf used on input line 766.
-(pdftex.def)             Requested size: 187.17682pt x 107.41466pt.
+Package pdftex.def Info: figures/dis_diff.pdf used on input line 763.
+(pdftex.def)             Requested size: 187.17682pt x 148.46779pt.
 
-<figures/vel_diff.pdf, id=123, 1215.54124pt x 697.60625pt>
+<figures/vel_diff.pdf, id=123, 1028.63655pt x 815.11343pt>
 File: figures/vel_diff.pdf Graphic file (type pdf)
 
 <use figures/vel_diff.pdf>
-Package pdftex.def Info: figures/vel_diff.pdf used on input line 773.
-(pdftex.def)             Requested size: 187.17682pt x 107.41466pt.
+Package pdftex.def Info: figures/vel_diff.pdf used on input line 770.
+(pdftex.def)             Requested size: 187.17682pt x 148.31854pt.
  [6 <./figures/mode_prob.pdf> <./figures/imm_vs_single.pdf>] [7 <./figures/ref_
 traj_end.pdf> <./figures/sim_traj_obs1.pdf
 
@@ -935,13 +935,21 @@ clusion: multiple pdfs with page group included in a single page
 
 pdfTeX warning: /usr/texbin/pdflatex (file ./figures/sim_traj_end.pdf): PDF inc
 lusion: multiple pdfs with page group included in a single page
-> <./figures/dis_diff.pdf> <./figures/vel_diff.pdf>]
+> <./figures/dis_diff.pdf
 
-LaTeX Warning: Reference `eqn:h_c_dyn' on page 1 undefined on input line 874.
+pdfTeX warning: /usr/texbin/pdflatex (file ./figures/dis_diff.pdf): PDF inclusi
+on: multiple pdfs with page group included in a single page
+> <./figures/vel_diff.pdf
+
+pdfTeX warning: /usr/texbin/pdflatex (file ./figures/vel_diff.pdf): PDF inclusi
+on: multiple pdfs with page group included in a single page
+>]
+
+LaTeX Warning: Reference `eqn:h_c_dyn' on page 1 undefined on input line 871.
 
 
 LaTeX Warning: Reference `fig:ellipse_approx' on page 1 undefined on input line
- 928.
+ 925.
 
 (./SSRR2015.bbl
 Missing character: There is no â in font ptmri7t!
@@ -1000,10 +1008,10 @@ ts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2014/texmf-dist/fonts
 rw/times/utmb8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/u
 tmbi8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmr8a.pfb
 ></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on SSRR2015.pdf (8 pages, 650855 bytes).
+Output written on SSRR2015.pdf (8 pages, 691229 bytes).
 PDF statistics:
- 558 PDF objects out of 1000 (max. 8388607)
- 379 compressed objects within 4 object streams
+ 603 PDF objects out of 1000 (max. 8388607)
+ 407 compressed objects within 5 object streams
  0 named destinations out of 1000 (max. 500000)
  68 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -215,17 +215,17 @@
 	The robot motion capability is modeled by the following kinematic model:
 	\begin{subequations}
 		\begin{align}
-		p^r(k+1)&=p^r(k)+v^r(k)
-		\left[ 
-		\begin{array}{c}
-		\cos \theta(k)\\
-		\sin \theta(k)\\
-		\end{array}
-		\right]T\label{eqn:constr:dyn_pre_motion}\\
-		v^r(k+1)&=v^r(k)+a(k)T\label{eqn:constr:dyn_pre_v}\\
-		\theta^r(k+1)&=\theta^r(k)+w(k)T\label{eqn:constr:dyn_pre_theta}\\
-		a_{lb}&\le a^r(k)\le a_{ub}\label{eqn:constr:a}\\
-		w_{lb}&\le \omega^r(k)\le w_{ub}\label{eqn:constr:w}
+			p^r(k+1)&=p^r(k)+v^r(k)
+			\left[ 
+			\begin{array}{c}
+				\cos \theta(k)\\
+				\sin \theta(k)\\
+			\end{array}
+			\right]T\label{eqn:constr:dyn_pre_motion}\\
+			v^r(k+1)&=v^r(k)+a(k)T\label{eqn:constr:dyn_pre_v}\\
+			\theta^r(k+1)&=\theta^r(k)+w(k)T\label{eqn:constr:dyn_pre_theta}\\
+			a_{lb}&\le a^r(k)\le a_{ub}\label{eqn:constr:a}\\
+			w_{lb}&\le \omega^r(k)\le w_{ub}\label{eqn:constr:w}
 		\end{align}
 	\end{subequations}
 	where $(p^r(k),v^r(k),\theta^r(k))$ denote the robot state at time $k$, representing the position, speed and heading angle, respectively; $T$ represent the discretization sampling time.
@@ -265,8 +265,6 @@
 	% IMM algorithm is a sub-optimal algorithm based on the minimum mean square error criterion. 
 	%	State estimate at time $k$ is computed with mode probabilities and state estimates from each possible current model associated with one of the $r$ filters, using the following formula:
 	State estimate at time $k$ is computed as a weighted sum of estimates from each filter, as shown in the following formula:
-	\todoQ{$mu_i$ or $mu_j$?}
-	\todonote{dh: $mu_j$ is right}
 	\[
 	\hat{x}(k|k)=\sum\limits_{j=1}^{r}\mu_j(k)\hat{x}^j(k|k)
 	\]
@@ -758,7 +756,6 @@
 			\label{fig:robot_accom}
 		\end{subfigure}
 		\caption{A screenshot of the simulation. The red line represents the human trajectory and the green on shows the companion robot's trajectory. For most of the time, the robot follows the human from behind}
-		\todohere{dh: change moving obstacles' color to make it more obvious; add arrows to them to show the direction.}
 	\end{figure}
 	
 	\begin{figure}
@@ -783,9 +780,9 @@
 			\hline
 			Method & IMM-UKF & UKF & non-prediction\\
 			\hline
-			Ave & 1.4323 & 1.5890 & 2.6053\\
+			Ave & 2.716 & 2.8774 & 3.8913\\
 			\hline
-			Std & 0.9367 & 0.9023 & 0.6428\\
+			Std & 0.9084 & 0.8548 & 0.6549\\
 			\hline
 		\end{tabular}
 		\label{table:distance}
@@ -799,9 +796,9 @@
 			\hline
 			Method & IMM-UKF & UKF & non-prediction\\
 			\hline
-			Ave & 0.1018 & 0.1194 & 0.0189\\
+			Ave & 0.0789 & 0.1057 & 0.0008\\
 			\hline
-			Std & 0.2588 & 0.2510 & 0.2032\\
+			Std & 0.2559 & 0.2583 & 0.1868\\
 			\hline
 		\end{tabular}
 		\label{table:speed}

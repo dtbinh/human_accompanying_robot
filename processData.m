@@ -309,18 +309,18 @@ max_pos_dif = max(abs(pos_dif),[],2);
 h2 = figure;
 hold on
 box on
-plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',2) % IMM-UKF
-plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2) % UKF
-plot((1:size(pos_dif,2))*0.5,pos_dif(3,:),'k','LineWidth',2) % NOP
-% plot((1:size(pos_dif,2))*0.5,pos_dif(4,:),'g','LineWidth',2) % OPT
+plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',4) % IMM-UKF
+plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',4) % UKF
+plot((1:size(pos_dif,2))*0.5,pos_dif(3,:),'k','LineWidth',4) % NOP
+% plot((1:size(pos_dif,2))*0.5,pos_dif(4,:),'g','LineWidth',4) % OPT
 legend('IMM-UKF','UKF','NOP')
 grid on
 title('Distance difference','FontSize', 20)
 xlabel('Time [sec]','FontSize', 20)
 ylabel('Distance [m]','FontSize', 20)
 xlim([0,160])
-saveas(h2,sprintf('sim_res/imm_vs_ukf_vs_no-pred_dis_diff_%s',str_t),'fig')
-fig2Pdf(sprintf('sim_res/imm_vs_ukf_vs_no-pred_dis_diff_%s',str_t),300,h2)
+% saveas(h2,sprintf('sim_res/imm_vs_ukf_vs_no-pred_dis_diff_%s',str_t),'fig')
+% fig2Pdf(sprintf('sim_res/imm_vs_ukf_vs_no-pred_dis_diff_%s',str_t),300,h2)
 % saveas(h2,sprintf('sim_res/ukf_mpc_dis_diff_%s',str_t),'fig')
 % fig2Pdf(sprintf('sim_res/ukf_mpc_dis_diff_%s',str_t),300,h2)
 
@@ -350,18 +350,18 @@ max_v_dif = max(abs(v_dif),[],2);
 h4 = figure;
 hold on
 box on
-plot((1:size(v_dif,2))*0.5,v_dif(1,:),'b','LineWidth',2)
-plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r','LineWidth',2)
-plot((1:size(v_dif,2))*0.5,v_dif(3,:),'k','LineWidth',2)
-% plot((1:size(v_dif,2))*0.5,v_dif(4,:),'g','LineWidth',2)
+plot((1:size(v_dif,2))*0.5,v_dif(1,:),'b','LineWidth',4)
+plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r','LineWidth',4)
+plot((1:size(v_dif,2))*0.5,v_dif(3,:),'k','LineWidth',4)
+% plot((1:size(v_dif,2))*0.5,v_dif(4,:),'g','LineWidth',4)
 legend('IMM-UKF','UKF','NOP')
 grid on
 title('Velocity difference','FontSize', 20)
 xlabel('Time[sec]','FontSize', 20)
 ylabel('Speed [m/s]','FontSize', 20)
 xlim([0,160])
-saveas(h4,sprintf('sim_res/imm_vs_ukf_vs_no-pred_vel_diff_%s',str_t),'fig')
-fig2Pdf(sprintf('sim_res/imm_vs_ukf_vs_no-pred_vel_diff_%s',str_t),300,h4)
+% saveas(h4,sprintf('sim_res/imm_vs_ukf_vs_no-pred_vel_diff_%s',str_t),'fig')
+% fig2Pdf(sprintf('sim_res/imm_vs_ukf_vs_no-pred_vel_diff_%s',str_t),300,h4)
 % saveas(h4,sprintf('sim_res/ukf_mpc_vel_diff_%s',str_t),'fig')
 % fig2Pdf(sprintf('sim_res/ukf_mpc_vel_diff_%s',str_t),300,h4)
  
