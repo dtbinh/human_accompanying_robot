@@ -2,8 +2,8 @@
 #define __c2_UKF_h__
 
 /* Include files */
-#include "sfc_sf.h"
-#include "sfc_mex.h"
+#include "sf_runtime/sfc_sf.h"
+#include "sf_runtime/sfc_mex.h"
 #include "rtwtypes.h"
 #include "multiword_types.h"
 

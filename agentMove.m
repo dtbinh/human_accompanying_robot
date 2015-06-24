@@ -73,14 +73,17 @@ cmft_dis = inPara.cmft_dis;
         h = agents(1);
         cur_hd = h.currentPos(3);
         %% estimate human position
-        %
+        % 
         if strcmp(pre_type,'IMM-UKF')
             [x_est,y_est,x_pos_pre,y_pos_pre] = IMM_UKF_run();
+            est_state([1,2],:,k) = x_est((k-1)*samp_num+1:end-1,:)';
+            est_state([3,4],:,k) = y_est((k-1)*samp_num+1:end-1,:)';
         elseif strcmp(pre_type,'UKF')
             [x_est,y_est,x_pos_pre,y_pos_pre] = UKF_run();
+            est_state([1,2],:,k) = x_est((k-1)*samp_num+1:end-1,:)';
+            est_state([3,4],:,k) = y_est((k-1)*samp_num+1:end-1,:)';
         end
-        est_state([1,2],:,k) = x_est((k-1)*samp_num+1:end-1,:)';
-        est_state([3,4],:,k) = y_est((k-1)*samp_num+1:end-1,:)';
+        
         %}
         % estimation with no measurement noise
         %{
@@ -94,6 +97,7 @@ cmft_dis = inPara.cmft_dis;
         %
         if strcmp(pre_type,'IMM-UKF') || strcmp(pre_type,'UKF')
             pre_traj(:,:,k) = [[x_est((k-1)*samp_num+1,1);y_est((k-1)*samp_num+1,1)],[x_pos_pre(k,:);y_pos_pre(k,:)]];
+            h_v = [x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)];
 %             pre_traj(:,:,k) = [x_pos_pre_imm(:,k)';y_pos_pre_imm(:,k)'];
         % prediction by extrapolation
         elseif strcmp(pre_type,'extpol')
@@ -102,17 +106,26 @@ cmft_dis = inPara.cmft_dis;
             inPara_phj = struct('state',[x_est((k-1)*samp_num+1,:)';y_est((k-1)*samp_num+1,:)'],...
                 'hor',hor,'pre_type',pre_type,'mpc_dt',mpc_dt);
             pre_traj(:,:,k) = predictHumanTraj(agent,inPara_phj);
+            h_v = [x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)];
+        elseif strcmp(pre_type,'opt')
+            load('sim_res/human_traj.mat','human_traj')
+            tmp_len = size(human_traj,2);
+            if k+hor <= tmp_len
+                pre_traj(:,:,k) = human_traj(1:2,k:k+hor);
+            else
+                pre_traj(:,:,k) = [human_traj(1:2,k:tmp_len),human_traj(1:2,tmp_len)*ones(1,k+hor-tmp_len)];
+            end
+            h_v = 1.5;
         end     
 %         pos_pre_imm = inPara.pos_pre_imm;
         %}
         %% robot path planning
         %
-        if strcmp(plan_type,'MPC')           
+        if strcmp(plan_type,'MPC')         
             %%% a possible bug: h_v here is a vector while in
             %%% pathPlanner.m, it is treated as a scalar.
             inPara_pp = struct('pre_traj',pre_traj(:,:,k),'hor',hor,...
-                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',...
-                [x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],...
+                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',h_v,...
                 'obs_info',campus.obs_info,'safe_marg',safe_marg,...
                 'guess_u',guess_u,'guess_x',guess_x,'cmft_dis',cmft_dis);
 
@@ -144,8 +157,7 @@ cmft_dis = inPara.cmft_dis;
             % assume accurate estimation and prediction
 %             load('human_traj.mat','human_traj');
             inPara_pp = struct('pre_traj',pre_traj(:,1,k),'hor',2,...
-                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',...
-                [x_est((k-1)*samp_num+1,2);y_est((k-1)*samp_num+1,2)],...
+                'safe_dis',safe_dis,'mpc_dt',mpc_dt,'h_v',h_v,...
                 'obs_info',campus.obs_info,'safe_marg',safe_marg,...
                 'guess_u',guess_u,'guess_x',guess_x,'cmft_dis',cmft_dis);
             outPara_pp = pathPlannerGreedy(agent,inPara_pp);

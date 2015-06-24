@@ -226,60 +226,81 @@ safe_dist = 1; % safe_dist for imm
 h_v = 1.5;
 
 % imm-ukf
-load('sim_traj_IMM-UKF_MPC_1_1_1p5_21-Jun-2015_155124','pre_traj','r_state','plan_state');
+load('sim_traj_IMM-UKF_MPC_1_1_1p5_23-Jun-2015_161640','pre_traj','r_state','plan_state');
 imm_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
 imm_r_plan_pos = plan_state(1:2,:,:);
 imm_r_pos = r_state(1:2,1:sim_len);
 imm_r_v = r_state(4,1:sim_len);
 % ukf
 %
-load('sim_traj_UKF_MPC_1_1_1p5_21-Jun-2015_152805','pre_traj','r_state','plan_state');
+load('sim_traj_UKF_MPC_1_1_1p5_23-Jun-2015_165318','pre_traj','r_state','plan_state');
 ufk_pre_traj = pre_traj(:,:,1:sim_len);
 ufk_r_plan_pos = plan_state(1:2,:,:);
 ufk_r_pos = r_state(1:2,1:sim_len);
 ufk_r_v = r_state(4,1:sim_len);
 %}
 % no-prediction
-load('sim_traj_IMM-UKF_greedy0_1_1_1p5_21-Jun-2015_163734','pre_traj','r_state','plan_state');
+load('sim_traj_IMM-UKF_greedy0_1_1_1p5_23-Jun-2015_173047','pre_traj','r_state','plan_state');
 nop_pre_traj = pre_traj(:,:,1:sim_len);
 nop_r_plan_pos = plan_state(1:2,:,:);
 nop_r_pos = r_state(1:2,1:sim_len);
 nop_r_v = r_state(4,1:sim_len);
+% optimal case: exact human trajectory is used for motion planning
+load('sim_traj_opt_MPC_1_1_1p5_23-Jun-2015_154925','pre_traj','r_state','plan_state');
+opt_pre_traj = pre_traj(:,:,1:sim_len); % predicted human position
+opt_r_plan_pos = plan_state(1:2,:,:);
+opt_r_pos = r_state(1:2,1:sim_len);
+opt_r_v = r_state(4,1:sim_len);
 
  % position difference between human and robot. 
  % Six elements: 
  % 1. diff between actual positions of h and r for imm-ukf
  % 2. diff between actual positions of h and r for ukf
  % 3. diff between actual positions of h and r for no-prediction
- % 4. diff between predicted positions of h and actual positions of r for imm-ukf
- % 5. diff between predicted positions of h and actual positions of r for ukf
- % 6. diff between predicted positions of h and actual positions of r for no-prediction
-pos_dif = zeros(6,sim_len-1);
+ % 4. diff between actual positions of h and r for opt
+ % 5. diff between predicted positions of h and actual positions of r for imm-ukf
+ % 6. diff between predicted positions of h and actual positions of r for ukf
+ % 7. diff between predicted positions of h and actual positions of r for no-prediction
+ % 8. diff between predicted positions of h and actual positions of r for opt
+pos_dif = zeros(8,sim_len-1);
 % velocity difference
 v_dif = zeros(3,sim_len-1);
 imm_plan_pos_dif = zeros(6,sim_len-1); % difference between human estimated positon and robot planned positions in the prediction horizon
-ukf_plan_pos_dif = zeros(6,sim_len-1); % difference between human estimated positon and robot planned positions in the prediction horizon
-nop_plan_pos_dif = zeros(6,sim_len-1); % difference between human estimated positon and robot planned positions in the prediction horizon
+ukf_plan_pos_dif = zeros(6,sim_len-1); 
+nop_plan_pos_dif = zeros(6,sim_len-1); 
+opt_plan_pos_dif = zeros(6,sim_len-1); 
 
 for ii = 1:sim_len-2
+    % distance between the robot and the actual human positions
     dif_vec1 = imm_r_pos(:,ii)-h_traj(:,ii);
     dif_vec2 = ufk_r_pos(:,ii)-h_traj(:,ii);
     dif_vec3 = nop_r_pos(:,ii)-h_traj(:,ii);
+    dif_vec4 = opt_r_pos(:,ii)-h_traj(:,ii);
     pos_dif(1,ii) = norm(dif_vec1,2);
     pos_dif(2,ii) = norm(dif_vec2,2);
     pos_dif(3,ii) = norm(dif_vec3,2);
-    dif_vec4 = imm_r_pos(:,ii)-imm_pre_traj(:,1,ii);
-    dif_vec5 = ufk_r_pos(:,ii)-ufk_pre_traj(:,1,ii);
-    dif_vec6 = nop_r_pos(:,ii)-nop_pre_traj(:,1,ii);
     pos_dif(4,ii) = norm(dif_vec4,2);
+    
+    % distance between the robot and the predicted human positions
+    dif_vec5 = imm_r_pos(:,ii)-imm_pre_traj(:,1,ii);
+    dif_vec6 = ufk_r_pos(:,ii)-ufk_pre_traj(:,1,ii);
+    dif_vec7 = nop_r_pos(:,ii)-nop_pre_traj(:,1,ii);
+    dif_vec8 = opt_r_pos(:,ii)-opt_pre_traj(:,1,ii);
     pos_dif(5,ii) = norm(dif_vec5,2);
     pos_dif(6,ii) = norm(dif_vec6,2);
-    dif_vec7 = imm_r_plan_pos(:,:,ii)-imm_pre_traj(:,:,ii);
-    dif_vec8 = ufk_r_plan_pos(:,:,ii)-ufk_pre_traj(:,:,ii);
-    dif_vec9 = nop_r_plan_pos(:,:,ii)-nop_pre_traj(:,:,ii);
-    imm_plan_pos_dif(:,ii) = sqrt((sum(dif_vec7.*dif_vec7,1))');
-    ukf_plan_pos_dif(:,ii) = sqrt((sum(dif_vec8.*dif_vec8,1))');
-    nop_plan_pos_dif(:,ii) = sqrt((sum(dif_vec9.*dif_vec9,1))');
+    pos_dif(7,ii) = norm(dif_vec7,2);
+    pos_dif(8,ii) = norm(dif_vec8,2);
+    
+    % distance between the planned robot and the predicted human positions
+    % in prediction horizon
+    dif_vec9 = imm_r_plan_pos(:,:,ii)-imm_pre_traj(:,:,ii);
+    dif_vec10 = ufk_r_plan_pos(:,:,ii)-ufk_pre_traj(:,:,ii);
+    dif_vec11 = nop_r_plan_pos(:,:,ii)-nop_pre_traj(:,:,ii);
+    dif_vec12 = opt_r_plan_pos(:,:,ii)-opt_pre_traj(:,:,ii);
+    imm_plan_pos_dif(:,ii) = sqrt((sum(dif_vec9.*dif_vec9,1))');
+    ukf_plan_pos_dif(:,ii) = sqrt((sum(dif_vec10.*dif_vec10,1))');
+    nop_plan_pos_dif(:,ii) = sqrt((sum(dif_vec11.*dif_vec11,1))');
+    opt_plan_pos_dif(:,ii) = sqrt((sum(dif_vec12.*dif_vec12,1))');
 end
 
 ave_pos_dif = mean(pos_dif,2);
@@ -288,14 +309,15 @@ max_pos_dif = max(abs(pos_dif),[],2);
 h2 = figure;
 hold on
 box on
-plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',2)
-plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2)
-plot((1:size(pos_dif,2))*0.5,pos_dif(3,:),'k','LineWidth',2)
+plot((1:size(pos_dif,2))*0.5,pos_dif(1,:),'b','LineWidth',2) % IMM-UKF
+plot((1:size(pos_dif,2))*0.5,pos_dif(2,:),'r','LineWidth',2) % UKF
+plot((1:size(pos_dif,2))*0.5,pos_dif(3,:),'k','LineWidth',2) % NOP
+% plot((1:size(pos_dif,2))*0.5,pos_dif(4,:),'g','LineWidth',2) % OPT
 legend('IMM-UKF','UKF','NOP')
 grid on
-title('Distance difference')
-xlabel('time [sec]')
-ylabel('distance [m]')
+title('Distance difference','FontSize', 20)
+xlabel('Time [sec]','FontSize', 20)
+ylabel('Distance [m]','FontSize', 20)
 xlim([0,160])
 saveas(h2,sprintf('sim_res/imm_vs_ukf_vs_no-pred_dis_diff_%s',str_t),'fig')
 fig2Pdf(sprintf('sim_res/imm_vs_ukf_vs_no-pred_dis_diff_%s',str_t),300,h2)
@@ -317,10 +339,11 @@ ylabel('distance [m]')
 xlim([0,160])
 saveas(h3,'mpc_vs_reac_dis_diff','fig')
 %}
-
+% velocity differnece between human and robot
 v_dif(1,:) = imm_r_v(1:end-1)-h_v;
 v_dif(2,:) = ufk_r_v(1:end-1)-h_v;
 v_dif(3,:) = nop_r_v(1:end-1)-h_v;
+v_dif(4,:) = opt_r_v(1:end-1)-h_v;
 ave_v_dif = mean(v_dif,2);
 std_v_dif = std(v_dif,0,2);
 max_v_dif = max(abs(v_dif),[],2);
@@ -330,11 +353,12 @@ box on
 plot((1:size(v_dif,2))*0.5,v_dif(1,:),'b','LineWidth',2)
 plot((1:size(v_dif,2))*0.5,v_dif(2,:),'r','LineWidth',2)
 plot((1:size(v_dif,2))*0.5,v_dif(3,:),'k','LineWidth',2)
+% plot((1:size(v_dif,2))*0.5,v_dif(4,:),'g','LineWidth',2)
 legend('IMM-UKF','UKF','NOP')
 grid on
-title('Velocity difference')
-xlabel('time[sec]')
-ylabel('speed [m/s]')
+title('Velocity difference','FontSize', 20)
+xlabel('Time[sec]','FontSize', 20)
+ylabel('Speed [m/s]','FontSize', 20)
 xlim([0,160])
 saveas(h4,sprintf('sim_res/imm_vs_ukf_vs_no-pred_vel_diff_%s',str_t),'fig')
 fig2Pdf(sprintf('sim_res/imm_vs_ukf_vs_no-pred_vel_diff_%s',str_t),300,h4)

@@ -86,13 +86,13 @@ campus.obs_info = {[c_set;r_set];ell_set}; % gives the center and radius of each
 kf = 350; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon 
-pre_type = 'IMM-UKF';%'extpol'; % 'extpol','IMM-UKF','UKF'. specify the method for predicting human motion
-plan_type = 'greedy0'; % 'MPC','greedy1','greedy0'. specify the method for robot controller. Note: greedy0 has been modified to use MPC framework, not hand-made planner.
+pre_type = 'IMM-UKF';% 'opt'(accurate knowledge of human trajectory), 'extpol','IMM-UKF','UKF'. specify the method for predicting human motion
+plan_type = 'MPC'; % 'MPC','greedy1','greedy0'. specify the method for robot controller. Note: greedy0 has been modified to use MPC framework, not hand-made planner.
 samp_rate = 20; % sampling rate (/Hz)
 safe_dis = 1; %safe distance between human and robot
 safe_marg = 1; % safety margin between human the the obstacle
 mpc_dt = 0.5; % sampling time for model discretization used in MPC
-cmft_dis = 2; % comfortable distance
+cmft_dis = 2.4; % comfortable distance
 
 % initialize variables
 obv_traj = zeros(3,0); % observed human trajectory; first row denotes the time [t,x,y]
@@ -236,9 +236,10 @@ for k = 1:kf
     end
     %% plot trajectories
     % draw under certain conditions
-    if (k == 1) || (k >= 300) %true %|| (k == obs1.s_time) || (k == obs2.s_time) 
+    if (k == 1) || (k >= 300) || ((k >= obs1.s_time) && (k <= obs1.s_time+20)) ||  ((k >= obs2.s_time) && (k <= obs2.s_time+20))
         % plot specifications
-        color_agent = {'r','g','k','b','m','m'};
+        soil_yellow = [0.87,0.49,0];
+        color_agent = {'r','g','k',soil_yellow,'m','m'};
         marker_agent = {'o','^','*','d'};
         line_agent = {'-','-','-','-'};
         line_wid = {2,2,2,2};
@@ -248,10 +249,11 @@ for k = 1:kf
         hold on
         
         % draw targets
+        dark_green = [0,0.5,0];
         for jj = 1:campus.targetNum
-            h = plot(campus.targetPos(1,jj),campus.targetPos(2,jj),'MarkerSize',15);
+            h = plot(campus.targetPos(1,jj),campus.targetPos(2,jj),'MarkerSize',15,'Color',dark_green);
             set(h,'Marker','p');
-            set(h,'linewidth',1);
+            set(h,'linewidth',6);
         end
         
         % draw obstacles
@@ -303,7 +305,7 @@ for k = 1:kf
         %}
         
         % planned robot trajectory
-        h4 = plot(plan_state(1,:,k),plan_state(2,:,k),color_agent{4},'markers',2);
+        h4 = plot(plan_state(1,:,k),plan_state(2,:,k),'Color',color_agent{4},'markers',2);
         set(h4,'MarkerFaceColor',color_agent{4});
         set(h4,'MarkerEdgeColor',color_agent{4});
         set(h4,'Color',color_agent{4});
@@ -327,12 +329,12 @@ for k = 1:kf
         %
         if k >= obs1.s_time
             h5 = plot(obs1.traj(1,:),obs1.traj(2,:),color_agent{5},'markers',2,...
-                'MarkerSize',2,'linewidth',2);
+                'MarkerSize',3,'linewidth',2);
         end
         %}
         if k >= obs2.s_time
             h6 = plot(obs2.traj(1,:),obs2.traj(2,:),color_agent{6},'markers',2,...
-                'MarkerSize',2,'linewidth',2);
+                'MarkerSize',3,'linewidth',2);
         end
         
         % refine plot
@@ -343,7 +345,7 @@ for k = 1:kf
         
         % close plots when there are too many plots
         h7 = gcf;
-        if h7 > 50
+        if h7 > 100
             close all;
         end
     end
