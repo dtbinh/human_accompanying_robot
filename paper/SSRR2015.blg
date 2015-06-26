@@ -3,53 +3,63 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: SSRR2015.aux
 The style file: ieeetr.bst
 Database file #1: references.bib
+Repeated entry---line 157 of file references.bib
+ : @inproceedings{svenstrup2010trajectory
+ :                                       ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 184 of file references.bib
+ : @inproceedings{fulgenzi2008probabilistic
+ :                                         ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 193 of file references.bib
+ : @inproceedings{barnaud2014proxemics
+ :                                    ,
+I'm skipping whatever remains of this entry
 Warning--I didn't find a database entry for ""
-Warning--I didn't find a database entry for "kirbyCompanion:Aconstraintoptimizingmethodforpersonacceptablenavigation"
-Warning--I didn't find a database entry for "welch1995introduction"
-Warning--I didn't find a database entry for "KalmanFiltering"
-Warning--I didn't find a database entry for "key"
+Warning--I didn't find a database entry for "Future_Trajectory"
 Warning--I didn't find a database entry for "ref"
 Warning--I didn't find a database entry for "yaakov2002estimation"
+Warning--I didn't find a database entry for "KalmanFiltering"
 Warning--I didn't find a database entry for "Hong"
-You've used 11 entries,
+You've used 14 entries,
             1876 wiz_defined-function locations,
-            555 strings with 6346 characters,
-and the built_in function-call counts, 3793 in all, are:
-= -- 369
-> -- 166
+            572 strings with 6813 characters,
+and the built_in function-call counts, 4699 in all, are:
+= -- 461
+> -- 193
 < -- 0
-+ -- 59
-- -- 48
-* -- 276
-:= -- 525
-add.period$ -- 12
-call.type$ -- 11
-change.case$ -- 10
++ -- 69
+- -- 55
+* -- 335
+:= -- 641
+add.period$ -- 15
+call.type$ -- 14
+change.case$ -- 13
 chr.to.int$ -- 0
-cite$ -- 11
-duplicate$ -- 193
-empty$ -- 347
-format.name$ -- 48
-if$ -- 918
+cite$ -- 14
+duplicate$ -- 246
+empty$ -- 441
+format.name$ -- 55
+if$ -- 1144
 int.to.chr$ -- 0
-int.to.str$ -- 11
-missing$ -- 12
-newline$ -- 37
-num.names$ -- 11
-pop$ -- 45
+int.to.str$ -- 14
+missing$ -- 15
+newline$ -- 46
+num.names$ -- 14
+pop$ -- 60
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 136
+skip$ -- 172
 stack$ -- 0
-substring$ -- 299
-swap$ -- 85
+substring$ -- 371
+swap$ -- 106
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 38
-width$ -- 13
-write$ -- 112
-(There were 8 warnings)
+while$ -- 47
+width$ -- 16
+write$ -- 141
+(There were 3 error messages)

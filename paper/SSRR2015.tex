@@ -99,13 +99,13 @@
 	For example, Hall \cite{hall1968proxemics} proposed the concept of ''Proxemics" to denote the virtual zone around a person that other people should avoiding entering in order to prevent the discomfort the person may feel.
 	Barnaud et al.\cite{barnaud2014proxemics} investigated the proxemics models in the context of human-aware robot navigation by investigating a classic corridor-crossing experiment.
 	This work provides a tool for designing parameters of the proxmics model that can be used for robot motion planning in the environment with human existence.
-	Naturalness and sociability reflect the requirements on \todohere{finish this sentence}.
+%	Naturalness and sociability reflect the requirements on \todohere{finish this sentence}.
 	%     \todohere{rephrase the following sentence:}
 	%     In \cite{takayama2009influences}, authors extract robot design principles for approaching distance and gaze depending on social context.
 	
-	\todohere{move the following sentence to the method review section}
-	By incorporating these requirements into account, researchers have developed several human-companion robots. 
-	In \cite{kirby Companion: A constraintoptimizing method for person acceptable navigation}, a generalized framework for representing social conventions as components of a constrained optimization problem was presented and it was used for path planning and navigation.
+%	\todohere{move the following sentence to the method review section}
+%	By incorporating these requirements into account, researchers have developed several human-companion robots. 
+%	In \cite{kirby Companion: A constraintoptimizing method for person acceptable navigation}, a generalized framework for representing social conventions as components of a constrained optimization problem was presented and it was used for path planning and navigation.
 	
 	% the former requires robots to maintain appropriate distance from humans and the latter emphasizes on the similarity in motion speeds between robots and humans. 
 	% This requires robots to stay within a proper distance from the accompanied person while avoiding collision with him/her.
@@ -116,35 +116,40 @@
 	% In this work, we develop an approach for robots to follow humans in real time without the prior knowledge of the human trajectory. 
 	% The planned robot motion takes the safety, comfortableness and naturalness requirements into consideration.
 	
-	Cosgun et al.\cite{cosgun2013autonomous} develops a robot for telepresence usage, which uses the laser scanner to track human movement and predicts human path by extrapolating based on the estimated human position and speed, assuming a constant velocity human motion model.
-	The robot utilizes the depth-limited breadth-first search approach to find the waypoints around the predicted human positions so that the robot can always face the accompanied human with a similar velocity as the human.
-	Hoeller et al.\cite{hoeller2007accompanying} presents a local path planning approach for the companion robot to stay in proximity to the target person and simultaneously prevent colliding with any passers-by. 
-	The probabilistic roadmaps is used to plan collision-free paths to a given target location, chosen based on the predicted adjacent humans' positions.
-	A laser-based people tracking technique is used to estimate the motions of humans and a potential field method is applied for predicting the humans’ future trajectories.
+%	Cosgun et al.\cite{cosgun2013autonomous} develops a robot for telepresence usage, which uses the laser scanner to track human movement and predicts human path by extrapolating based on the estimated human position and speed, assuming a constant velocity human motion model.
+%	The robot utilizes the depth-limited breadth-first search approach to find the waypoints around the predicted human positions so that the robot can always face the accompanied human with a similar velocity as the human.
+%	Hoeller et al.\cite{hoeller2007accompanying} presents a local path planning approach for the companion robot to stay in proximity to the target person and simultaneously prevent colliding with any passers-by. 
+%	The probabilistic roadmaps is used to plan collision-free paths to a given target location, chosen based on the predicted adjacent humans' positions.
+%	A laser-based people tracking technique is used to estimate the motions of humans and a potential field method is applied for predicting the humans’ future trajectories.
 	
 	%	Artificial Neural Network (ANN) is adopted for human motion prediction. 
 	To generate socially desirable motion behavior, accurate human motion estimation and prediction is necessary, which can be then utilized for robot motion planning.
 	% We divide the human-accompanying motion planning into three steps.
 	To be specific, a robot needs to estimate motion states of the accompanied human in real time based on measurements from equipments such as GPS sensors or cameras and then predict human future trajectory.
-	% Due to the sensor noise, measurement results need filtering.
-	There exist several widely-adopted estimation methods. Huang et al.\cite {Future_Trajectory} presents vehicle future trajectory based on GPS sensor using Kalman filter (KF),which provides the minimum mean square error estimation of states for linear systems with Gaussian noise. 
-	%such as the Kalman filter(KF)\cite{welch1995introduction}, which provides the minimum mean square error estimation of states for linear systems with Gaussian noise. %\todohere{find references for its application to motion estimation and prediction}  
-	The Extended Kalman filter (EKF) and Unscented Kalman filter (UKF) \cite {KalmanFiltering}, which are extensions of the KF for nonlinear systems, have also been applied for motion estimation and prediction\cite{key}. 
-	EKF can be obtained by applying the KF to the first-order Taylor expansion of nonlinear systems while UKF uses a deterministic sampling technique, called the Unscented Transform, to perform a stochastic linearization through the use of a weighted statistical linear regression process \cite{thrun2005probabilistic}. Schubert et al. \cite{Motion_model} compares the motion models for the vehicle tracking with UKF.  
-	The motion model, such as the constant velocity and constant turn model, can be applied for predicting the future path of the vehicle based on the estimated states. 
-	\todonote{try to merge the following sentence with the previous one. }
-	These methods usually assumes a single motion model for estimation and prediction and have been widely applied in motion planning and localization in the field of robotics \cite{thrun2005probabilistic}.
+%	Previous work on human state estimation and prediction is generally composed of two frameworks: model-based and model-free approaches.
+	Traditional filtering methods, such as the Kalman filter (KF), has been applied for tracking moving objects Huang et al.\cite {koller1994robust,Future_Trajectory,cosgun2013autonomous}.
+	Simple human motion models, such as the constant speed and direction model, has been utilized in \cite{svenstrup2010trajectory,bruce2004better}.
+	These approaches can efficiently track humans when the people follow the assumed motion pattern.
+	However, when humans movement involves complex behaviors (such as making turns), such methods may fail.
 	
-	In recent years, machine learning techniques have been utilized for human motion prediction.
+	% Due to the sensor noise, measurement results need filtering.
+%	There exist several widely-adopted estimation methods. Huang et al.\cite {Future_Trajectory} presents vehicle future trajectory based on GPS sensor using Kalman filter (KF),which provides the minimum mean square error estimation of states for linear systems with Gaussian noise. 
+	%such as the Kalman filter(KF)\cite{welch1995introduction}, which provides the minimum mean square error estimation of states for linear systems with Gaussian noise. %\todohere{find references for its application to motion estimation and prediction}  
+%	The Extended Kalman filter (EKF) and Unscented Kalman filter (UKF) \cite {KalmanFiltering}, which are extensions of the KF for nonlinear systems, have also been applied for motion estimation and prediction\cite{key}. 
+%	EKF can be obtained by applying the KF to the first-order Taylor expansion of nonlinear systems while UKF uses a deterministic sampling technique, called the Unscented Transform, to perform a stochastic linearization through the use of a weighted statistical linear regression process \cite{thrun2005probabilistic}. 
+%	Schubert et al. \cite{Motion_model} compares the motion models for the vehicle tracking with UKF.  
+%	The motion model, such as the constant velocity and constant turn model, can be applied for predicting the future path of the vehicle based on the estimated states. 
+%	\todonote{try to merge the following sentence with the previous one. }
+%	These methods usually assumes a single motion model for estimation and prediction and have been widely applied in motion planning and localization in the field of robotics \cite{thrun2005probabilistic}.
+	
+	Learning techniques have also been utilized for human motion prediction in recent years. 
 	% 	In \cite{wu2012path}, Wu et al. developed a path prediction approach by back propagating through a trained Netural Network. 
 	%     The proposed method is shown to be able to predict abrupt human direction change when a person makes turns. 
 	Bennewitz et al. \cite{bennewitz2005learning} proposed a technique for learning collections of trajectories that characterize typical motion patterns of persons
-	Trajectories were clustered using Expectation Maximization algorithm and a hidden Markov model was then applied to predict future positions of persons based on sensory input in real time.
-	Fulgenzi et al. \cite{fulgenzi2008probabilistic} developed an approach for predicting trajectories of moving objects, which were supposed
-	to move with typical patterns with some amount of uncertainty. 
-	Those patterns were represented by Gaussian processes and pre-learned based on the collected set of trajectories.
+	Trajectories were clustered using the Expectation Maximization algorithm and a hidden Markov model was then applied to predict future positions of persons.
+	Fulgenzi et al. \cite{fulgenzi2008probabilistic} developed an approach for predicting trajectories of moving objects, using typical motion patterns that were pre-learned based on the collected set of trajectories and represented by Gaussian processes.
 	A two-layer prediction that combined long-term destination inference and short-term motion prediction was proposed in \cite{foka2010probabilistic}:
-	the short-term prediction that refers to the one-step ahead prediction of a human’s future position was achieved by a Polynomial Neural Network (PNN), which was trained offline;
+	the short-term prediction was achieved by a Polynomial Neural Network (PNN), which was trained offline;
 	the long-term prediction was performed by utilizing the heading direction of a human to determine the destinations where he/she would have interest in visiting.
 	%     These locations were pre-defined by utilizing the human motion data.
 	%     Ziebart et al. \cite{ziebart2009planning} proposed the maximum entropy inverse optimal control approach for modeling goal-directed trajectories of pedestrians.
@@ -153,18 +158,27 @@
 	
 	These approaches have achieved success in predicting human motion trajectories.
 	However, they usually involves the collection of training data (e.g., recorded human trajectory) and are prone to be scenario specific. 
-	In fact, human motion can be well predicted using these machine learning-based prediction approaches in the scenarios where human trajectories have been collected used for training predictors.
+	In fact, human motion can be well predicted using these learning-based approaches in the environments where human trajectories have been collected for training predictors.
 	However, these predictors may fail to obtain accurate prediction in unknown environments.
-	This drawback renders the machine learning-based methods less applicable for search and rescue missions since disaster sites are rarely similar to the known ones and therefore robots need to work in unfamiliar environments.
+	This drawback renders the learning-based methods less applicable for SAR missions since disaster sites are diverse and rarely similar to the known ones.
+	Therefore robots need to work in unfamiliar environments.
 	
-	Human motion usually involves different identified motion models, such as straight-line movement, making turns and change of speed.
-	Therefore, a model-based approach would be promising to generate accurate prediction results.
-	In this work, we employ the Interacting Multiple Model (IMM) approach for human motion estimation and prediction.
-	IMM is a model-based estimation framework that takes into several system models into account and dynamically adjusts the mode probabilities. 
-	To deal with the nonlinear dynamics of the human motion (such as making turns), UKF is applied to each model in the IMM framework, resulting in the so-called IMM-UKF approach.
-	Such approach can achieve higher accuracy compared to traditional estimation and prediction methods that utilize a single motion model. 
-	Additionally, no training is needed and thus scenario-independent, which is advantageous over machine learning methods for search and rescue missions.
-	Utilizing the predicted human trajectory, a model predictive control (MPC)-based motion planner is developed for the companion robot to autonomously accompany the target person in a socially desirable manner, which takes into consideration the safety and comfort requirements.
+	In this work, we propose an Interacting Multiple Model (IMM)-based human motion prediction approach, taking advantage of the fact that human motion usually involves different identified motion models \cite{aggarwal1999human}, such as straight-line movement, making turns and change of speed.
+	Such IMM-based predictor incorporates several motion models into account and dynamically adjusts the mode probabilities based on the observed human trajectory.
+	To deal with the nonlinearity of the human motion (such as making turns), Unscented Kalman Filter is applied to each model in the IMM framework, resulting in the so-called IMM-UKF approach.
+	Such approach can achieve higher prediction accuracy compared to traditional methods that utilizes a single motion model. 
+	Additionally, no training is needed and thus scenario-independent, which is advantageous over learning-based methods for search and rescue missions.
+	
+	Based on the predicted human trajectory, robot motion planner that generates socially desirable companion behavior is necessary. 
+	Several motion planner have been proposed in previous work.
+	For example, Hoeller et al.\cite{hoeller2007accompanying} presents a local path planning approach based on the expansive-spaces tree algorithm, which repeatedly computes collision-free paths from the robot’s current position to a target position near the person using a randomized search in configuration space.
+	Fulgenzi et al.\cite{fulgenzi2008probabilistic} proposed an extended Rapidly-exploring Random Tree (RRT) algorithm that takes the likelihood of the obstacles trajectory and the probability of collision into account for robot path planning in a dynamic uncertain environment.
+	Similar RRT approaches have also been adopted in \cite{barnaud2014proxemics,rios2011understanding}.
+	
+	%	The probabilistic roadmaps is used to plan collision-free paths to a given target location, chosen based on the predicted adjacent humans' positions.
+	In this work, a model predictive control (MPC)-based motion planner is developed that formulates the motion planning as a nonlinear programming that considers the safety and comfort requirements.
+	Such approach offers the flexibility in incorporating diverse constraints on motion dynamics and motion behavior and can be solved online.	
+	
 	The main contribution of this paper is ... \todohere{need to fill this paragraph}.
 	% 	The proposed motion planning method differs from previous works in several aspects.
 	% 	First, different from the single-model based estimation and prediction approaches used in \cite{cosgun2013autonomous,hoeller2007accompanying}, the IMM-UKF method incorporates different human movement models into account, which results in higher estimation and prediction accuracy, especially when humans motion involves complex patterns.

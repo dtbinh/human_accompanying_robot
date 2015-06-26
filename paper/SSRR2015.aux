@@ -5,28 +5,27 @@
 \citation{kruse2013human}
 \citation{hall1968proxemics}
 \citation{barnaud2014proxemics}
-\citation{kirbyCompanion:Aconstraintoptimizingmethodforpersonacceptablenavigation}
-\citation{cosgun2013autonomous}
-\citation{hoeller2007accompanying}
-\citation{Future_Trajectory}
-\citation{KalmanFiltering}
-\citation{key}
-\citation{thrun2005probabilistic}
-\citation{Motion_model}
-\@writefile{toc}{\contentsline {section}{\numberline {I}INTRODUCTION}{1}}
-\newlabel{sec:intro}{{I}{1}}
-\newlabel{sec:intro@cref}{{[section][1][]I}{1}}
-\citation{thrun2005probabilistic}
+\citation{koller1994robust,Future_Trajectory,cosgun2013autonomous}
+\citation{svenstrup2010trajectory,bruce2004better}
 \citation{bennewitz2005learning}
 \citation{fulgenzi2008probabilistic}
 \citation{foka2010probabilistic}
+\citation{aggarwal1999human}
+\@writefile{toc}{\contentsline {section}{\numberline {I}INTRODUCTION}{1}}
+\newlabel{sec:intro}{{I}{1}}
+\newlabel{sec:intro@cref}{{[section][1][]I}{1}}
+\citation{hoeller2007accompanying}
+\citation{fulgenzi2008probabilistic}
+\citation{barnaud2014proxemics,rios2011understanding}
 \citation{hall1968proxemics}
 \citation{ref}
-\@writefile{tdo}{\contentsline {todo}{\textbf  {[Note:]} {try to merge the following sentence with the previous one. }}{2}}
-\pgfsyspdfmark {pgfid1}{11587521}{44617081}
 \@writefile{toc}{\contentsline {section}{\numberline {II}PROBLEM FORMULATION}{2}}
 \newlabel{sec:formulation}{{II}{2}}
 \newlabel{sec:formulation@cref}{{[section][2][]II}{2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A search-and-rescue scenario for the companion robot to accompany a human. The red circle and the green triangle represent the human rescuer and the robot companion, respectively. Stars denote human destinations and the blue rectangles stand for static obstacles.\relax }}{2}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:ref_traj_init}{{1}{2}}
+\newlabel{fig:ref_traj_init@cref}{{[figure][1][]1}{2}}
 \newlabel{eqn:constr:dyn_pre_motion}{{1a}{2}}
 \newlabel{eqn:constr:dyn_pre_motion@cref}{{[subequation][1][1]1a}{2}}
 \newlabel{eqn:constr:dyn_pre_v}{{1b}{2}}
@@ -38,10 +37,7 @@
 \newlabel{eqn:constr:w}{{1e}{2}}
 \newlabel{eqn:constr:w@cref}{{[subequation][5][1]1e}{2}}
 \citation{yaakov2002estimation}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A search-and-rescue scenario for the companion robot to accompany a human. The red circle and the green triangle represent the human rescuer and the robot companion, respectively. Stars denote human destinations and the blue rectangles stand for static obstacles.\relax }}{3}}
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:ref_traj_init}{{1}{3}}
-\newlabel{fig:ref_traj_init@cref}{{[figure][1][]1}{3}}
+\citation{KalmanFiltering}
 \@writefile{toc}{\contentsline {section}{\numberline {III}METHODS}{3}}
 \newlabel{sec:framework}{{III}{3}}
 \newlabel{sec:framework@cref}{{[section][3][]III}{3}}
@@ -52,21 +48,20 @@
 \newlabel{eqn:h_d_dyn@cref}{{[subequation][1][3]3a}{3}}
 \newlabel{eqn:n_observation}{{4a}{3}}
 \newlabel{eqn:n_observation@cref}{{[subequation][1][4]4a}{3}}
-\citation{KalmanFiltering}
+\newlabel{eqn:C}{{5a}{3}}
+\newlabel{eqn:C@cref}{{[subequation][1][5]5a}{3}}
+\newlabel{eqn:meas_noise}{{5b}{3}}
+\newlabel{eqn:meas_noise@cref}{{[subequation][2][5]5b}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Unscented Kalman Filter}{3}}
+\newlabel{subsec:UKF}{{III-B}{3}}
+\newlabel{subsec:UKF@cref}{{[subsection][2][3]III-B}{3}}
 \citation{Hong}
 \citation{KalmanFiltering}
-\newlabel{eqn:C}{{5a}{4}}
-\newlabel{eqn:C@cref}{{[subequation][1][5]5a}{4}}
-\newlabel{eqn:meas_noise}{{5b}{4}}
-\newlabel{eqn:meas_noise@cref}{{[subequation][2][5]5b}{4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Unscented Kalman Filter}{4}}
-\newlabel{subsec:UKF}{{III-B}{4}}
-\newlabel{subsec:UKF@cref}{{[subsection][2][3]III-B}{4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {III-C}Human Motion Prediction}{4}}
 \newlabel{subsec:motion_pred}{{III-C}{4}}
 \newlabel{subsec:motion_pred@cref}{{[subsection][3][3]III-C}{4}}
 \@writefile{tdo}{\contentsline {todo}{\textbf  {[Note:]} {what's the difference between two sides of Eqn. (6c)?}}{4}}
-\pgfsyspdfmark {pgfid2}{28638146}{47877496}
+\pgfsyspdfmark {pgfid1}{11587521}{21021982}
 \newlabel{eqn:motion_pred_imm}{{7}{4}}
 \newlabel{eqn:motion_pred_imm@cref}{{[subequation][7][]7}{4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {III-D}Robot Path Planning}{4}}
@@ -95,32 +90,35 @@
 \newlabel{sec:results}{{IV}{5}}
 \newlabel{sec:results@cref}{{[section][4][]IV}{5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {IV-A}Simulation setup}{5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Comparison of position estimation error with LKF, IMM-LKF, UKF and IMM-UKF\relax }}{5}}
-\newlabel{fig:track_pos}{{2}{5}}
-\newlabel{fig:track_pos@cref}{{[figure][2][]2}{5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Comparison of the estimated velocity using the IMM-based and the single-model approaches\relax }}{5}}
-\newlabel{fig:track_v}{{3}{5}}
-\newlabel{fig:track_v@cref}{{[figure][3][]3}{5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {IV-B}Simulation results}{5}}
 \newlabel{subsubsec:motion_est}{{IV-B.1}{5}}
 \newlabel{subsubsec:motion_est@cref}{{[subsubsection][1][4,2]IV-B.1}{5}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {IV-B.1}Human motion estimation}{5}}
 \newlabel{eqn:track_err_pos}{{IV-B.1}{5}}
 \newlabel{eqn:track_err_pos@cref}{{[subsubsection][1][4,2]IV-B.1}{5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Model probabilities of two models in the IMM-UKF estimator\relax }}{6}}
-\newlabel{fig:mode_prob}{{4}{6}}
-\newlabel{fig:mode_prob@cref}{{[figure][4][]4}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Comparison of position estimation error with LKF, IMM-LKF, UKF and IMM-UKF\relax }}{5}}
+\newlabel{fig:track_pos}{{2}{5}}
+\newlabel{fig:track_pos@cref}{{[figure][2][]2}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Comparison of the estimated velocity using the IMM-based and the single-model approaches\relax }}{5}}
+\newlabel{fig:track_v}{{3}{5}}
+\newlabel{fig:track_v@cref}{{[figure][3][]3}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Model probabilities of two models in the IMM-UKF estimator\relax }}{5}}
+\newlabel{fig:mode_prob}{{4}{5}}
+\newlabel{fig:mode_prob@cref}{{[figure][4][]4}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Comparison of prediction error between the IMM-based and single-model approaches\relax }}{6}}
+\newlabel{fig:pred}{{5}{6}}
+\newlabel{fig:pred@cref}{{[figure][5][]5}{6}}
 \newlabel{subsubsec:motion_pred}{{IV-B.2}{6}}
 \newlabel{subsubsec:motion_pred@cref}{{[subsubsection][2][4,2]IV-B.2}{6}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {IV-B.2}Human motion prediction}{6}}
 \newlabel{eqn:pred_err}{{9}{6}}
 \newlabel{eqn:pred_err@cref}{{[equation][9][]9}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Comparison of prediction error between the IMM-based and single-model approaches\relax }}{6}}
-\newlabel{fig:pred}{{5}{6}}
-\newlabel{fig:pred@cref}{{[figure][5][]5}{6}}
 \@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Human-robot Distance\relax }}{6}}
 \newlabel{table:distance}{{I}{6}}
 \newlabel{table:distance@cref}{{[table][1][]I}{6}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Speed Difference\relax }}{6}}
+\newlabel{table:speed}{{II}{6}}
+\newlabel{table:speed@cref}{{[table][2][]II}{6}}
 \newlabel{subsubsec:motion_plan}{{IV-B.3}{6}}
 \newlabel{subsubsec:motion_plan@cref}{{[subsubsection][3][4,2]IV-B.3}{6}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {IV-B.3}Robot motion planning}{6}}
@@ -129,7 +127,7 @@
 \newlabel{eqn:err_v}{{10b}{6}}
 \newlabel{eqn:err_v@cref}{{[subequation][2][10]10b}{6}}
 \@writefile{tdo}{\contentsline {todo}{\textbf  {[Note:]} {Dong-han, is this correct?}}{6}}
-\pgfsyspdfmark {pgfid3}{28638146}{6911008}
+\pgfsyspdfmark {pgfid2}{28638146}{16364177}
 \newlabel{fig:ref_traj_obs1}{{6a}{7}}
 \newlabel{fig:ref_traj_obs1@cref}{{[subfigure][1][6]6a}{7}}
 \newlabel{sub@fig:ref_traj_obs1}{{a}{7}}
@@ -153,12 +151,11 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Comparison of velocity difference between the human and the robot using the MPC and the reactive methods\relax }}{7}}
 \newlabel{fig:err_v}{{8}{7}}
 \newlabel{fig:err_v@cref}{{[figure][8][]8}{7}}
-\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Speed Difference\relax }}{7}}
-\newlabel{table:speed}{{II}{7}}
-\newlabel{table:speed@cref}{{[table][2][]II}{7}}
 \@writefile{toc}{\contentsline {section}{\numberline {V}CONCLUSION}{7}}
 \newlabel{sec:conclusion}{{V}{7}}
 \newlabel{sec:conclusion@cref}{{[section][5][]V}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}APPENDIX}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VI-A}IMM-LKF Predictor}{7}}
 \bibstyle{ieeetr}
 \bibdata{references}
 \bibcite{kruse2013human}{1}
@@ -167,13 +164,14 @@
 \bibcite{svenstrup2010trajectory}{4}
 \bibcite{hall1968proxemics}{5}
 \bibcite{barnaud2014proxemics}{6}
-\bibcite{cosgun2013autonomous}{7}
-\bibcite{thrun2005probabilistic}{8}
-\bibcite{bennewitz2005learning}{9}
-\bibcite{fulgenzi2008probabilistic}{10}
-\bibcite{foka2010probabilistic}{11}
-\@writefile{toc}{\contentsline {section}{\numberline {VI}APPENDIX}{8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {VI-A}IMM-LKF Predictor}{8}}
+\bibcite{koller1994robust}{7}
+\bibcite{cosgun2013autonomous}{8}
+\bibcite{bruce2004better}{9}
+\bibcite{bennewitz2005learning}{10}
+\bibcite{fulgenzi2008probabilistic}{11}
+\bibcite{foka2010probabilistic}{12}
+\bibcite{aggarwal1999human}{13}
+\bibcite{rios2011understanding}{14}
 \newlabel{eqn:h_dyn}{{11a}{8}}
 \newlabel{eqn:h_dyn@cref}{{[subequation][1][11]11a}{8}}
 \newlabel{eqn:observation}{{11b}{8}}

@@ -34,14 +34,20 @@ M.-L. Barnaud, N.~Morgado, R.~Palluel-Germain, J.~Diard, and A.~Spalanzani,
   in {\em Proceedings of the 3rd IROS’2014 workshop “Assistance and Service
   Robotics in a Human Environment”}, 2014.
 
+\bibitem{koller1994robust}
+D.~Koller, J.~Weber, and J.~Malik, {\em Robust multiple car tracking with
+  occlusion reasoning}.
+\newblock Springer, 1994.
+
 \bibitem{cosgun2013autonomous}
 A.~Cosgun, D.~Florencio, H.~I. Christensen, {\em et~al.}, ``Autonomous person
   following for telepresence robots,'' in {\em Robotics and Automation (ICRA),
   2013 IEEE International Conference on}, pp.~4335--4342, IEEE, 2013.
 
-\bibitem{thrun2005probabilistic}
-S.~Thrun, W.~Burgard, and D.~Fox, {\em Probabilistic robotics}.
-\newblock MIT press, 2005.
+\bibitem{bruce2004better}
+A.~Bruce and G.~Gordon, ``Better motion prediction for people-tracking,'' in
+  {\em Proc. of the Int. Conf. on Robotics \& Automation (ICRA), Barcelona,
+  Spain}, 2004.
 
 \bibitem{bennewitz2005learning}
 M.~Bennewitz, W.~Burgard, G.~Cielniak, and S.~Thrun, ``Learning motion patterns
@@ -58,5 +64,15 @@ C.~Fulgenzi, C.~Tay, A.~Spalanzani, and C.~Laugier, ``Probabilistic navigation
 A.~F. Foka and P.~E. Trahanias, ``Probabilistic autonomous robot navigation in
   dynamic environments with human motion prediction,'' {\em International
   Journal of Social Robotics}, vol.~2, no.~1, pp.~79--94, 2010.
+
+\bibitem{aggarwal1999human}
+J.~K. Aggarwal and Q.~Cai, ``Human motion analysis: A review,'' {\em Computer
+  vision and image understanding}, vol.~73, no.~3, pp.~428--440, 1999.
+
+\bibitem{rios2011understanding}
+J.~Rios-Martinez, A.~Spalanzani, and C.~Laugier, ``Understanding human
+  interaction for probabilistic autonomous navigation using risk-rrt
+  approach,'' in {\em Intelligent Robots and Systems (IROS), 2011 IEEE/RSJ
+  International Conference on}, pp.~2014--2019, IEEE, 2011.
 
 \end{thebibliography}
