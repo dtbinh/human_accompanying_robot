@@ -34,6 +34,17 @@ M.-L. Barnaud, N.~Morgado, R.~Palluel-Germain, J.~Diard, and A.~Spalanzani,
   in {\em Proceedings of the 3rd IROS’2014 workshop “Assistance and Service
   Robotics in a Human Environment”}, 2014.
 
+\bibitem{rios2012navigating}
+J.~Rios-Martinez, A.~Renzaglia, A.~Spalanzani, A.~Martinelli, and C.~Laugier,
+  ``Navigating between people: A stochastic optimization approach,'' in {\em
+  Robotics and Automation (ICRA), 2012 IEEE International Conference on},
+  pp.~2880--2885, IEEE, 2012.
+
+\bibitem{henry2010learning}
+P.~Henry, C.~Vollmer, B.~Ferris, and D.~Fox, ``Learning to navigate through
+  crowded environments,'' in {\em Robotics and Automation (ICRA), 2010 IEEE
+  International Conference on}, pp.~981--986, IEEE, 2010.
+
 \bibitem{koller1994robust}
 D.~Koller, J.~Weber, and J.~Malik, {\em Robust multiple car tracking with
   occlusion reasoning}.
