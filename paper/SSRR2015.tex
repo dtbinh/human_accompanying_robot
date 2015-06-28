@@ -73,14 +73,14 @@
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{abstract}
-		Motion planning of human-companion robots is a challenging problem and its solution has numerous applications. 
-		This paper proposes a motion planning method for human-companion robots to accompany humans in a socially desirable manner, which takes into account the safety, comfortableness and naturalness requirements.
+		Motion planning of human-companion robots is a challenging problem and its solution has numerous applications.
+		This paper proposes a motion planning method for human-companion robots to accompany humans in a socially desirable manner, which takes into account the safety, comfort requirements.
 		A unified Interacting Multiple Model (IMM) framework is developed to estimate human motion states from noisy sensor data and predict human positions in a finite horizon.
 		The robot motion planning is formulated as a model predictive control problem to generate socially desirable motion behavior based on the predicted human positions.
 		% The proposed approach generates an accompanying behavior that takes into account the safety, comfortableness and naturalness requirements.
 		% Such IMM-based estimation and prediction framework incorporates different dynamic models and computes mode probabilities of each model, which is suitable for human motion prediction as human motion usually involves different patterns.
 		% To deal with the nonlinear dynamics of the human motion, Unscented Kalman filter (UKF) is applied to each model in the IMM framework.
-		The effectiveness of the proposed motion planning method in facilitating the socially desirable companion behavior is evaluated through simulations and the advantage of IMM framework for human motion estimation and prediction compared to traditional single-model approaches has been demonstrated.
+		The effectiveness of the proposed motion planning method in facilitating the socially desirable companion behavior is evaluated through simulations and the advantage of IMM framework for human motion estimation and prediction compared to traditional single model approaches has been demonstrated.
 	\end{abstract}
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -93,21 +93,21 @@
 	To make the robot's companion behavior natural and amiable, referred to as being \textit{socially desirable}, several requirements need to be satisfied, including the safety and comfort \cite{kruse2013human}.
 	Safety serves as the fundamental guideline, requiring that robots avoid collision with accompanied humans under all circumstances \cite{hoeller2007accompanying,fox1997dynamic,svenstrup2010trajectory}.
 	% 	\todohere{use lit from the survey paper. explain many aspects of social navigation. However, in problem formulation, just list what is done in this paper: focus on comfortableness (distance using proxemics and velocity similarity)}
-	Comfort composes a social requirement on the robot behavior, which requires robots to pose little annoyance and stress for the accompanied humans \cite{kruse2013human}.
+	Comfort requires robots to pose little annoyance and stress for the accompanied humans \cite{kruse2013human}.
 	It is mainly formulated regarding the distance that a robot needs to keep from people.
 	The ''Proxemics" model, proposed by Hall et al. \cite{hall1968proxemics}, has been adopted for designing robot's human-friendly motion behavior \cite{barnaud2014proxemics,rios2012navigating}.
 	This model denotes a virtual zone around a person that robots should avoiding entering in order to prevent the discomfort that the person may feel.
 	Similarity on speed between the human and the robot has also been considered as a contributing factor for comfort \cite{henry2010learning}.
-%	For example, Hall \cite{hall1968proxemics} proposed the concept of ''Proxemics" to denote the virtual zone around a person that other people should avoiding entering in order to prevent the discomfort the person may feel.
-%	Barnaud et al.\cite{barnaud2014proxemics} investigated the proxemics models in the context of human-aware robot navigation by investigating a classic corridor-crossing experiment.
-%	This work provides a tool for designing parameters of the proxmics model that can be used for robot motion planning in the environment with human existence.
-%	Naturalness and sociability reflect the requirements on \todohere{finish this sentence}.
+	%	For example, Hall \cite{hall1968proxemics} proposed the concept of ''Proxemics" to denote the virtual zone around a person that other people should avoiding entering in order to prevent the discomfort the person may feel.
+	%	Barnaud et al.\cite{barnaud2014proxemics} investigated the proxemics models in the context of human-aware robot navigation by investigating a classic corridor-crossing experiment.
+	%	This work provides a tool for designing parameters of the proxmics model that can be used for robot motion planning in the environment with human existence.
+	%	Naturalness and sociability reflect the requirements on \todohere{finish this sentence}.
 	%     \todohere{rephrase the following sentence:}
 	%     In \cite{takayama2009influences}, authors extract robot design principles for approaching distance and gaze depending on social context.
 	
-%	\todohere{move the following sentence to the method review section}
-%	By incorporating these requirements into account, researchers have developed several human-companion robots. 
-%	In \cite{kirby Companion: A constraintoptimizing method for person acceptable navigation}, a generalized framework for representing social conventions as components of a constrained optimization problem was presented and it was used for path planning and navigation.
+	%	\todohere{move the following sentence to the method review section}
+	%	By incorporating these requirements into account, researchers have developed several human-companion robots. 
+	%	In \cite{kirby Companion: A constraintoptimizing method for person acceptable navigation}, a generalized framework for representing social conventions as components of a constrained optimization problem was presented and it was used for path planning and navigation.
 	
 	% the former requires robots to maintain appropriate distance from humans and the latter emphasizes on the similarity in motion speeds between robots and humans. 
 	% This requires robots to stay within a proper distance from the accompanied person while avoiding collision with him/her.
@@ -118,70 +118,70 @@
 	% In this work, we develop an approach for robots to follow humans in real time without the prior knowledge of the human trajectory. 
 	% The planned robot motion takes the safety, comfortableness and naturalness requirements into consideration.
 	
-%	Cosgun et al.\cite{cosgun2013autonomous} develops a robot for telepresence usage, which uses the laser scanner to track human movement and predicts human path by extrapolating based on the estimated human position and speed, assuming a constant velocity human motion model.
-%	The robot utilizes the depth-limited breadth-first search approach to find the waypoints around the predicted human positions so that the robot can always face the accompanied human with a similar velocity as the human.
-%	Hoeller et al.\cite{hoeller2007accompanying} presents a local path planning approach for the companion robot to stay in proximity to the target person and simultaneously prevent colliding with any passers-by. 
-%	The probabilistic roadmaps is used to plan collision-free paths to a given target location, chosen based on the predicted adjacent humans' positions.
-%	A laser-based people tracking technique is used to estimate the motions of humans and a potential field method is applied for predicting the humans’ future trajectories.
+	%	Cosgun et al.\cite{cosgun2013autonomous} develops a robot for telepresence usage, which uses the laser scanner to track human movement and predicts human path by extrapolating based on the estimated human position and speed, assuming a constant velocity human motion model.
+	%	The robot utilizes the depth-limited breadth-first search approach to find the waypoints around the predicted human positions so that the robot can always face the accompanied human with a similar velocity as the human.
+	%	Hoeller et al.\cite{hoeller2007accompanying} presents a local path planning approach for the companion robot to stay in proximity to the target person and simultaneously prevent colliding with any passers-by. 
+	%	The probabilistic roadmaps is used to plan collision-free paths to a given target location, chosen based on the predicted adjacent humans' positions.
+	%	A laser-based people tracking technique is used to estimate the motions of humans and a potential field method is applied for predicting the humans’ future trajectories.
 	
 	%	Artificial Neural Network (ANN) is adopted for human motion prediction. 
 	To generate socially desirable motion behavior, accurate human motion prediction is necessary.
 	% We divide the human-accompanying motion planning into three steps.
-	To be specific, a robot needs to estimate motion states of the accompanied human in real time based on measurement inputs from equipments such as GPS sensors or cameras and then predict human future trajectory.
-%	Previous work on human state estimation and prediction is generally composed of two frameworks: model-based and model-free approaches.
-	Traditional filtering methods, such as the Kalman filter (KF) and the particle filter, have been applied for tracking moving objects \cite {koller1994robust,cosgun2013autonomous}, assuming certain human motion model, such as the constant speed and direction model \cite{svenstrup2010trajectory,bruce2004better}.
-	These model-based filtering approaches effectively predict human motion when the people follow the assumed motion pattern.
-	However, when human movement involves multiple models (\todohere{can we think about some convincing examples}such as making turns with changing speed), such methods may fail to give accurate prediction as they only consider single motion model.
+	To be specific, a robot needs to predict human future trajectory based on the human's motion states that are estimated from measurement of equipment such as GPS sensors or cameras.
+	%	Previous work on human state estimation and prediction is generally composed of two frameworks: model-based and model-free approaches.
+	Filtering methods, such as the Kalman filter (KF) and the particle filter (PF), have been applied for tracking moving objects \cite {koller1994robust,}, assuming certain human motion model, such as the constant speed and direction model \cite{svenstrup2010trajectory,bruce2004better}.
+	These single-model filtering approaches can effectively predict human motion when the people follow the assumed motion pattern.
+	However, when human movement involves multiple models (such as making turns with changing speed), such methods may fail to give accurate prediction.
 	
 	% Due to the sensor noise, measurement results need filtering.
-%	There exist several widely-adopted estimation methods. Huang et al.\cite {Future_Trajectory} presents vehicle future trajectory based on GPS sensor using Kalman filter (KF),which provides the minimum mean square error estimation of states for linear systems with Gaussian noise. 
+	%	There exist several widely-adopted estimation methods. Huang et al.\cite {Future_Trajectory} presents vehicle future trajectory based on GPS sensor using Kalman filter (KF),which provides the minimum mean square error estimation of states for linear systems with Gaussian noise. 
 	%such as the Kalman filter(KF)\cite{welch1995introduction}, which provides the minimum mean square error estimation of states for linear systems with Gaussian noise. %\todohere{find references for its application to motion estimation and prediction}  
-%	The Extended Kalman filter (EKF) and Unscented Kalman filter (UKF) \cite {KalmanFiltering}, which are extensions of the KF for nonlinear systems, have also been applied for motion estimation and prediction\cite{key}. 
-%	EKF can be obtained by applying the KF to the first-order Taylor expansion of nonlinear systems while UKF uses a deterministic sampling technique, called the Unscented Transform, to perform a stochastic linearization through the use of a weighted statistical linear regression process \cite{thrun2005probabilistic}. 
-%	Schubert et al. \cite{Motion_model} compares the motion models for the vehicle tracking with UKF.  
-%	The motion model, such as the constant velocity and constant turn model, can be applied for predicting the future path of the vehicle based on the estimated states. 
-%	\todonote{try to merge the following sentence with the previous one. }
-%	These methods usually assumes a single motion model for estimation and prediction and have been widely applied in motion planning and localization in the field of robotics \cite{thrun2005probabilistic}.
+	%	The Extended Kalman filter (EKF) and Unscented Kalman filter (UKF) \cite {KalmanFiltering}, which are extensions of the KF for nonlinear systems, have also been applied for motion estimation and prediction\cite{key}. 
+	%	EKF can be obtained by applying the KF to the first-order Taylor expansion of nonlinear systems while UKF uses a deterministic sampling technique, called the Unscented Transform, to perform a stochastic linearization through the use of a weighted statistical linear regression process \cite{thrun2005probabilistic}. 
+	%	Schubert et al. \cite{Motion_model} compares the motion models for the vehicle tracking with UKF.  
+	%	The motion model, such as the constant velocity and constant turn model, can be applied for predicting the future path of the vehicle based on the estimated states. 
+	%	\todonote{try to merge the following sentence with the previous one. }
+	%	These methods usually assumes a single motion model for estimation and prediction and have been widely applied in motion planning and localization in the field of robotics \cite{thrun2005probabilistic}.
 	
 	Learning techniques have also been utilized for human motion prediction in recent years. 
 	% 	In \cite{wu2012path}, Wu et al. developed a path prediction approach by back propagating through a trained Netural Network. 
 	%     The proposed method is shown to be able to predict abrupt human direction change when a person makes turns. 
 	Bennewitz et al. \cite{bennewitz2005learning} proposed a prediction approach based on the hidden Markov model, utilizing the clustered collections of trajectories that characterize typical motion patterns of persons.
-	Fulgenzi et al. \cite{fulgenzi2008probabilistic} developed a motion predictor based on human motion patterns that were pre-learned from collected trajectories and represented by Gaussian processes.
-	A two-layer prediction that combined long-term destination inference and short-term motion prediction was proposed in \cite{foka2010probabilistic}:
-	the short-term prediction was achieved by a pre-trained Polynomial Neural Network (PNN);
-	the long-term prediction was performed by utilizing the heading direction of a human to determine his/her destinations.
+	Fulgenzi et al. \cite{fulgenzi2008probabilistic} developed a Gaussian process-based motion predictor, using pre-learned human motion patterns.
+	Neural networks have also been utilized \cite{foka2010probabilistic,wu2012path}.
+	% 	A two-layer prediction that combined long-term destination inference and short-term motion prediction was proposed in \cite{foka2010probabilistic}:
+	% 	the short-term prediction was achieved by a pre-trained Polynomial Neural Network (PNN);
+	% 	the long-term prediction was performed by utilizing the heading direction of a human to determine his/her destinations.
 	%     These locations were pre-defined by utilizing the human motion data.
 	%     Ziebart et al. \cite{ziebart2009planning} proposed the maximum entropy inverse optimal control approach for modeling goal-directed trajectories of pedestrians.
 	%     Such modeling method offers the benefit of the generality of its learned cost function to changes in the environment and to entirely different environments.
 	% 	\todohere{more references on human motion estimation and prediction.}
-	
 	These learning-based approaches have achieved success in predicting human motion in the environments where human trajectories have been previously collected for training.
-%	However, they usually involves the collection of training data (e.g., recorded human trajectory) and are prone to be scenario specific. 
-%	In fact, human motion can be well predicted using these learning-based approaches in the environments where human trajectories have been collected for training predictors.
+	%	However, they usually involves the collection of training data (e.g., recorded human trajectory) and are prone to be scenario specific. 
+	%	In fact, human motion can be well predicted using these learning-based approaches in the environments where human trajectories have been collected for training predictors.
 	However, these predictors may fail to obtain accurate prediction in unknown environments that no training data is available.
-	This drawback renders the learning-based methods less applicable for SAR missions since disaster sites are diverse and rarely similar to the known ones.
-	Therefore robots need to work in unfamiliar environments.
+	This drawback renders the learning-based prediction methods less applicable for SAR missions since disaster sites are diverse and rarely similar to the known ones.
+	% 	Therefore robots need to work in unfamiliar environments.
 	
-	In this work, we propose an Interacting Multiple Model (IMM)-based human motion prediction approach, taking advantage of the fact that human motion usually involves different identified motion models \cite{aggarwal1999human}, such as straight-line movement, making turns and change of speed.
-	Such IMM-based predictor incorporates several motion models into account and dynamically adjusts the mode probabilities based on the observed human trajectory.
-	To deal with the nonlinearity of the human motion (such as making turns \todohere{is this a nonlinear model?}), Unscented Kalman Filter is applied to each model in the IMM framework, resulting in the so-called IMM-UKF approach.
-	Such approach can achieve higher prediction accuracy compared to traditional filtering methods that utilizes a single motion model. 
-	Additionally, no training is needed and thus scenario-independent, which is advantageous over learning-based methods for SAR missions.
+	In this work, we propose an Interacting Multiple Model (IMM)-based human motion prediction approach, taking advantage of the fact that human motion usually involves different motion models \cite{aggarwal1999human}, such as straight-line movement, making turns and change of speed.
+	Such IMM-based predictor incorporates several motion models and dynamically adjusts the mode probabilities based on the observed human trajectory.
+	To deal with the nonlinearity of the human motion, such as making turns, Unscented Kalman Filter is applied to each model in the IMM framework, resulting in the so-called IMM-UKF approach.
+	Such approach can achieve higher prediction accuracy and faster response compared to single-model filtering methods such as KF and PF. 
+	Additionally, IMM-UKF does not need training and is thus applicable to unknown environments, which is advantageous over learning-based methods for SAR missions.
 	
-	Utilizing the predicted human trajectory, a model predictive control (MPC)-based motion planner is developed that formulates the motion planning as a nonlinear programming, which conveniently considers the safety and comfort requirements.
-%	robot motion planner that generates socially desirable companion behavior is necessary. 
-%	Several motion planner have been proposed in previous work.
-%	For example, Hoeller et al.\cite{hoeller2007accompanying} presents a local path planning approach based on the expansive-spaces tree algorithm, which repeatedly computes collision-free paths from the robot’s current position to a target position near the person using a randomized search in configuration space.
-%	Fulgenzi et al.\cite{fulgenzi2008probabilistic} proposed an extended Rapidly-exploring Random Tree (RRT) algorithm that takes the likelihood of the obstacles trajectory and the probability of collision into account for robot path planning in a dynamic uncertain environment.
-%	Similar RRT approaches have also been adopted in \cite{barnaud2014proxemics,rios2011understanding}.	
+	Utilizing the predicted human trajectory, a model predictive control (MPC)-based motion planner is developed that formulates the motion planning as a nonlinear programming, which conveniently considers the safety and comfort requirements.\todohere{ask sb. to check the grammar}.
+	%	robot motion planner that generates socially desirable companion behavior is necessary. 
+	%	Several motion planner have been proposed in previous work.
+	%	For example, Hoeller et al.\cite{hoeller2007accompanying} presents a local path planning approach based on the expansive-spaces tree algorithm, which repeatedly computes collision-free paths from the robot’s current position to a target position near the person using a randomized search in configuration space.
+	%	Fulgenzi et al.\cite{fulgenzi2008probabilistic} proposed an extended Rapidly-exploring Random Tree (RRT) algorithm that takes the likelihood of the obstacles trajectory and the probability of collision into account for robot path planning in a dynamic uncertain environment.
+	%	Similar RRT approaches have also been adopted in \cite{barnaud2014proxemics,rios2011understanding}.	
 	%	The probabilistic roadmaps is used to plan collision-free paths to a given target location, chosen based on the predicted adjacent humans' positions.	
-%	
-%	The main contribution of this paper is that we proposed a model-based human motion predictor that takes several human motion patterns into account.
-%	Such approach can achieve higher prediction accuracy compared to traditional methods that utilizes a single motion model.
-%	In addition, the prediction performance does not rely on any training data and thus not scenario-dependent, which is advantageous over learning-based methods for search and rescue missions.
-%	a model predictive control (MPC)-based motion planner is developed that formulates the motion planning as a nonlinear programming, which conveniently considers the safety and comfort requirements.	
-	The proposed framework is evaluated using a simulated SAR scenario, in which the human rescuer moves sequentially to several destinations and the robot needs to accompany. 
+	%	
+	%	The main contribution of this paper is that we proposed a model-based human motion predictor that takes several human motion patterns into account.
+	%	Such approach can achieve higher prediction accuracy compared to traditional methods that utilizes a single motion model.
+	%	In addition, the prediction performance does not rely on any training data and thus not scenario-dependent, which is advantageous over learning-based methods for search and rescue missions.
+	%	a model predictive control (MPC)-based motion planner is developed that formulates the motion planning as a nonlinear programming, which conveniently considers the safety and comfort requirements.	
+	The MPC planner with IMM-UKF prediction is evaluated using a simulated SAR scenario, in which the human rescuer moves sequentially to several destinations and the robot needs to accompany. 
 	Simulation results show that the IMM-based predictor provides superior prediction performance than other filtering-based methods.
 	Using the MPC motion planner, the robot has successfully accompanied the human in a safe and comfortable manner.
 	% 	The proposed motion planning method differs from previous works in several aspects.
@@ -223,27 +223,8 @@
 	The robot has no knowledge about the positions of human destinations.
 	However, it can measure human positions in real time from the GPS sensor that the human carries.
 	
-	The robot motion capability is modeled by the following kinematic model:
-	\begin{subequations}
-		\begin{align}
-			p^r(k+1)&=p^r(k)+v^r(k)
-			\left[ 
-			\begin{array}{c}
-				\cos \theta(k)\\
-				\sin \theta(k)\\
-			\end{array}
-			\right]T\label{eqn:constr:dyn_pre_motion}\\
-			v^r(k+1)&=v^r(k)+a(k)T\label{eqn:constr:dyn_pre_v}\\
-			\theta^r(k+1)&=\theta^r(k)+w(k)T\label{eqn:constr:dyn_pre_theta}\\
-			a_{lb}&\le a^r(k)\le a_{ub}\label{eqn:constr:a}\\
-			w_{lb}&\le \omega^r(k)\le w_{ub}\label{eqn:constr:w}
-		\end{align}
-	\end{subequations}
-	where $(p^r(k),v^r(k),\theta^r(k))$ denote the robot state at time $k$, representing the position, speed and heading angle, respectively; $T$ represent the discretization sampling time.
-	The control input consists of the acceleration $a^r(k)$ and the angular velocity $\omega^r(k)$, with $a_{lb},w_{lb}$ being the corresponding lower bounds and $a_{ub},w_{ub}$ the upper bounds.
-	
-	Several obstacles exist in the field, including five stationary ones and two moving ones, representing unmovable obstructions, such as buildings or plants, and mobile objects, such as pedestrians or vehicles, respectively.
-	The positions of stationary obstacles are known to both the human and the companion robot while the moving obstacles are measured using same measurement tool for tracking the human rescuer\todohere{How to make is reasonable that moving obstacles also have GPS?}.
+	Several obstacles exist in the field, including five stationary ones (blue rectangles), representing unmovable obstructions such as buildings or plants, and two moving ones (pink dots with arrows showing moving direction) representing mobile objects such as pedestrians or vehicles.
+	The positions of stationary obstacles are known to both the human and the companion robot while the moving obstacles are measured using same measurement tool for tracking the human rescuer.
 	%	Neither the human nor the robot can step into or cross these obstacles. 
 	When accompanying the human, the robot should satisfy the aforementioned safety and comfort requirements.
 	%     , which requires the robot to avoid colliding with either the human or any obstacles and maintain a proper distance from the accompanied human.
@@ -269,7 +250,9 @@
 	%Based on the prediction, the robot plans its own motion in a socially acceptable way.
 	%The following subsections details the methods for each of the three steps.
 	
-	\subsection{Human Motion Estimation}\label{subsec:human_track}
+	\subsection{Human Motion Estimation and Prediction}\label{subsec:human_track}
+	\subsubsection{Interacting Multiple Model Approach}\label{subsec:imm}
+	
 	The Interacting Multiple Model (IMM) approach are applied for estimating the human motion from the noisy sensor data.
 	% 	The IMM approach has been generally considered as the mainstream method for maneuvering target estimation. 
 	It utilizes a bank of $r$ number of filters corresponding to different motion models.
@@ -283,18 +266,18 @@
 	\[
 	\mu_j(k)=\frac{1}{c}\sum\limits_{i=1}^{r}L_{ij}(k)p_{ij}\mu_j(k-1)
 	\]
-	where $c$ denotes the normalizing factor; $L_{ij}(k)$ stands for the likelihood function and $p_{ij}$ represents the mode transition probability from the $i^\text{th}$ to the $j^\text{th}$ model. 
-	Each filter uses the mixed initial state estimate and covariance from different combination of the previous model. 
-	Readers interested in the details of the IMM approach can refer to \cite{yaakov2002estimation}.
+	where $c$ denotes the normalizing factor; $L_{ij}(k)$ stands for the likelihood function \todohere{explain a little bit} and $p_{ij}$ represents the mode transition probability from the $i^\text{th}$ to the $j^\text{th}$ model. 
+	Each filter uses the mixed initial state estimate and covariance from different combination of the previous model. \todohere{this sentence is a little confusing}
+	Readers interested in the details of the IMM approach can refer to \cite{yaakov2001estimation}.
 	% 	The IMM approach offers the benefits of incorporating multiple motion models in the estimation process, which makes it suitable for human state estimation since when a person moves, it usually involves multiple motion patterns.
 	% We now motivate the use if nonlinear models in the IMM by introducing a popular nonlinear model used in target tracking. It is the Coordinated Turn model, whose name is derived from the aerospace industry. A coordinated turn is a turn in which the turn rate and speed are constant. If the turn rate is a known constant the model is linear. \cite {derek_phd_dissertation} 
 	
 	% Unfortunately, the turn rate of the human is rarely constant. Thus the coordinated turn model will be augmented with the turn rate as additional state. Therefore it is necessary to use an nonlinear system.
 	In this work, two different dynamic models are used in the IMM framework: one is the coordinated turn motion model, reflecting the action of making turns or moving along a curved path, and the other is the uniform motion model, representing the straight-line movement. 
-	The equation of motion for the coordinated turn motion becomes the following 
+	The equation for the coordinated turn motion is shown below:
 	\begin{subequations}
-		\begin{align}
-			x^{h,1}(k+1)&= f(x^{h,1}(k))+Gw(k)\\
+		\begin{align*}
+			x^{h,1}(k+1)&= f(x^{h,1}(k))+Gw_1(k) \\ 
 			%Q(k)&=E[w(k)w(k)^\top]
 			f(x^{h,1}(k))&=\left[
 			\begin{array}{c}
@@ -303,7 +286,7 @@
 				p^h_2+\frac{1-\cos(\omega^h T)}{\omega^h}v^h_1+\frac{\sin(\omega^h T)}{\omega^h}v^h_2\\
 				\sin(\omega^h T)v^h_1+\cos(\omega^h T)v^h_2\\
 				\omega^h 
-			\end{array}\right]\\
+			\end{array}\right] \\
 			G &= \left[
 			\begin{array}{ccc}
 				\frac{T^2}{2}& 0& 0\\
@@ -311,14 +294,15 @@
 				0& \frac{T^2}{2}& 0\\
 				0& T& 0\\
 				0& 0& 1\\
-			\end{array}\right]\\
-			w&\sim\mathcal{N}(0,Q)
-		\end{align}
+			\end{array}\right] \\
+			w_1&\sim\mathcal{N}(0,Q).
+		\end{align*}
 	\end{subequations}
+	
 	Also, the equation of the uniform motion is represent as follows:
 	\begin{subequations}
-		\begin{align}
-			\dot{x}^{h,2}(k+1)&= Ax^{h,2}(k)+Bw(k)\label{eqn:h_d_dyn}\\
+		\begin{align*}
+			\dot{x}^{h,2}(k+1)&= Ax^{h,2}(k)+Bw_2(k) \label{eqn:h_d_dyn}\\
 			A=\left[
 			\begin{array}{ccccc}
 				1& T& 0& 0& 0\\
@@ -334,10 +318,11 @@
 				0& \frac{T^2}{2}& 0\\
 				0& T& 0\\
 				0& 0& 1\\
-			\end{array}\right]
-		\end{align}
+			\end{array}\right] \\
+			w_2&\sim\mathcal{N}(0,Q)
+		\end{align*}
 	\end{subequations}
-	where $x^{h,i}(k)$ represents the human motion state including five elements : $p^h_1,v^h_1,p^h_2,v^h_2,\omega^h$, where $p^h_1,p^h_2$ denote the longitudinal and lateral position of the human, $v^h_1,v^h_2$ the corresponding velocity and $\omega^h$ the turn rate of the human; $w(k)$ represents process noise; $T$ represents the sampling time; Q is the covariance matrix of the process noise.
+	where $x^{h,i}(k)$, $i=1,2$ represents the human motion state including five elements : $p^h_1,v^h_1,p^h_2,v^h_2,\omega^h$, where $p^h_1,p^h_2$ denote the longitudinal and lateral position of the human, $v^h_1,v^h_2$ the corresponding velocity and $\omega^h$ the turn rate of the human; $w_i(k)$, $i=1,2$ represents process noise; $T$ represents the sampling time; Q is the covariance matrix of the process noise.
 	
 	The uniform motion model is essentially a special case of the coordinated turn motion model with the turn rate $\omega$ being fixed to zero.
 	%	while the coordinated turn motion model considers the turn rate as a time-varying value.
@@ -378,29 +363,24 @@
 	% When this continuous system is discretized, the equation becomes
 	
 	
-	% With a single nonlinear model, accurate state estimates are possible over all target motions and maneuvers may be inferred from the state estimates themselves. However, in nonlinear multiple model approach, it is common to include one uniform motion model and one coordinated turn model for quick maneuver detection\cite {derek_phd_dissertation}. 
-	
-	
+	% With a single nonlinear model, accurate state estimates are possible over all target motions and maneuvers may be inferred from the state estimates themselves. However, in nonlinear multiple model approach, it is common to include one uniform motion model and one coordinated turn model for quick maneuver detection\cite {derek_phd_dissertation}. 	
 	
 	The observation equation is represented as : 
-	\begin{subequations}
-		\begin{align}
-			y^h(k)=Cx^h(k)+v(k)\label{eqn:n_observation}
-		\end{align}
-	\end{subequations}
+	\begin{equation}
+		y^h(k)=Cx^h(k)+v(k)\label{eqn:n_observation}
+	\end{equation}
 	where $y^h(k)$ denotes the observed human state at the time step $k$; $v(k)$ stands for measurement noise. 
 	
 	By using GPS sensors or cameras, the human positions can be measured.
 	Therefore, the parameters in observation model \cref{eqn:n_observation} is defined as:
 	\begin{subequations}
-		\begin{align}
+		\begin{align}\label{eqn:meas_noise}
 			C&=\left[
-			\begin{array}{ccccc}
-				1& 0& 0& 0& 0\\
-				0& 0& 1& 0& 0
-			\end{array}\right],\label{eqn:C}\\
-			v&\sim\mathcal{N}(0,V)\label{eqn:meas_noise}
-			%V(k)&=E[v(k)v(k)^\top] 
+			\begin{array}{cccc}
+			1& 0& 0& 0\\
+			0& 0& 1& 0
+			\end{array}\right],\\
+			v&\sim\mathcal{N}(0,V)
 		\end{align}
 	\end{subequations}
 	where $V$ is the convariance matrix of the measurement noise.
@@ -451,15 +431,15 @@
 	% \end{align}
 	% \end{subequations}
 	
-	\subsection{Unscented Kalman Filter}\label{subsec:UKF}
+	\subsubsection{Unscented Kalman Filter}\label{subsec:UKF}
 	% We select the Unscented Kalman Filter (UKF) among the nonlinear estimation methods since the UKF is a versatile engineering tool that once understood can provide good nonlinear estimation results for many practical problems. Due to lack of Jacobian matrix calculation, the UKF can also be constructed and altered more easily than the Exteded Kalman Filter (EKF) in the prototyping stages of filter design. 
 	% In other words, the UKF circumvents the first-order linearization by implementing the Unscented Transformation (UT), which calculates the statistics of a random vector that undergoes a nonlinear transformation\cite {KalmanFiltering}.
 	% The Unscented Kalman Filter (UKF) circumvents the first-order linearization by implementing the Unscented Transformation (UT), which calculates the statistics of a random vector that undergoes a nonlinear transformation\cite {KalmanFiltering}
 	The Unscented Kalman Filter (UKF) is applied to each model that are used in IMM framework for estimating human states. 
-	It is an effective state estimation technique for nonlinear systems by implementing the Unscented Transformation (UT) that calculates the statistics of a random vector that undergoes a nonlinear transformation\cite {KalmanFiltering}.
+	It is an effective state estimation technique for nonlinear systems by implementing the Unscented Transformation (UT) that calculates the statistics of a random vector that undergoes a nonlinear transformation\cite {haykin2004kalman}.
 	% The UT is the central technique of the UKF which is used to handle the non-linearity in a nonlinear transformation. 
 	% This method provides the mean and covariance of the Gaussian Random Vector (GRV) at least second-order accuracy(Taylor Series Expansion) through use a set of sample points. 
-	To be specific, given an arbitrary nonlinear dynamic model $z=f(x)$ and as $L$-dimensional Gaussian Random Vector (GRV) $x$ with mean $\hat{x}$ and covariance $P_x$\todohere{how to choose the mean and Covariance}, the statistics of $z$ can be approximated by using $2L+1$ discrete sample points $\left\{\chi^{(i)} \right\}_{i=0}^{2L}=\left\{ \hat{x}\ \text{and}\  \hat{x} \pm \sigma_j, j=1,...,L\right \}$, called \textit{sigma points}, where $\sigma_i$ is the $i^{th}$ column of the matrix $\sqrt{(L+\lambda)P_x}$. $\lambda$ is a scaling parameter, as defined below:
+	To be specific, given an arbitrary nonlinear dynamic model $z=g(x)$ and as $L$-dimensional Gaussian Random Vector (GRV) $x$ with mean $\hat{x}$ and covariance $P_x$, the statistics of $z$ can be approximated by using $2L+1$ discrete sample points $\left\{\chi^{(i)} \right\}_{i=0}^{2L}=\left\{ \hat{x}\ \text{and}\  \hat{x} \pm \sigma_j, j=1,...,L\right \}$, called \textit{sigma points}, where $\sigma_i$ is the $i^{th}$ column of the matrix $\sqrt{(L+\lambda)P_x}$. $\lambda$ is a scaling parameter, as defined below:
 	\begin{subequations}
 		\begin{align}
 			\lambda&=\alpha^2(L+\kappa)-L\\
@@ -471,20 +451,19 @@
 	\end{subequations}
 	where $\alpha$ determines the spread of sigma points about the mean $\hat{x}$; $\kappa$ is a secondary scaling parameter; $\beta$ is used to incorporate prior knowledge of the distribution.	
 	
-	Once the sigma points have been generated, each point is passed through the nonlinear function $z=f(x)$, i.e. each column of the sigma points is propagated through the non-linearity, as in $\zeta=f(\chi), i=0,...,2L$. The mean $\hat{z}$ and the covariance $P_z$ are approximated as $\hat{z}\simeq \Sigma_{i=0}^{2L}W_i^{(m)} \zeta^{(i)}$ and $P_z \simeq  \Sigma_{i=0}^{2L}W_i^{(c)}(\zeta^{(i)}-\hat{z})(\zeta^{(i)}-\hat{z})^\mathsf{T}$, calculated as given in above equations of the weights and parameters\cite{Hong}. Readers can refer to \cite {KalmanFiltering} for more details of the UKF algorithm. 
+	Once the sigma points have been generated, each point is passed through the nonlinear function $z=g(x)$, i.e. each column of the sigma points is propagated through the non-linearity, as in $\zeta^{(i)}=g(\chi^{(i)}), i=0,...,2L$. The mean $\hat{z}$ and the covariance $P_z$ are approximated as $\hat{z}\simeq \Sigma_{i=0}^{2L}W_i^{(m)} \zeta^{(i)}$ and $P_z \simeq  \Sigma_{i=0}^{2L}W_i^{(c)}(\zeta^{(i)}-\hat{z})(\zeta^{(i)}-\hat{z})^\mathsf{T}$, calculated as given in above equations of the weights and parameters\cite{hong2013vehicle}. Readers can refer to \cite {haykin2004kalman} for more details of the UKF algorithm. 
 	
-	\subsection{Human Motion Prediction}\label{subsec:motion_pred}
+	\subsubsection{Human Motion Prediction}\label{subsec:motion_pred}
 	The estimated human motion states and the mode probabilities are utilized for predicting human future states.
 	To be specific, using the uniform motion model and the turn motion model, human positions for each model can be extrapolated and then combined based on the mode probabilities to obtain the predicted positions.
 	%Let $\mu_i$ denote the mode probability of the $i^{\text{th}}$ model.
 	Let $\hat{x}^{h,j}(k|k)$ and $\tilde{x}^{h,j}(k+i|k)$ represent the estimated and predicted human states associated with the $j^{th}$ model at time $k$ and $k+i\,(i\ge 0)$, respectively, based on the observations up to time $k$.
 	The prediction procedure works as follows:
-	\todoQ{what's the difference between two sides of Eqn. (6c)?}
+	%	\todoQ{what's the difference between two sides of Eqn. (6c)?}
 	\begin{subequations}\label{eqn:motion_pred_imm}
 		\begin{align}
-			\tilde{x}^h(k+l+1|k)&=\sum\limits_{j=1}^{r}\mu_j \tilde{x}^{h,j}(k+l+1|k)\\ l&=0,\dots,N-1\\
-			\tilde{x}^{h,j}(k+l+1|k)&=\hat{x}^{h,j}(k+l+1|k) \quad j=1,\dots, r\\
-			&=\Sigma_{i=0}^{2L}W_i^{(m)} \chi_{k+l+1|k}^{(i)} \\
+			\tilde{x}^h(k+l+1|k)&=\sum\limits_{j=1}^{r}\mu_j \tilde{x}^{h,j}(k+l+1|k)\\ l&=0,\dots,N-1\nonumber \\
+			\tilde{x}^{h,j}(k+l+1|k)&=\Sigma_{i=0}^{2L}W_i^{(m)} \chi_{k+l+1|k}^{(i)}\\ j&=1,\dots,r\nonumber \\
 			\chi_{k+l+1|k}^{(i)}&=f(\chi_{k+l|k}^{(i)}) \quad i=0,\dots, 2L
 			%\tilde{x}^{h,j}(k|k)&=\hat{x}^{h,j}(k|k),\quad j=1,\dots r
 		\end{align}
@@ -517,7 +496,7 @@
 	%%k=0,…,N
 	%%where x ̃(0)=x ̂,y ̃(0)=y ̂, Δt denotes the sampling time and N represents the prediction horizon.
 	
-	\subsection{Robot Path Planning}\label{subsec:robot_path_plan}
+	\subsection{Robot motion Planning}\label{subsec:robot_path_plan}
 	The model predictive control (MPC) approach i utilized for robot motion planning.
 	MPC provides an effective framework for incorporating the safety and comfort requirements into the planning procedure.
 	It iteratively solves a finite-horizon constrained optimal control problem.
@@ -557,23 +536,30 @@
 		\begin{align}
 			\min_{\mathbf{A}_k,\mathbf{\Theta}_k} \quad &\sum\limits_{i=1}^{N} q_1\left| \left\|\bar{p}^r(k+i|k)-\tilde{p}^h(k+i|k)\right\|^2_2-d^2_{c}\right| + \notag\\
 			& q_2\left|\bar{v}^r(k+i|k)-\tilde{v}^h(k+i|k)\right|^2\label{eqn:obj}\\
-			\text{subject to} \quad & \text{Robot kinematic model: \cref{eqn:constr:dyn_pre_motion,eqn:constr:dyn_pre_v,eqn:constr:dyn_pre_theta,eqn:constr:a,eqn:constr:w}}  \notag\\
-			% & ||\bar{p}^r(k+i+1|k)-\tilde{p}^h(k+i+1|k)||_2\geq d_c\label{eqn:constr:comfort}\\
-			& ||\bar{p}^r(k+i+1|k)-\tilde{p}^h(k+i+1|k)||_2\geq d_s\label{eqn:constr:safety}\\
-			& ||\bar{p}^r(k+i+1|k)-\tilde{p}^{obs_m}_{l_m}(k+i+1|k)||_2\geq d_s\label{eqn:constr:safety_mv_obs}\\
-			& h_{l_s}(\bar{p}^r(k+i+1|k))\ge 0\label{eqn:constr:safety_s_obs1}\\
-			% 		& ||\bar{p}^r(k+i+1|k)-p^{obs_s}_{l_s}||_2\geq r^{obs}_l\label{eqn:constr:obs1}\\
-			& h_{l_s}(\lambda \bar{p}^r(k+i|k)+(1-\lambda)\bar{p}^r(k+i+1|k))\ge 0\label{eqn:constr:safety_s_obs2}\\
-			& \forall l=1,\dots,m,\, 0\le \lambda\le 1\notag\\
-			% 		& ||\lambda \bar{p}^r(k+i|k)+(1-\lambda)\bar{p}^r(k+i+1|k)-p^{obs_m}_l||_2\notag\\
-			% 		& \geq r^{obs}_l,\, \forall l=1,\dots,m,\, 0\le \lambda\le 1\label{eqn:constr:obs2}\\
+			\text{s.t.} \quad & \bar{p}^r(k+i|k)=\bar{p}^r(k+i-1|k)+\notag\\
+			&\bar{v}^r(k+i-1|k)
+			\left[ 
+			\begin{array}{c}
+				\cos \theta(k)\\
+				\sin \theta(k)\\
+			\end{array}
+			\right]T\label{eqn:constr:dyn_pre_motion}\\
+			& v^r(k+i|k)=v^r(k+i-1|k)+a(k+i-1|k)T\label{eqn:constr:dyn_pre_v}\\       &\theta^r(k+i|k)=\theta^r(k+i-1|k)+w(k+i-1|k)T\label{eqn:constr:dyn_pre_theta}\\
+			& a_{lb}\le a^r(k)\le a_{ub}\label{eqn:constr:a}\\
+			& w_{lb}\le \omega^r(k)\le w_{ub}\label{eqn:constr:w}\\
+			& ||\bar{p}^r(k+i|k)-\tilde{p}^h(k+i|k)||_2\geq d_s\label{eqn:constr:safety}\\
+			& ||\bar{p}^r(k+i|k)-\tilde{p}^{obs_m}_{l_m}(k+i|k)||_2\geq d_s\label{eqn:constr:safety_mv_obs}\\
+			& l_m=1,\dots,n_m\notag\\
+			& h_{l_s}(\bar{p}^r(k+i|k))\ge 0\label{eqn:constr:safety_s_obs1}\\
+			& h_{l_s}(\lambda \bar{p}^r(k+i-1|k)+(1-\lambda)\bar{p}^r(k+i|k))\ge 0\label{eqn:constr:safety_s_obs2}\\
+			& \forall l_s=1,\dots,n_s,\, 0\le \lambda\le 1\notag\\
 			& \bar{p}^r(k|k)=p^r(k)\label{eqn:constr:init_z}\\
 			& \bar{v}^r(k|k)=v^r(k)\label{eqn:constr:init_v}\\
 			& \bar{\theta}^r(k|k)=\theta^r(k)\label{eqn:constr:init_theta}
 		\end{align}
 	\end{subequations}
 	where $\bar{p}^r(k+i|k)$, $\bar{v}^r(k+i|k)$ and $\bar{\theta}(k+i|k),\, 0\le i\le N$ represent the planned position, speed and heading angle at time $k+i$, respectively;
-	N is the prediction horizon.
+	N is the prediction horizon;
 	$n_s$ is the number of static obstacles and $p^{obs_s}_{l_s}$ denotes the position of the $l_s^{\text{th}}$ obstacle;
 	$n_m$ stands for the number of moving obstacles and $p^{obs_m}_{l_m}$ and $r^{obs_m}_{l_m}$ denote the position and the radius of the $l_m^{\text{th}}$ obstacle;
 	$(\mathbf{A}_k,\mathbf{\Theta}_k)$ stand for the set of optimal acceleration and angular velocity in the prediction  horizon $[k,k+N-1]$, obtained by solving the above optimization problem at time $k$.
@@ -723,7 +709,7 @@
 	
 	\subsubsection{Robot motion planning}\label{subsubsec:motion_plan}
 	\cref{fig:robot_accom} shows the trajectory of the companion robot that accompanies the target person moving in the field. The trajectory is generated by the proposed MPC motion planner with five-step planning horizon ($2.5s$) and using the IMM-UKF for predicting the human and moving obstacles' trajectories.
-	The performance of the motion planning is evaluated using the criterion of safety \todohere{need to evaluate the safety in the following paragraphs} and comfort.
+	The performance of the motion planning is evaluated using the criterion of safety and comfort.
 	To be specific, the distance and speed differences between the robot and the human at each time step are measured, which are defined as:
 	\begin{subequations}
 		\begin{align}
@@ -733,8 +719,8 @@
 	\end{subequations}
 	These quantities are illustrated as the blue line in \cref{fig:err_d,fig:err_v}.
 	
-	The performance of IMM-UKF predictor for robot motion planning compared with two benchmark prediction strategies, using the same MPC planner.
-	The first benchmark method uses the coordinate turn motion model and applies a single-model predictor (the UKF predictor) to  \todoQ{Dong-han, is this correct?} predict human motion.
+	The performance of IMM-UKF for robot motion planning is compared with two benchmark prediction strategies, using the same MPC planner.
+	The first benchmark method uses the coordinate turn motion model and applies UKF to predict human motion.
 	The second method does not predict human motion.
 	Instead, the robot only utilize the human's current state for one-step ($500ms$) motion planning.
 	%We compare the MPC-based motion planning with a commonly used reactive motion planning method. %using \cref{eqn:err_d,eqn:err_v}.
@@ -783,37 +769,37 @@
 		\label{fig:err_v}
 	\end{figure}
 	
-	\begin{table}
-		\caption{Human-robot Distance}
-		\captionsetup{width=.5\textwidth}
-		\centering
-		\begin{tabular}{|c|c|c|c|}
-			\hline
-			Method & IMM-UKF & UKF & non-prediction\\
-			\hline
-			Ave & 2.716 & 2.8774 & 3.8913\\
-			\hline
-			Std & 0.9084 & 0.8548 & 0.6549\\
-			\hline
-		\end{tabular}
-		\label{table:distance}
-	\end{table}
-	
-	\begin{table}
-		\caption{Speed Difference}
-		\captionsetup{width=.5\textwidth}
-		\centering
-		\begin{tabular}{|c|c|c|c|}
-			\hline
-			Method & IMM-UKF & UKF & non-prediction\\
-			\hline
-			Ave & 0.0789 & 0.1057 & 0.0008\\
-			\hline
-			Std & 0.2559 & 0.2583 & 0.1868\\
-			\hline
-		\end{tabular}
-		\label{table:speed}
-	\end{table}
+%	\begin{table}
+%		\caption{Human-robot Distance}
+%		\captionsetup{width=.5\textwidth}
+%		\centering
+%		\begin{tabular}{|c|c|c|c|}
+%			\hline
+%			Method & IMM-UKF & UKF & non-prediction\\
+%			\hline
+%			Ave & 2.716 & 2.8774 & 3.8913\\
+%			\hline
+%			Std & 0.9084 & 0.8548 & 0.6549\\
+%			\hline
+%		\end{tabular}
+%		\label{table:distance}
+%	\end{table}
+%	
+%	\begin{table}
+%		\caption{Speed Difference}
+%		\captionsetup{width=.5\textwidth}
+%		\centering
+%		\begin{tabular}{|c|c|c|c|}
+%			\hline
+%			Method & IMM-UKF & UKF & non-prediction\\
+%			\hline
+%			Ave & 0.0789 & 0.1057 & 0.0008\\
+%			\hline
+%			Std & 0.2559 & 0.2583 & 0.1868\\
+%			\hline
+%		\end{tabular}
+%		\label{table:speed}
+%	\end{table}
 	
 	\cref{fig:err_d} compares the distances between the human and the robot using these three strategies.
 	% 	Notice that the distances in the plot has been substracted by the safety distance $d_s$.
@@ -821,9 +807,9 @@
 	%     In addition, distance around $d_c-d_s$ is desired, as it implies that the robot keeps a comfortable distance $d_c$ from the human.
 	It can be noticed that the MPC planner has ensured the safety of the accompanied human with each of the three prediction methods in that no distance goes below $d_s$.
 	Additionally, by incorporating human motion prediction into the motion planning, the robot significantly improves its companion performance from the non-prediction case.
-	This can be demonstrated by \cref{table:distance} that the mean of human-robot distance using the prediction is much smaller than that without prediction.
-	Additionally, the IMM-UKF predictor achieves better performance than the UKF-predictor in that the average distance is smaller but still within the comfort range using the former predictor than with the latter one.
-	\todohere{if possible, still compare the portion that IMM-UKF and UKF make the robot stay in the comfort distance.}
+	In fact, the average distance between the human and the robot are 2.716, 2.8774, 3.8913 using the IMM-UKF, UKF and non-prediction methods respectively.
+%	This can be demonstrated by \cref{table:distance} that the mean of human-robot distance using the prediction is much smaller than that without prediction.
+	Besides, the IMM-UKF predictor achieves better performance than the UKF-predictor in that the average distance is smaller but still within the comfort range using the IMM-UKF.
 	%On the contrary, the reactive method results in distances greater than $1$ for xxx\% of time while the smallest distance drops to $-xxx$ at time xxx.
 	% 	The IMM-UKF method achieves xxx\% improvement on average distance, xxx\% on maximum distance and also minimum distance. 
 	% 	In addition, the robot using IMM-UKF as the predictor can achieve less unsafe distance than the other two approaches. 
@@ -844,14 +830,14 @@
 	%\cref{fig:err_v} compares the velocity differences between the human and the robot using these two methods.
 	%It can be noticed that both approaches result in comparable velocity differences.
 	
-	The non-prediction method achieves smaller velocity difference than methods using predictors.
+	The non-prediction method achieves smaller speed difference than methods using prediction.
 	This seems to imply that the non-prediction method is preferable for the robot to keep similar pace as the human.
-	However, such similarity using non-prediction method results in large distance between the human and the robot, which is undesirable.
-	The fluctuation in the velocity when using predictors is causes by the motion planner's effort to keep the robot within the comfort region around the human.
+	However, such speed similarity using non-prediction method results in large distance between the human and the robot, which is undesirable.
+	The change of the speed when using prediction is caused by the motion planner's effort to keep the robot within the comfort region around the human.
 	%     The benefits of including human motion prediction is also demonstrated by comparing the velocity differences, as shown in \cref{fig:err_v}.
 	%     UKF and IMM-UKF predictor result in smaller differences than the non-prediction method.
 	%     Moreover, the statistics shows smaller velocity difference using the IMM-UKF predictor.	
-	Therefore, the simulation results show the superiority of using the multiple-model predictor (IMM-UKF predictor) for robot motion planning.
+	Therefore, the simulation results show the superiority of using the IMM-UKF prediction for robot motion planning.
 	% This makes sense as we explicitly requires the robot to match up with the human speed using the reactive method while in MPC method the velocity difference only composes one term in the objective function with a smaller weight than the distance term.
 	% However, in spite of the small speed difference using the reactive method, the resultant large human-robot distance, as shown in \cref{fig:err_d}, renders such closeness on speed less attractive.
 	% In fact, the proper distance between the human and the robot composes the core part of a human-accompanying robot.
@@ -920,14 +906,14 @@
 	We assume that only the human position can be measured.
 	Therefore, the parameters in observation model \cref{eqn:observation} can be defined as:
 	\begin{subequations}
-		\begin{align}
+		\begin{align*}
 			C&=\left[
 			\begin{array}{cccc}
 				1& 0& 0& 0\\
 				0& 0& 1& 0
-			\end{array}\right],\label{eqn:C}\\
-			v&\sim\mathcal{N}(0,V)\label{eqn:meas_noise}
-		\end{align}
+			\end{array}\right],\\
+			v&\sim\mathcal{N}(0,V)
+		\end{align*}
 	\end{subequations}
 	Above linear state space models are used in LKF and IMM-LKF in this paper.
 	Moreover, we set the turn rate $\omega$ to be $0.1$ rad/s as a known constant, in the turn motion model in IMM-LKF. 

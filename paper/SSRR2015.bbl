@@ -50,11 +50,6 @@ D.~Koller, J.~Weber, and J.~Malik, {\em Robust multiple car tracking with
   occlusion reasoning}.
 \newblock Springer, 1994.
 
-\bibitem{cosgun2013autonomous}
-A.~Cosgun, D.~Florencio, H.~I. Christensen, {\em et~al.}, ``Autonomous person
-  following for telepresence robots,'' in {\em Robotics and Automation (ICRA),
-  2013 IEEE International Conference on}, pp.~4335--4342, IEEE, 2013.
-
 \bibitem{bruce2004better}
 A.~Bruce and G.~Gordon, ``Better motion prediction for people-tracking,'' in
   {\em Proc. of the Int. Conf. on Robotics \& Automation (ICRA), Barcelona,
@@ -76,14 +71,29 @@ A.~F. Foka and P.~E. Trahanias, ``Probabilistic autonomous robot navigation in
   dynamic environments with human motion prediction,'' {\em International
   Journal of Social Robotics}, vol.~2, no.~1, pp.~79--94, 2010.
 
+\bibitem{wu2012path}
+Z.~Wu, M.~Hashimoto, B.~Guo, and K.~Takahashi, ``A path prediction method for
+  human-accompanying mobile robot based on neural network,'' in {\em
+  Intelligent Science and Intelligent Data Engineering}, pp.~35--42, Springer,
+  2012.
+
 \bibitem{aggarwal1999human}
 J.~K. Aggarwal and Q.~Cai, ``Human motion analysis: A review,'' {\em Computer
   vision and image understanding}, vol.~73, no.~3, pp.~428--440, 1999.
 
-\bibitem{rios2011understanding}
-J.~Rios-Martinez, A.~Spalanzani, and C.~Laugier, ``Understanding human
-  interaction for probabilistic autonomous navigation using risk-rrt
-  approach,'' in {\em Intelligent Robots and Systems (IROS), 2011 IEEE/RSJ
-  International Conference on}, pp.~2014--2019, IEEE, 2011.
+\bibitem{yaakov2001estimation}
+B.-S. Yaakov, X.~Li, and K.~Thiagalingam, ``Estimation with applications to
+  tracking and navigation,'' {\em New York: Johh Wiley and Sons}, vol.~245,
+  2001.
+
+\bibitem{haykin2004kalman}
+S.~Haykin, {\em Kalman filtering and neural networks}, vol.~47.
+\newblock John Wiley \& Sons, 2004.
+
+\bibitem{hong2013vehicle}
+S.~Hong, T.~Smith, F.~Borrelli, and J.~K. Hedrick, ``Vehicle inertial parameter
+  identification using extended and unscented kalman filters,'' in {\em
+  Intelligent Transportation Systems-(ITSC), 2013 16th International IEEE
+  Conference on}, pp.~1436--1441, IEEE, 2013.
 
 \end{thebibliography}
