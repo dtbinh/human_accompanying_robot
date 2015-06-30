@@ -1,5 +1,22 @@
 \begin{thebibliography}{10}
 
+\bibitem{casper2003human}
+J.~Casper and R.~R. Murphy, ``Human-robot interactions during the
+  robot-assisted urban search and rescue response at the world trade center,''
+  {\em Systems, Man, and Cybernetics, Part B: Cybernetics, IEEE Transactions
+  on}, vol.~33, no.~3, pp.~367--385, 2003.
+
+\bibitem{nourbakhsh2005human}
+I.~R. Nourbakhsh, K.~Sycara, M.~Koes, M.~Yong, M.~Lewis, and S.~Burion,
+  ``Human-robot teaming for search and rescue,'' {\em Pervasive Computing,
+  IEEE}, vol.~4, no.~1, pp.~72--79, 2005.
+
+\bibitem{kruijff2012designing}
+G.-J.~M. Kruijff, F.~Colas, T.~Svoboda, J.~Van~Diggelen, P.~Balmer, F.~Pirri,
+  and R.~Worst, ``Designing intelligent robots for human-robot teaming in urban
+  search and rescue.,'' in {\em AAAI Spring Symposium: Designing Intelligent
+  Robots}, 2012.
+
 \bibitem{kruse2013human}
 T.~Kruse, A.~K. Pandey, R.~Alami, and A.~Kirsch, ``Human-aware robot
   navigation: A survey,'' {\em Robotics and Autonomous Systems}, vol.~61,
@@ -49,6 +66,12 @@ P.~Henry, C.~Vollmer, B.~Ferris, and D.~Fox, ``Learning to navigate through
 D.~Koller, J.~Weber, and J.~Malik, {\em Robust multiple car tracking with
   occlusion reasoning}.
 \newblock Springer, 1994.
+
+\bibitem{rui2001better}
+Y.~Rui and Y.~Chen, ``Better proposal distributions: Object tracking using
+  unscented particle filter,'' in {\em Computer Vision and Pattern Recognition,
+  2001. CVPR 2001. Proceedings of the 2001 IEEE Computer Society Conference
+  on}, vol.~2, pp.~II--786, IEEE, 2001.
 
 \bibitem{bruce2004better}
 A.~Bruce and G.~Gordon, ``Better motion prediction for people-tracking,'' in
