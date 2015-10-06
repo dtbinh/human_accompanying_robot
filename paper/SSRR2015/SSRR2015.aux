@@ -16,9 +16,16 @@
 \newlabel{sec:intro}{{I}{1}}
 \newlabel{sec:intro@cref}{{[section][1][]I}{1}}
 \citation{yaakov2001estimation}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A search-and-rescue scenario for the companion robot to accompany a human. The red circle and the green triangle represent the human rescuer and the robot companion, respectively. Stars denote human destinations and the blue rectangles stand for static obstacles. Moving obstacles are shown as pink circles with arrows.\relax }}{2}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:ref_traj_init}{{1}{2}}
+\newlabel{fig:ref_traj_init@cref}{{[figure][1][]1}{2}}
 \@writefile{toc}{\contentsline {section}{\numberline {II}PROBLEM FORMULATION}{2}}
 \newlabel{sec:formulation}{{II}{2}}
 \newlabel{sec:formulation@cref}{{[section][2][]II}{2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Illustration of safety and comfort requirements. The blue circle represents the ``unsafety zone'' and the orange area represents the ``comfort range''. (a) The most desirable companion behavior is that the robot stays within the ``comfort range'' and maintains similar speed as the human. (b) The robot is not allowed to enter the ``unsafety zone''. (c) It is acceptable, but not desirable, that the robot stays outside of the ``comfort range'' and the ``unsafety zone''.\relax }}{2}}
+\newlabel{fig:zone}{{2}{2}}
+\newlabel{fig:zone@cref}{{[figure][2][]2}{2}}
 \@writefile{toc}{\contentsline {section}{\numberline {III}METHODS}{2}}
 \newlabel{sec:framework}{{III}{2}}
 \newlabel{sec:framework@cref}{{[section][3][]III}{2}}
@@ -30,25 +37,17 @@
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {III-A.1}Interacting Multiple Model}{2}}
 \newlabel{eqn:imm_eq}{{1}{2}}
 \newlabel{eqn:imm_eq@cref}{{[equation][1][]1}{2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A search-and-rescue scenario for the companion robot to accompany a human. The red circle and the green triangle represent the human rescuer and the robot companion, respectively. Stars denote human destinations and the blue rectangles stand for static obstacles. Moving obstacles are shown as pink circles with arrows.\relax }}{2}}
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:ref_traj_init}{{1}{2}}
-\newlabel{fig:ref_traj_init@cref}{{[figure][1][]1}{2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Illustration of safety and comfort requirements. The blue circle represents the ``safety zone'' and the orange area represents the ``comfort range''. (a) The most desirable companion behavior is that the robot stays within the ``comfort range'' and maintains similar speed as the human. (b) The robot is not allowed to enter the ``safety zone''. (c) It is acceptable, but not desirable, that the robot stays outside of the ``comfort range'' and the ``safety zone''.\relax }}{2}}
-\newlabel{fig:zone}{{2}{2}}
-\newlabel{fig:zone@cref}{{[figure][2][]2}{2}}
+\citation{}
 \citation{haykin2004kalman}
 \citation{hong2013vehicle}
 \citation{haykin2004kalman}
 \newlabel{eqn:n_observation}{{2}{3}}
 \newlabel{eqn:n_observation@cref}{{[equation][2][]2}{3}}
-\newlabel{eqn:meas_noise}{{3a}{3}}
-\newlabel{eqn:meas_noise@cref}{{[subequation][1][3]3a}{3}}
 \newlabel{subsec:UKF}{{III-A.2}{3}}
 \newlabel{subsec:UKF@cref}{{[subsubsection][2][3,1]III-A.2}{3}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {III-A.2}Unscented Kalman Filter}{3}}
-\newlabel{eqn:ukf}{{4a}{3}}
-\newlabel{eqn:ukf@cref}{{[subequation][1][4]4a}{3}}
+\newlabel{eqn:ukf}{{3a}{3}}
+\newlabel{eqn:ukf@cref}{{[subequation][1][3]3a}{3}}
 \newlabel{subsec:motion_pred}{{III-A.3}{3}}
 \newlabel{subsec:motion_pred@cref}{{[subsubsection][3][3,1]III-A.3}{3}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {III-A.3}Human Motion Prediction}{3}}
@@ -69,39 +68,39 @@
 \newlabel{sub@fig:ref_traj_accom}{{d}{4}}
 \newlabel{sub@fig:ref_traj_accom@cref}{{[subfigure][4][3]3d}{4}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A screenshot of the simulation. The red line represents the human trajectory and the green on shows the companion robot's trajectory. For most of the time, the robot follows the human from behind\relax }}{4}}
-\newlabel{eqn:motion_pred_imm}{{5}{4}}
-\newlabel{eqn:motion_pred_imm@cref}{{[subequation][5][]5}{4}}
+\newlabel{eqn:motion_pred_imm}{{4}{4}}
+\newlabel{eqn:motion_pred_imm@cref}{{[subequation][4][]4}{4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Robot motion Planning}{4}}
 \newlabel{subsec:robot_path_plan}{{III-B}{4}}
 \newlabel{subsec:robot_path_plan@cref}{{[subsection][2][3]III-B}{4}}
-\newlabel{eqn:path_plan_mpc}{{6}{4}}
-\newlabel{eqn:path_plan_mpc@cref}{{[subequation][6][]6}{4}}
-\newlabel{eqn:obj}{{6a}{4}}
-\newlabel{eqn:obj@cref}{{[subequation][1][6]6a}{4}}
-\newlabel{eqn:constr:dyn_pre_motion}{{6b}{4}}
-\newlabel{eqn:constr:dyn_pre_motion@cref}{{[subequation][2][6]6b}{4}}
-\newlabel{eqn:constr:dyn_pre_v}{{6c}{4}}
-\newlabel{eqn:constr:dyn_pre_v@cref}{{[subequation][3][6]6c}{4}}
-\newlabel{eqn:constr:dyn_pre_theta}{{6d}{4}}
-\newlabel{eqn:constr:dyn_pre_theta@cref}{{[subequation][4][6]6d}{4}}
-\newlabel{eqn:constr:a}{{6e}{4}}
-\newlabel{eqn:constr:a@cref}{{[subequation][5][6]6e}{4}}
-\newlabel{eqn:constr:w}{{6f}{4}}
-\newlabel{eqn:constr:w@cref}{{[subequation][6][6]6f}{4}}
-\newlabel{eqn:constr:safety_human}{{6g}{4}}
-\newlabel{eqn:constr:safety_human@cref}{{[subequation][7][6]6g}{4}}
-\newlabel{eqn:constr:safety_mv_obs}{{6h}{4}}
-\newlabel{eqn:constr:safety_mv_obs@cref}{{[subequation][8][6]6h}{4}}
-\newlabel{eqn:constr:safety_s_obs1}{{6i}{4}}
-\newlabel{eqn:constr:safety_s_obs1@cref}{{[subequation][9][6]6i}{4}}
-\newlabel{eqn:constr:safety_s_obs2}{{6j}{4}}
-\newlabel{eqn:constr:safety_s_obs2@cref}{{[subequation][10][6]6j}{4}}
-\newlabel{eqn:constr:init_z}{{6k}{4}}
-\newlabel{eqn:constr:init_z@cref}{{[subequation][11][6]6k}{4}}
-\newlabel{eqn:constr:init_v}{{6l}{4}}
-\newlabel{eqn:constr:init_v@cref}{{[subequation][12][6]6l}{4}}
-\newlabel{eqn:constr:init_theta}{{6m}{4}}
-\newlabel{eqn:constr:init_theta@cref}{{[subequation][13][6]6m}{4}}
+\newlabel{eqn:path_plan_mpc}{{5}{4}}
+\newlabel{eqn:path_plan_mpc@cref}{{[subequation][5][]5}{4}}
+\newlabel{eqn:obj}{{5a}{4}}
+\newlabel{eqn:obj@cref}{{[subequation][1][5]5a}{4}}
+\newlabel{eqn:constr:dyn_pre_motion}{{5b}{4}}
+\newlabel{eqn:constr:dyn_pre_motion@cref}{{[subequation][2][5]5b}{4}}
+\newlabel{eqn:constr:dyn_pre_v}{{5c}{4}}
+\newlabel{eqn:constr:dyn_pre_v@cref}{{[subequation][3][5]5c}{4}}
+\newlabel{eqn:constr:dyn_pre_theta}{{5d}{4}}
+\newlabel{eqn:constr:dyn_pre_theta@cref}{{[subequation][4][5]5d}{4}}
+\newlabel{eqn:constr:a}{{5e}{4}}
+\newlabel{eqn:constr:a@cref}{{[subequation][5][5]5e}{4}}
+\newlabel{eqn:constr:w}{{5f}{4}}
+\newlabel{eqn:constr:w@cref}{{[subequation][6][5]5f}{4}}
+\newlabel{eqn:constr:safety_human}{{5g}{4}}
+\newlabel{eqn:constr:safety_human@cref}{{[subequation][7][5]5g}{4}}
+\newlabel{eqn:constr:safety_mv_obs}{{5h}{4}}
+\newlabel{eqn:constr:safety_mv_obs@cref}{{[subequation][8][5]5h}{4}}
+\newlabel{eqn:constr:safety_s_obs1}{{5i}{4}}
+\newlabel{eqn:constr:safety_s_obs1@cref}{{[subequation][9][5]5i}{4}}
+\newlabel{eqn:constr:safety_s_obs2}{{5j}{4}}
+\newlabel{eqn:constr:safety_s_obs2@cref}{{[subequation][10][5]5j}{4}}
+\newlabel{eqn:constr:init_z}{{5k}{4}}
+\newlabel{eqn:constr:init_z@cref}{{[subequation][11][5]5k}{4}}
+\newlabel{eqn:constr:init_v}{{5l}{4}}
+\newlabel{eqn:constr:init_v@cref}{{[subequation][12][5]5l}{4}}
+\newlabel{eqn:constr:init_theta}{{5m}{4}}
+\newlabel{eqn:constr:init_theta@cref}{{[subequation][13][5]5m}{4}}
 \citation{hall1968proxemics}
 \@writefile{toc}{\contentsline {section}{\numberline {IV}SIMULATION RESULTS \& DISCUSSION}{5}}
 \newlabel{sec:results}{{IV}{5}}
@@ -122,24 +121,24 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Model probabilities of two models in the IMM-UKF estimator\relax }}{5}}
 \newlabel{fig:mode_prob}{{6}{5}}
 \newlabel{fig:mode_prob@cref}{{[figure][6][]6}{5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Comparison of prediction error between the IMM-based and single-model approaches\relax }}{6}}
-\newlabel{fig:pred}{{7}{6}}
-\newlabel{fig:pred@cref}{{[figure][7][]7}{6}}
 \newlabel{subsubsec:motion_pred}{{IV-B.2}{6}}
 \newlabel{subsubsec:motion_pred@cref}{{[subsubsection][2][4,2]IV-B.2}{6}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {IV-B.2}Human motion prediction}{6}}
-\newlabel{eqn:pred_err}{{7}{6}}
-\newlabel{eqn:pred_err@cref}{{[equation][7][]7}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Comparison of distance between the human and the robot using the MPC and the reactive methods\relax }}{6}}
-\newlabel{fig:err_d}{{8}{6}}
-\newlabel{fig:err_d@cref}{{[figure][8][]8}{6}}
+\newlabel{eqn:pred_err}{{6}{6}}
+\newlabel{eqn:pred_err@cref}{{[equation][6][]6}{6}}
 \newlabel{subsubsec:motion_plan}{{IV-B.3}{6}}
 \newlabel{subsubsec:motion_plan@cref}{{[subsubsection][3][4,2]IV-B.3}{6}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {IV-B.3}Robot motion planning}{6}}
-\newlabel{eqn:err_d}{{8a}{6}}
-\newlabel{eqn:err_d@cref}{{[subequation][1][8]8a}{6}}
-\newlabel{eqn:err_v}{{8b}{6}}
-\newlabel{eqn:err_v@cref}{{[subequation][2][8]8b}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Comparison of prediction error between the IMM-based and single-model approaches\relax }}{6}}
+\newlabel{fig:pred}{{7}{6}}
+\newlabel{fig:pred@cref}{{[figure][7][]7}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Comparison of distance between the human and the robot using the MPC and the reactive methods\relax }}{6}}
+\newlabel{fig:err_d}{{8}{6}}
+\newlabel{fig:err_d@cref}{{[figure][8][]8}{6}}
+\newlabel{eqn:err_d}{{7a}{6}}
+\newlabel{eqn:err_d@cref}{{[subequation][1][7]7a}{6}}
+\newlabel{eqn:err_v}{{7b}{6}}
+\newlabel{eqn:err_v@cref}{{[subequation][2][7]7b}{6}}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Comparison of velocity difference between the human and the robot using the MPC and the reactive methods\relax }}{7}}
 \newlabel{fig:err_v}{{9}{7}}
 \newlabel{fig:err_v@cref}{{[figure][9][]9}{7}}
@@ -147,10 +146,10 @@
 \newlabel{sec:conclusion}{{V}{7}}
 \newlabel{sec:conclusion@cref}{{[section][5][]V}{7}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {V-A}IMM-LKF Method}{7}}
-\newlabel{eqn:h_dyn}{{9a}{7}}
-\newlabel{eqn:h_dyn@cref}{{[subequation][1][9]9a}{7}}
-\newlabel{eqn:observation}{{9b}{7}}
-\newlabel{eqn:observation@cref}{{[subequation][2][9]9b}{7}}
+\newlabel{eqn:h_dyn}{{8a}{7}}
+\newlabel{eqn:h_dyn@cref}{{[subequation][1][8]8a}{7}}
+\newlabel{eqn:observation}{{8b}{7}}
+\newlabel{eqn:observation@cref}{{[subequation][2][8]8b}{7}}
 \bibstyle{ieeetr}
 \bibdata{references}
 \bibcite{casper2003human}{1}
@@ -181,6 +180,6 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {V-B}Approximating Static Obstacles}{8}}
 \newlabel{subsec:ellip_approx}{{V-B}{8}}
 \newlabel{subsec:ellip_approx@cref}{{[subsection][2][5]V-B}{8}}
-\newlabel{eqn:ellipse}{{12}{8}}
-\newlabel{eqn:ellipse@cref}{{[equation][12][]12}{8}}
+\newlabel{eqn:ellipse}{{9}{8}}
+\newlabel{eqn:ellipse@cref}{{[equation][9][]9}{8}}
 \@writefile{toc}{\contentsline {section}{References}{8}}
