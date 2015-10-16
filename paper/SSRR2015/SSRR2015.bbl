@@ -22,17 +22,6 @@ T.~Kruse, A.~K. Pandey, R.~Alami, and A.~Kirsch, ``Human-aware robot
   navigation: A survey,'' {\em Robotics and Autonomous Systems}, vol.~61,
   no.~12, pp.~1726--1743, 2013.
 
-\bibitem{hoeller2007accompanying}
-F.~Hoeller, D.~Schulz, M.~Moors, and F.~E. Schneider, ``Accompanying persons
-  with a mobile robot using motion prediction and probabilistic roadmaps,'' in
-  {\em Intelligent Robots and Systems, 2007. IROS 2007. IEEE/RSJ International
-  Conference on}, pp.~1260--1265, IEEE, 2007.
-
-\bibitem{fox1997dynamic}
-D.~Fox, W.~Burgard, S.~Thrun, {\em et~al.}, ``The dynamic window approach to
-  collision avoidance,'' {\em IEEE Robotics \& Automation Magazine}, vol.~4,
-  no.~1, pp.~23--33, 1997.
-
 \bibitem{svenstrup2010trajectory}
 M.~Svenstrup, T.~Bak, and H.~J. Andersen, ``Trajectory planning for robots in
   dynamic human environments,'' in {\em Intelligent Robots and Systems (IROS),
@@ -51,12 +40,6 @@ M.-L. Barnaud, N.~Morgado, R.~Palluel-Germain, J.~Diard, and A.~Spalanzani,
   in {\em Proceedings of the 3rd IROS’2014 workshop “Assistance and Service
   Robotics in a Human Environment”}, 2014.
 
-\bibitem{rios2012navigating}
-J.~Rios-Martinez, A.~Renzaglia, A.~Spalanzani, A.~Martinelli, and C.~Laugier,
-  ``Navigating between people: A stochastic optimization approach,'' in {\em
-  Robotics and Automation (ICRA), 2012 IEEE International Conference on},
-  pp.~2880--2885, IEEE, 2012.
-
 \bibitem{henry2010learning}
 P.~Henry, C.~Vollmer, B.~Ferris, and D.~Fox, ``Learning to navigate through
   crowded environments,'' in {\em Robotics and Automation (ICRA), 2010 IEEE
@@ -73,11 +56,6 @@ Y.~Rui and Y.~Chen, ``Better proposal distributions: Object tracking using
   2001. CVPR 2001. Proceedings of the 2001 IEEE Computer Society Conference
   on}, vol.~2, pp.~II--786, IEEE, 2001.
 
-\bibitem{bruce2004better}
-A.~Bruce and G.~Gordon, ``Better motion prediction for people-tracking,'' in
-  {\em Proc. of the Int. Conf. on Robotics \& Automation (ICRA), Barcelona,
-  Spain}, 2004.
-
 \bibitem{bennewitz2005learning}
 M.~Bennewitz, W.~Burgard, G.~Cielniak, and S.~Thrun, ``Learning motion patterns
   of people for compliant robot motion,'' {\em The International Journal of
@@ -89,17 +67,6 @@ C.~Fulgenzi, C.~Tay, A.~Spalanzani, and C.~Laugier, ``Probabilistic navigation
   processes,'' in {\em Intelligent Robots and Systems, 2008. IROS 2008.
   IEEE/RSJ International Conference on}, pp.~1056--1062, IEEE, 2008.
 
-\bibitem{foka2010probabilistic}
-A.~F. Foka and P.~E. Trahanias, ``Probabilistic autonomous robot navigation in
-  dynamic environments with human motion prediction,'' {\em International
-  Journal of Social Robotics}, vol.~2, no.~1, pp.~79--94, 2010.
-
-\bibitem{wu2012path}
-Z.~Wu, M.~Hashimoto, B.~Guo, and K.~Takahashi, ``A path prediction method for
-  human-accompanying mobile robot based on neural network,'' in {\em
-  Intelligent Science and Intelligent Data Engineering}, pp.~35--42, Springer,
-  2012.
-
 \bibitem{aggarwal1999human}
 J.~K. Aggarwal and Q.~Cai, ``Human motion analysis: A review,'' {\em Computer
   vision and image understanding}, vol.~73, no.~3, pp.~428--440, 1999.
@@ -108,6 +75,10 @@ J.~K. Aggarwal and Q.~Cai, ``Human motion analysis: A review,'' {\em Computer
 B.-S. Yaakov, X.~Li, and K.~Thiagalingam, ``Estimation with applications to
   tracking and navigation,'' {\em New York: Johh Wiley and Sons}, vol.~245,
   2001.
+
+\bibitem{caveney2004multiple}
+D.~S. Caveney, ``Multiple model techniques in automotive estimation and
+  control,'' tech. rep., 2004.
 
 \bibitem{haykin2004kalman}
 S.~Haykin, {\em Kalman filtering and neural networks}, vol.~47.

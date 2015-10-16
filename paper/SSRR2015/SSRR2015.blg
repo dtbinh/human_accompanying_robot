@@ -15,6 +15,10 @@ Repeated entry---line 193 of file references.bib
  : @inproceedings{barnaud2014proxemics
  :                                    ,
 I'm skipping whatever remains of this entry
+Repeated entry---line 227 of file references.bib
+ : @techreport{caveney2004multiple
+ :                                ,
+I'm skipping whatever remains of this entry
 Repeated entry---line 233 of file references.bib
  : @article{yaakov2001estimation
  :                              ,
@@ -27,45 +31,46 @@ Repeated entry---line 249 of file references.bib
  : @inproceedings{hong2013vehicle
  :                               ,
 I'm skipping whatever remains of this entry
-You've used 22 entries,
+Warning--empty institution in caveney2004multiple
+You've used 17 entries,
             1876 wiz_defined-function locations,
-            606 strings with 8447 characters,
-and the built_in function-call counts, 7004 in all, are:
-= -- 675
-> -- 301
+            578 strings with 7226 characters,
+and the built_in function-call counts, 5153 in all, are:
+= -- 492
+> -- 230
 < -- 0
-+ -- 108
-- -- 86
-* -- 508
-:= -- 968
-add.period$ -- 24
-call.type$ -- 22
-change.case$ -- 20
++ -- 83
+- -- 66
+* -- 377
+:= -- 728
+add.period$ -- 19
+call.type$ -- 17
+change.case$ -- 16
 chr.to.int$ -- 0
-cite$ -- 22
-duplicate$ -- 365
-empty$ -- 667
-format.name$ -- 86
-if$ -- 1701
+cite$ -- 18
+duplicate$ -- 264
+empty$ -- 485
+format.name$ -- 66
+if$ -- 1241
 int.to.chr$ -- 0
-int.to.str$ -- 22
-missing$ -- 24
-newline$ -- 71
-num.names$ -- 22
-pop$ -- 94
+int.to.str$ -- 17
+missing$ -- 18
+newline$ -- 56
+num.names$ -- 17
+pop$ -- 70
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 244
+skip$ -- 171
 stack$ -- 0
-substring$ -- 510
-swap$ -- 148
+substring$ -- 358
+swap$ -- 104
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 0
-while$ -- 70
-width$ -- 24
-write$ -- 221
-(There were 6 error messages)
+warning$ -- 1
+while$ -- 50
+width$ -- 19
+write$ -- 169
+(There were 7 error messages)
