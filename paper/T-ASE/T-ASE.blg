@@ -1,0 +1,81 @@
+This is BibTeX, Version 0.99d (TeX Live 2014)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: T-ASE.aux
+The style file: ieeetr.bst
+Database file #1: references.bib
+Repeated entry---line 157 of file references.bib
+ : @inproceedings{svenstrup2010trajectory
+ :                                       ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 184 of file references.bib
+ : @inproceedings{fulgenzi2008probabilistic
+ :                                         ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 193 of file references.bib
+ : @inproceedings{barnaud2014proxemics
+ :                                    ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 227 of file references.bib
+ : @techreport{caveney2004multiple
+ :                                ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 233 of file references.bib
+ : @article{yaakov2001estimation
+ :                              ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 241 of file references.bib
+ : @book{haykin2004kalman
+ :                       ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 249 of file references.bib
+ : @inproceedings{hong2013vehicle
+ :                               ,
+I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 305 of file references.bib
+ : 
+ : @article{julier2004unscented,
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Warning--empty institution in caveney2004multiple
+You've used 18 entries,
+            1876 wiz_defined-function locations,
+            584 strings with 7354 characters,
+and the built_in function-call counts, 5485 in all, are:
+= -- 530
+> -- 238
+< -- 0
++ -- 86
+- -- 68
+* -- 400
+:= -- 771
+add.period$ -- 20
+call.type$ -- 18
+change.case$ -- 17
+chr.to.int$ -- 0
+cite$ -- 19
+duplicate$ -- 281
+empty$ -- 515
+format.name$ -- 68
+if$ -- 1324
+int.to.chr$ -- 0
+int.to.str$ -- 18
+missing$ -- 19
+newline$ -- 59
+num.names$ -- 18
+pop$ -- 71
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 186
+stack$ -- 0
+substring$ -- 390
+swap$ -- 113
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 1
+while$ -- 54
+width$ -- 20
+write$ -- 180
+(There were 8 error messages)
