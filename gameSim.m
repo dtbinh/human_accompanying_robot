@@ -17,8 +17,9 @@ set(0,'DefaultFigureWindowStyle','docked');
 % Human agent 1
 h = agent('human');
 h.currentPos = [5;10/3;0]; %[10;10/3;0] [x y heading]
-% h.maxV = 1.5;
-h.currentV = 1.5;
+h.maxA = 0.2;
+h.currentV = 1;
+h.maxV = 2;
 
 % Robot agent 1
 r = agent('robot');
@@ -48,7 +49,8 @@ h_way_pts = getWayPts(inPara_gwp);
 % apply different human speed between different way points.
 % h_v = [2,3,1,1,1,1,1,1,1,1,3,1.5,2,3,2,1.5,4];
 % apply different acceleration for human speed
-% h_acl = -h.maxA+2*h.maxA*rand(1,300);
+% h_acl = -h.maxA+2*h.maxA*rand(1,1000);
+h_acl = repmat([h.maxA*ones(1,5),zeros(1,10),-h.maxA*ones(1,5)],1,50);
 %%%
 
 % define vertices of obstacles. Here use round and rectangular obstacles
@@ -83,7 +85,7 @@ campus.obs_info = {[c_set;r_set];ell_set}; % gives the center and radius of each
 
 %% Simulation
 % simulation parameters
-kf = 350; % simulation length (/s)
+kf = 1000; % simulation length (/s)
 agents = [h r];
 hor = 5; % MPC horizon 
 pre_type = 'IMM-UKF';% 'opt'(accurate knowledge of human trajectory), 'extpol','IMM-UKF','UKF'. specify the method for predicting human motion
@@ -111,22 +113,26 @@ guess_u = []; % guess of the initial solution of the MPC
 % the following snippet seems not in use, but only for purpose of the input
 % of agentMove for robot
 addpath('./sim_res')
-load('x_pos_pre_imm','x_pos_pre_imm')
-load('y_pos_pre_imm','y_pos_pre_imm')
-pos_pre_imm = zeros(2,size(x_pos_pre_imm,1)-1,size(x_pos_pre_imm,2));
-for ii = 1:size(x_pos_pre_imm,2)
-    pos_pre_imm(:,:,ii) = [x_pos_pre_imm(2:end,ii)';y_pos_pre_imm(2:end,ii)'];
-end
+% load('x_pos_pre_imm','x_pos_pre_imm')
+% load('y_pos_pre_imm','y_pos_pre_imm')
+% pos_pre_imm = zeros(2,size(x_pos_pre_imm,1)-1,size(x_pos_pre_imm,2));
+% for ii = 1:size(x_pos_pre_imm,2)
+%     pos_pre_imm(:,:,ii) = [x_pos_pre_imm(2:end,ii)';y_pos_pre_imm(2:end,ii)'];
+% end
 for k = 1:kf
     display(k)
     
     %% change human speed
-    %{
+    %
     tmp_v = agents(1).currentV+h_acl(k)*mpc_dt;
     if tmp_v <= 0
         tmp_v = 0;
     else
-        agents(1).currentV = tmp_v;
+        if tmp_v > agents(1).maxV;
+            agents(1).currentV = agents(1).maxV;
+        else
+            agents(1).currentV = tmp_v;
+        end
     end
     %}
     
@@ -165,7 +171,7 @@ for k = 1:kf
     samp_num = outPara_ams.samp_num;
     
     % robot moves
-    %
+    %{
     agentIndex = 2;
 %     load('obv_traj3_w_time.mat')% Load Tracjectory of Human
     obv_traj1=obv_traj';
@@ -266,7 +272,7 @@ for k = 1:kf
         ylim([0,campus.endpoints(4)]);
         
         % draw agent trajectory
-        for ii = 1:length(agents)
+        for ii = 1%:length(agents)
             tmp_agent = agents(ii);
             h1 = plot(tmp_agent.traj(1,:),tmp_agent.traj(2,:),'markers',2);
             set(h1,'MarkerFaceColor',color_agent{ii});
@@ -283,6 +289,7 @@ for k = 1:kf
             set(h2,'Marker',marker_agent{ii});
         end
         % predicted human positions
+        %{
         h3 = plot(pre_traj(1,:,k),pre_traj(2,:,k),color_agent{3},'markers',2);
         set(h3,'MarkerFaceColor',color_agent{3});
         set(h3,'MarkerEdgeColor',color_agent{3});
@@ -290,6 +297,7 @@ for k = 1:kf
         set(h3,'LineStyle',line_agent{3});
         set(h3,'Marker',marker_agent{3});
         set(h3,'linewidth',line_wid{3});
+        %}
         hold on
         % I don't know why I need to repeat this snippet here.
         %{
@@ -305,6 +313,7 @@ for k = 1:kf
         %}
         
         % planned robot trajectory
+        %{
         h4 = plot(plan_state(1,:,k),plan_state(2,:,k),'Color',color_agent{4},'markers',2);
         set(h4,'MarkerFaceColor',color_agent{4});
         set(h4,'MarkerEdgeColor',color_agent{4});
@@ -312,6 +321,7 @@ for k = 1:kf
         set(h4,'LineStyle',line_agent{4});
         set(h4,'Marker',marker_agent{4});
         set(h4,'linewidth',line_wid{4});
+        %}
         % I don't know why I need to repeat this snippet here.
         %{
     c_set = [plan_state(1,2:end,k);plan_state(2,2:end,k)];
@@ -345,7 +355,7 @@ for k = 1:kf
         
         % close plots when there are too many plots
         h7 = gcf;
-        if h7 > 100
+        if h7 > 50
             close all;
         end
     end
@@ -355,7 +365,7 @@ end
 % pre_traj = pos_pre_imm;
 %% save simulation result
 % The following data should be further processed using processData.m
-%
+%{
 % save data
 % if the data is a decimal, replace the '.' with 'p'
 str_safe_dis = strrep(num2str(safe_dis),'.','p');

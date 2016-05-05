@@ -5,7 +5,7 @@ classdef agent
     properties
         type; % agent type: 'human', 'robot'
         maxV; % max travel velocity: h=1.5, r=2
-%         maxA; % max acceleration
+        maxA; % max acceleration
         a_lb; % min deceleration
         a_ub; % max acceleration
         w_lb; % min angular velocity
