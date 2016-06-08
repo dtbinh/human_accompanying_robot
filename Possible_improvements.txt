@@ -1,5 +1,0 @@
-Possible improvements:
-1. use simpler robot dynamics
-2. modify the way to deal with infeasible problem
-3. use barrier functions for collision avoidance instead of using constraints
-4. local optimal can be very bad (e.g., robot not moves), need to think how to deal with
