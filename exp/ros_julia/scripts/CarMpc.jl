@@ -31,23 +31,30 @@ type MpcProblem
   tuning::Tuning
   # JuMP model variables
   model::Model
-  z::Array{Variable,4}
+  z::Array{Variable,2}
   u::Array{Variable,2}
   # JuMP model parameters
   z0::Array{Float64,1}
   u0::Array{Float64,1}
-  z_h::Array{Float64,1}
+  z_h::Array{Float64,2}
 end
 
 ### Set up MPC optimization problem
 function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
   ### Parameters
-  N, dt = tuning.N, tuning.dt
+
+  N = tuning.N
+  dt = tuning.dt
+  safe_dis = tuning.safe_dis
+  safe_margin = tuning.safe_margin
+  cmft_dis = tuning.cmft_dis
+
   uLB = [robot.steerMin, robot.accMin]
   uUB = [robot.steerMax, robot.accMax]
+  zLB = [0.0;0.0]
+  zUB = [10.0;10.0]
   maxV = robot.maxV
-  safe_dis = robot.safe_dis
-  cmft_dis = robot.cmft_dis
+  init_pose = robot.z
 
   ### Optimization problem
 #   model = Model(solver=IpoptSolver(linear_solver="ma27",
@@ -63,11 +70,12 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
   # (Parameters for optimization problem that can be modified online)
   z0 = init_pose
   u0 = zeros(nu)
+  z_h = zeros(4,N+1)
 
   ### Variables
   @variable(model, z[1:nz,1:N+1])
   @variable(model, u[1:nu,1:N])
-  @variable(model, dummy_t[1:N]>=0)
+  @variable(model, dummy_t[1:N+1]>=0)
 
   # ### initial solution
   # ux_init = (ter_pos[1]-z0[1])/N;
@@ -104,14 +112,14 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
   # @setNLObjective(model, Min, sum{obj,i=1:N})
 
   # @setNLObjective(model, Min, sum{abs((z[1,j]-ter_pos[1])^2+(z[2,j]-ter_pos[2])^2-ter_r^2),j=1:N})
-  @setNLObjective(model, Min, sum{dummy_t[i],i=1:N}) # abs((z[1,k]-z_h[1])^2+(z[2,k]-z_h[2])^2-cmft_dis^2) + 2*(z[4,k]-v_h)^2)
+  @NLobjective(model, Min, sum{dummy_t[i],i=1:N}) # abs((z[1,k]-z_h[1])^2+(z[2,k]-z_h[2])^2-cmft_dis^2) + 2*(z[4,k]-v_h)^2)
 
   ### Constraints
   # initial condition
-  @constraint(z(:,1) == z0)
+  @constraint(model, initconstr[i=1:nz],z[i,1] == z0[i])
 
   for k=1:N+1
-    # Dynamics
+    ### Dynamics
     if k <= N
     @NLconstraints(model, begin
       z[1,k+1] == z[1,k] + dt*z[4,k]*cos(z[3,k])
@@ -123,26 +131,25 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
 
     # state and input constraints
     @constraint(model, 0 <= z[4,k] <= maxV)
-    @constraint(model, zLB[1] <=z[1,k] <= zUB[1])
-    @constraint(model, zLB[2] <=z[2,k] <= zUB[2])  
+    # stay within the field boundary
+    # @constraint(model, zLB[1] <=z[1,k] <= zUB[1])
+    # @constraint(model, zLB[2] <=z[2,k] <= zUB[2])  
 
     if k <= N
     @constraint(model, uLB[1] <=u[1,k] <= uUB[1])
     @constraint(model, uLB[2] <=u[2,k] <= uUB[2])
     end
 
-    # epigraph variable
-    @NLconstraint(model,dummy_t[k]>=(z[1,k]-z_h[1])^2 + (z[2,k]-z_h[2])^2 - cmft_dis^2 + 2*(z[4,k]-z_h[3])^2)
-    @NLconstraint(model,dummy_t[k]>=-((z[1,k]-z_h[1])^2 + (z[2,k]-z_h[2])^2 - cmft_dis^2) + 2*(z[4,k]-z_h[3])^2)
+    # # epigraph variable
+    @NLconstraint(model,dummy_t[k]>=(z[1,k]-z_h[1,k])^2 + (z[2,k]-z_h[2,k])^2 - cmft_dis^2 + 2*(z[4,k]-z_h[3,k])^2)
+    @NLconstraint(model,dummy_t[k]>=-((z[1,k]-z_h[1,k])^2 + (z[2,k]-z_h[2,k])^2 - cmft_dis^2) + 2*(z[4,k]-z_h[3,k])^2)
 
-    # collision avoidance
-    # stay within the field boundary
-
+    ### collision avoidance    
     # avoid static obstacles
 
     # avoid human
     @NLconstraint(model,(z[1,k] - z_h[1,k])^2 + (z[2,k] - z_h[2,k])^2 >= safe_dis^2)
-    end
+  end
 
   # for k=1:N+1
   #   # Dynamics
@@ -174,7 +181,8 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
 ### Solve dummy problem
 solve(model)
 
-return MpcProblem(robot, field, uLB, uUB, zLB, zUB, nz, nu, tuning, model, z, u, z0, u0)
+return MpcProblem(robot, field, uLB, uUB, zLB, zUB, nz, nu, tuning, model, z, u, z0, u0, z_h)
+
 end
 
 ### Update and solve MPC optimization problem
@@ -182,15 +190,16 @@ end
 #                                URef::Array{Float64,2}, z0::Array{Float64,1},
 #                                u0::Array{Float64,1})
 function updateSolveMpcProblem(mpc::MpcProblem, z0::Array{Float64,1},
-  u0::Array{Float64,1}, z_h::Array{Float64,1})
+  u0::Array{Float64,1}, z_h::Array{Float64,2})
   # Parameters
   nz, nu, dt, N = mpc.nz, mpc.nu, mpc.tuning.dt, mpc.tuning.N
 
   # Warm start
-  UPred = hcat(getValue(mpc.u[:,2:N]), getValue(mpc.u[:,N]))
+  UPred = hcat(getvalue(mpc.u[:,2:N]), getvalue(mpc.u[:,N]))
   ZPred = simRobotModel(mpc.robot, UPred, dt)
-  map(setValue, collect(mpc.z[:,:]), collect(ZPred[:,:]))
-  map(setValue, collect(mpc.u[:,:]), collect(UPred[:,:]))
+  print(ZPred)
+  map(setvalue, collect(mpc.z[:,:]), collect(ZPred[:,:]))
+  map(setvalue, collect(mpc.u[:,:]), collect(UPred[:,:]))
 
   # Update model parameters
   mpc.z0[:] = z0
@@ -201,7 +210,7 @@ function updateSolveMpcProblem(mpc::MpcProblem, z0::Array{Float64,1},
   solve(mpc.model)
   solveTime = time() - tStart
 
-  return getValue(mpc.z), getValue(mpc.u), solveTime
+  return getvalue(mpc.z), getvalue(mpc.u), solveTime
 end
 
 ### Localize vehicle in current lane on field and compute reference speed

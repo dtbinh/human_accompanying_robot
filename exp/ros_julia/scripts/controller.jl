@@ -14,13 +14,14 @@ using CarMpc
 
 ### MPC parameters
 # initialize vehicle
-robot = Robot([0.0, 0.0, 0.0, 0.0])
+robot = Robot([1, 1, 0.0, 0.0], model=unicycleDiscrete)
 
 # tuning parameters
-tuning = Tuning(dt = 0.2, dtMPC = 0.2, N = 20,
-                Q = [0.5, 0.5, 10.0, 0.0], R = [20.0, 2.0],
-                P = [1000.0, 20.0], vRef = 10.0, dSafe = 5.0,
-                eYRef = 0.0, TTC = 3.0, eYSafe = 0.5)
+# tuning = Tuning(dt = 0.2, dtMPC = 0.2, N = 20,
+#                 Q = [0.5, 0.5, 10.0, 0.0], R = [20.0, 2.0],
+#                 P = [1000.0, 20.0], vRef = 10.0, dSafe = 5.0,
+#                 eYRef = 0.0, TTC = 3.0, eYSafe = 0.5)
+tuning = Tuning(dt = 0.5, N = 10, safe_dis = 1.0, safe_margin = 1.0, cmft_dis = 2.4)
 
 # map
 # Map = TrackMap("maps/RFS_2Lanes_Speed_0128.mat")
@@ -44,7 +45,7 @@ end
 ################
 
 ### MPC model parameters updated by subscribers
-z0 = vehicle.z
+z0 = robot.z
 u0 = zeros(nu)
 
 ### ROS subroutines
@@ -59,7 +60,7 @@ while !is_shutdown()
 
 
   ### Reference generation
-  URef, ZRef = generateReference(z0, Map, tuning, mpc)
+  # URef, ZRef = generateReference(z0, Map, tuning, mpc)
 
   ### Update and solve MPC problem
   ZOpt, UOpt, solveTime = updateSolveMpcProblem(mpc, z0, u0)

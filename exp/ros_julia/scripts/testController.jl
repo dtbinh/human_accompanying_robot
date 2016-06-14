@@ -6,26 +6,26 @@ using CarMpc
 ### Simulation parameters
 simLength = 200
 
-# Map
-map = SlamMap("maps/shared_room_map.mat")
 
 # # initialize vehicle
 # vehicle = Vehicle([122.724, 44.3005, 2.615, 5.0], model=kinematicBicycleDiscrete)   # RFS 0128
-rob = Robot([1, 1, 0, 0.5], model=unicycleDiscrete)   # RFS 0128, map
+robot = Robot([1.0, 1.0, 0.0, 0.5], model=unicycleDiscrete)   # RFS 0128, map
 
 # # tuning parameters
 # tuning = Tuning(dt = 0.2, dtMPC = 0.2, N = 20,
 #                 Q = [0.5, 0.5, 10.0, 0.0], R = [20.0, 2.0],
 #                 P = [1000.0, 20.0], vRef = 10.0, dSafe = 5.0,
 #                 eYRef = 0.0, TTC = 3.0, eYSafe = 0.5)
-tuning = Tuning(dt = 1.0, dtMPC = 1.0, N = 2)
+# tuning = Tuning(dt = 1.0, dtMPC = 1.0, N = 2)
+tuning = Tuning(dt = 0.5, N = 10, safe_dis = 1.0, safe_margin = 1.0, cmft_dis = 2.4)
 
 # map
 # Map = TrackMap("maps/RFS_2Lanes_Speed_0128.mat")
+field = Field("maps/shared_room_map.mat")
 
 # ### Initialize MPC problem and solve dummy problem
 # mpc = initializeMPCProblem(vehicle, tuning)
-mpc = initializeMPCProblem(rob, map, tuning)
+mpc = initializeMPCProblem(robot, field, tuning)
 nz, nu, N = mpc.nz, mpc.nu, tuning.N
 
 
@@ -34,7 +34,7 @@ nz, nu, N = mpc.nz, mpc.nu, tuning.N
 # ################
 
 # ### MPC model parameters updated by subscribers
-z0 = vehicle.z
+z0 = robot.z
 u0 = zeros(nu)
 
 USim = zeros(nu,simLength)
@@ -50,8 +50,8 @@ for t=1:simLength
 
   ### update prob map using observation
   # get obs from ROS publisher
-  obs = [100;100]
-  updateMap(rob,obj,map)
+  # obs = [100;100]
+  # updateMap(rob,obj,map)
 
   ### Update and solve MPC problem
   ### missing part: need to incorporate map into MPC
@@ -67,7 +67,7 @@ for t=1:simLength
 
   ### Variables for logging
   # ZSim[:,t+1] = vehicle.z
-  ZSim[:,t+1] = rob.z
+  ZSim[:,t+1] = robot.z
   USim[:,t] = u0
 end
 

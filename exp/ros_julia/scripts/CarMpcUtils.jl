@@ -55,16 +55,17 @@ type Robot
   ### missing part: conversion of camera FOV boundary from camera coordinate to robot coordinate.
 
   z::Array{Float64,1}   # state vector: [x,y,V,theta]
-  steerMin:: Float64
-  steerMax:: Float64 
-  accMin:: Float64
-  accMax:: Float64
-  model:: Function # state update model (discrete-time)
+  steerMin::Float64
+  steerMax::Float64 
+  accMin::Float64
+  accMax::Float64
+  maxV::Float64
+  model::Function # state update model (discrete-time)
 
   function Robot(z::Array{Float64,1}; steerMin::Float64 = -pi/4, 
-                   steerMax::Float64 = pi/4, accMin::Float64 = 0.0,
-                   accMax::Float64 = 1.2, model::Function = x->x)
-    new(z, steerMin, steergMax, accMin, accMax, model)
+                   steerMax::Float64 = pi/4, accMin::Float64 = -1.2,
+                   accMax::Float64 = 1.2, maxV::Float64 = 3.0, model::Function = x->x)
+    new(z, steerMin, steerMax, accMin, accMax, maxV, model)
   end
 end
 
@@ -98,10 +99,13 @@ type Tuning
 
   dt::Float64   # MPC model discretization time
   N::Int64   # Prediction horizon 
+  safe_dis::Float64 # safe distance between human and robot
+  safe_margin::Float64 # safety margin between human the the obstacle
+  cmft_dis::Float64 # comfortable distance
   S::Array{Float64,1}   # slack
 
-  function Tuning(; dt::Float64 = 0.5, N::Int64 = 10, S::Array{Float64,1} = [0.0])
-    new(dt, N, S)
+  function Tuning(; dt::Float64 = 0.5, N::Int64 = 10, safe_dis::Float64 = 1.0, safe_margin::Float64 = 1.0, cmft_dis::Float64 = 2.4, S::Array{Float64,1} = [0.0])
+    new(dt, N, safe_dis, safe_margin, cmft_dis, S)
   end
 end
 
@@ -142,8 +146,8 @@ end
 type Field
   occup_map::Array{Float64,2}
   prob_map::Array{Float64,2}
-  unocc_cor :: Array{Float64,2}
-  occ_cor :: Array{Float64,2}
+  unocc_cor::Array{Float64,2}
+  occ_cor::Array{Float64,2}
 
   function Field(map_file::AbstractString)
     println(map_file)
@@ -279,9 +283,9 @@ function simRobotModel(robot::Robot, U::Array{Float64}, dt::Float64)
   N = size(U,2)
   Z = hcat(z0, zeros(nz,N))
   for k=1:N
-    Z[:,k+1] = robot.model(Z[:,k], U[:,k], dt, robot)
+    Z[:,k+1] = robot.model(Z[:,k], U[:,k], dt)
   end
-  return Z[:,2:N+1]
+  return Z #Z[:,2:N+1]
 end
 
 # # Identify current lane
