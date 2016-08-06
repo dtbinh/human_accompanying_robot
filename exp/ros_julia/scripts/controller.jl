@@ -14,13 +14,14 @@ using CarMpc
 
 ### MPC parameters
 # initialize vehicle
-robot = Robot([1, 1, 0.0, 0.0], model=unicycleDiscrete)
+robot = Robot([1.0, 1.0, 0.0, 0.5], model=unicycleDiscrete)
 
 # tuning parameters
 # tuning = Tuning(dt = 0.2, dtMPC = 0.2, N = 20,
 #                 Q = [0.5, 0.5, 10.0, 0.0], R = [20.0, 2.0],
 #                 P = [1000.0, 20.0], vRef = 10.0, dSafe = 5.0,
 #                 eYRef = 0.0, TTC = 3.0, eYSafe = 0.5)
+# tuning = Tuning(dt = 1.0, dtMPC = 1.0, N = 2)
 tuning = Tuning(dt = 0.5, N = 10, safe_dis = 1.0, safe_margin = 1.0, cmft_dis = 2.4)
 
 # map
@@ -47,6 +48,10 @@ end
 ### MPC model parameters updated by subscribers
 z0 = robot.z
 u0 = zeros(nu)
+z_h = zeros(4,N+1) ## update by ROS
+
+USim = zeros(nu,simLength)
+ZSim = [z0 zeros(nz,simLength)]
 
 ### ROS subroutines
 init_node("mpc_julia")
@@ -63,7 +68,8 @@ while !is_shutdown()
   # URef, ZRef = generateReference(z0, Map, tuning, mpc)
 
   ### Update and solve MPC problem
-  ZOpt, UOpt, solveTime = updateSolveMpcProblem(mpc, z0, u0)
+  # ZOpt, UOpt, solveTime = updateSolveMpcProblem(mpc, z0, u0)
+  ZOpt, UOpt, solveTime = updateSolveMpcProblem(mpc, z0, z_h)
 
   ### Publish outputs
   steer_msg = Float64Msg()
@@ -76,4 +82,9 @@ while !is_shutdown()
 
   ### Update current input
   u0[1:nu] = UOpt[:,1]
+
+  ### Variables for logging
+  ZSim[:,t+1] = robot.z
+  USim[:,t] = u0
+  print(robot.z)
 end

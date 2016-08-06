@@ -11,7 +11,7 @@ using Ipopt
 using CarMpcUtils
 using Polynomials, Interpolations
 
-import JuMP.JuMPArray, JuMP.Variable
+import JuMP.JuMPArray, JuMP.Variable, JuMP.NonlinearParameter
 
 export MpcProblem, initializeMPCProblem, updateSolveMpcProblem
 # export localizeVehicle, generateReference
@@ -34,9 +34,9 @@ type MpcProblem
   z::Array{Variable,2}
   u::Array{Variable,2}
   # JuMP model parameters
-  z0::Array{Float64,1}
-  u0::Array{Float64,1}
-  z_h::Array{Float64,2}
+  z0::Array{NonlinearParameter,1}
+  # u0::Array{Float64,1}
+  z_h::Array{NonlinearParameter,2}
 end
 
 ### Set up MPC optimization problem
@@ -60,7 +60,7 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
 #   model = Model(solver=IpoptSolver(linear_solver="ma27",
 #                                      max_iter=100,
 #                                      max_cpu_time=dtMPC))
-  model = Model(solver=IpoptSolver(max_iter=100, max_cpu_time=100.0, print_timing_statistics="yes")) #max_cpu_time=dtMPC, hessian_approximation ="limited-memory"
+  model = Model(solver=IpoptSolver(max_iter=100, max_cpu_time=100.0, print_timing_statistics="no")) #max_cpu_time=dtMPC, hessian_approximation ="limited-memory"
 
   ### Dimensions
   nz = 4
@@ -68,9 +68,9 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
 
   ### Dummies
   # (Parameters for optimization problem that can be modified online)
-  z0 = init_pose
-  u0 = zeros(nu)
-  z_h = zeros(4,N+1)
+  @NLparameter(model, z0[i=1:nz] == init_pose[i]) #z0 = init_pose
+  # @NLparameter(model, u0 == zeros(nu)) #u0 = zeros(nu)
+  @NLparameter(model, z_h[i=1:nz,j=1:N+1] == 0) #z_h = zeros(4,N+1)
 
   ### Variables
   @variable(model, z[1:nz,1:N+1])
@@ -116,7 +116,7 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
 
   ### Constraints
   # initial condition
-  @constraint(model, initconstr[i=1:nz],z[i,1] == z0[i])
+  @NLconstraint(model, initconstr[i=1:nz], z[i,1] == z0[i])
 
   for k=1:N+1
     ### Dynamics
@@ -181,7 +181,7 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
 ### Solve dummy problem
 solve(model)
 
-return MpcProblem(robot, field, uLB, uUB, zLB, zUB, nz, nu, tuning, model, z, u, z0, u0, z_h)
+return MpcProblem(robot, field, uLB, uUB, zLB, zUB, nz, nu, tuning, model, z, u, z0, z_h)
 
 end
 
@@ -189,21 +189,25 @@ end
 # function updateSolveMpcProblem(mpc::MpcProblem, ZRef::Array{Float64,2},
 #                                URef::Array{Float64,2}, z0::Array{Float64,1},
 #                                u0::Array{Float64,1})
-function updateSolveMpcProblem(mpc::MpcProblem, z0::Array{Float64,1},
-  u0::Array{Float64,1}, z_h::Array{Float64,2})
+function updateSolveMpcProblem(mpc::MpcProblem, z0::Array{Float64,1}, z_h::Array{Float64,2})
   # Parameters
   nz, nu, dt, N = mpc.nz, mpc.nu, mpc.tuning.dt, mpc.tuning.N
 
   # Warm start
   UPred = hcat(getvalue(mpc.u[:,2:N]), getvalue(mpc.u[:,N]))
   ZPred = simRobotModel(mpc.robot, UPred, dt)
-  print(ZPred)
-  map(setvalue, collect(mpc.z[:,:]), collect(ZPred[:,:]))
-  map(setvalue, collect(mpc.u[:,:]), collect(UPred[:,:]))
+  # map(setvalue, collect(mpc.z[:,:]), collect(ZPred[:,:]))
+  # map(setvalue, collect(mpc.u[:,:]), collect(UPred[:,:]))
+  setvalue(mpc.z, ZPred)
+  setvalue(mpc.u, UPred)
 
   # Update model parameters
-  mpc.z0[:] = z0
-  mpc.z_h[:] = z_h
+  # mpc.z0[:] = z0
+  # mpc.z_h[:] = z_h
+  # map(setvalue, collect(mpc.z0[:]), collect(z0[:]))
+  # map(setvalue, collect(mpc.z_h[:,:]), collect(z_h[:,:]))
+  setvalue(mpc.z0, z0)
+  setvalue(mpc.z_h, z_h)
 
   # Solve updated problem
   tStart = time()
