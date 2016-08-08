@@ -164,7 +164,6 @@ for ii = 1:size(tar_pos,2)
 end
 %}
 
-
 %% find feasible path between targets
 %
 % this code usese RRT* to find a path
@@ -173,6 +172,7 @@ addpath('rrtstar')
 
 max_spd_set = [1,2,1,3,2]; % human speed for each section
 dt = 0.5;
+samp_t = 0.05;
 des_pos = [s_pos,tar_pos]; % human destinations, including his starting position and all target positions
 max_iter = 9e3;  % number of points to sample
 rand_seed = 30; 
@@ -196,14 +196,36 @@ for kk = 1:size(des_pos,2)-1
     
     % find a path using RRT*
     result = pathFinder(fld,max_step,max_iter,is_demo,rand_seed,variant);
-    traj = [traj,result.opt_path];
+    traj = [traj,result.opt_path];   
 end
+
+% smooth trajectory
+traj_s = trajSmoothing(traj);
+assignin('base','traj',traj);
+assignin('base','traj_s',traj_s);
+
+% change the sampling time to be samp_t = 0.05
+traj_dense = [];
+ratio = dt/samp_t;
+for ii = 1:size(traj_s,2)-1
+    pt1 = linspace(traj_s(1,ii),traj_s(1,ii+1),ratio);
+    pt2 = linspace(traj_s(2,ii),traj_s(2,ii+1),ratio);
+    tmp_traj = [pt1(1:end-1);pt2(1:end-1)];
+    traj_dense = [traj_dense,tmp_traj];
+end
+
 % draw trajectory
+hold on
 plot(traj(1,:),traj(2,:),'r')
-
+plot(traj_dense(1,:),traj_dense(2,:),'b')
 %}
-end
 
+%% save the scenario
+% scenario = struct('fld_cor',fld_cor,'dt',dt,'s_pos',s_pos,'obs_num',obs_num,...
+%     'obs_set',{obs_set},'tar_num',tar_num,'tar_pos',tar_pos,...
+%     'obs_margin',obs_margin,'samp_t',samp_t,'traj',traj_dense);
+% save('scenario.mat','scenario');
+end
 
 function is_colliding = collisionCheck(shape1, shape2)
 % check if two shapes collide
@@ -302,4 +324,23 @@ elseif strcmp(shape1{1},'c') && strcmp(shape2{1},'c')
         return
     end
 end
+end
+
+function traj_s = trajSmoothing(traj)
+    max_num = 20;
+    len = size(traj,2);
+    t = floor(len/max_num);
+    traj_s = [];
+    
+    for ii = 1:t
+        if ii < t
+            tmp_pts = traj(:,max_num*(ii-1)+1:max_num*ii);            
+        else
+            tmp_pts = traj(:,max_num*(ii-1)+1:end);
+        end
+        % polynomial fitting
+        p = polyfit(tmp_pts(1,:),tmp_pts(2,:),3);
+        fit_y = polyval(p,tmp_pts(1,:));
+        traj_s = [traj_s,[tmp_pts(1,:);fit_y]];
+    end
 end
