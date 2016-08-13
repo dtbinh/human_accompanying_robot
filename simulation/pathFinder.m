@@ -1,10 +1,11 @@
-function result = pathFinder(fld,max_step,max_iter,is_demo,rand_seed,variant)
+function result = pathFinder(fld,step_intv,max_iter,is_demo,rand_seed,variant)
 % use RRT* to find path
 %%% Configuration block
 conf = struct;
-conf.delta_goal_point = 3;          % Radius of goal point
-conf.delta_near = 1.5;              % Radius for neighboring nodes
-conf.max_step = max_step;                % Maximum position change when we add a new node to the tree
+conf.delta_goal_point = 1;          % Radius of goal point
+conf.delta_near = 3;%max_step;              % Radius for neighboring nodes % 1.5
+% conf.max_step = max_step;                % Maximum position change when we add a new node to the tree
+conf.step_intv = step_intv;           % speed interval, representing the min and max speed
 conf.bin_size = 7;
 conf.demo = is_demo;
 
@@ -37,7 +38,7 @@ problem = eval([variant '(RAND_SEED, MAX_NODES, MAP, CONF);']);
 % end
 
 % % starting timer
-% tic;
+tic;
 for ind = 1:MAX_ITER-1
     new_node = problem.sample();
     nearest_node_ind = problem.nearest(new_node);

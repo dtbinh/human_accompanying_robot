@@ -23,6 +23,7 @@ classdef Simple2D < handle
         handle              % Dictionary stores the plotting handles for all edges in the plotting process
         demo                % if 1, plot the tree growth process. if 0, no figure is drawn
         obs_margin          % points should not fall within a margin from boundaries of obstacles
+        step_intv            % speed interval
         %%% Binning for faster neighbor search
         % bins are square
         bin_size
@@ -59,7 +60,8 @@ classdef Simple2D < handle
             this.delta_goal_point = conf.delta_goal_point;
             this.delta_near = conf.delta_near;
             this.nodes_added = uint32(1);
-            this.max_step = conf.max_step;
+%             this.max_step = conf.max_step;
+            this.step_intv = conf.step_intv;
             this.best_path_node = -1;
             this.goal_reached = false;
 %             this.load_map(map.name);
@@ -226,11 +228,35 @@ classdef Simple2D < handle
         
         function position = steer(this, nearest_node, new_node_position)
             % if new node is very distant from the nearest node we go from the nearest node in the direction of a new node
-            if(norm(new_node_position - this.tree(:, nearest_node)) > this.max_step)
+%             if(norm(new_node_position - this.tree(:, nearest_node)) > this.max_step)            
+%                 theta = atan((new_node_position(2) - this.tree(2, nearest_node))/(new_node_position(1) - this.tree(1, nearest_node)));
+%                 position = this.tree(:, nearest_node) ...
+%                     + [sign((new_node_position(1) - this.tree(1, nearest_node))) * this.max_step * cos(theta); ...
+%                     sign((new_node_position(2) - this.tree(2, nearest_node))) * this.max_step * abs(sin(theta))];
+%             else
+%                 position = new_node_position;
+%             end
+            
+            if(norm(new_node_position - this.tree(:, nearest_node)) > this.step_intv(2))
                 theta = atan((new_node_position(2) - this.tree(2, nearest_node))/(new_node_position(1) - this.tree(1, nearest_node)));
                 position = this.tree(:, nearest_node) ...
-                    + [sign((new_node_position(1) - this.tree(1, nearest_node))) * this.max_step * cos(theta); ...
-                    sign((new_node_position(2) - this.tree(2, nearest_node))) * this.max_step * abs(sin(theta))];
+                    + [sign((new_node_position(1) - this.tree(1, nearest_node))) * this.step_intv(2) * cos(theta); ...
+                    sign((new_node_position(2) - this.tree(2, nearest_node))) * this.step_intv(2) * abs(sin(theta))];
+            elseif (norm(new_node_position - this.tree(:, nearest_node)) < this.step_intv(1))
+                theta = atan((new_node_position(2) - this.tree(2, nearest_node))/(new_node_position(1) - this.tree(1, nearest_node)));
+                position = this.tree(:, nearest_node) ...
+                    + [sign((new_node_position(1) - this.tree(1, nearest_node))) * this.step_intv(1) * cos(theta); ...
+                    sign((new_node_position(2) - this.tree(2, nearest_node))) * this.step_intv(1) * abs(sin(theta))];
+                
+                % restrict point to be within the boundary
+                if position(1) < this.XY_BOUNDARY(1)+0.1
+                    position(1) = this.XY_BOUNDARY(1)+0.1;
+                end
+                
+                if position(2) < this.XY_BOUNDARY(3)+0.1
+                    position(2) = this.XY_BOUNDARY(3)+0.1;
+                end
+                
             else
                 position = new_node_position;
             end
@@ -254,12 +280,14 @@ classdef Simple2D < handle
             nvarargs = length(varargin);
             if nvarargs == 0 % check if the point is inside an obstacle
                 tmp_node_set = tmp_node1;
-            elseif nvarargs >= 1 % check if the line connecting two points is inside an obstacle
+            elseif nvarargs >= 1 % check if the line connecting two points is inside an obstacle, needs revision. no intermediate point now
                 node_index = varargin{1};
                 tmp_node2 = this.tree(:,node_index);
-                delta_vec = tmp_node1 - tmp_node2;
-                tmp_node_set = [tmp_node2(1):delta_vec(1):tmp_node1(1);...
-                    tmp_node2(2):delta_vec(2):tmp_node1(2)];
+%                 delta_vec = (tmp_node1 - tmp_node2);
+%                 tmp_node_set = [tmp_node2(1):delta_vec(1):tmp_node1(1);...
+%                     tmp_node2(2):delta_vec(2):tmp_node1(2)];
+                tmp_node_set = [linspace(tmp_node2(1),tmp_node1(1),3);...
+                    linspace(tmp_node2(2),tmp_node1(2),3)];
             end
             
             for jj = 1:size(tmp_node_set,2)
@@ -276,9 +304,15 @@ classdef Simple2D < handle
                         end
                     elseif strcmp(tmp_shape{1},'r')
                         % for rectangle, the generated position is its lower-left coordinate
+                        % rectangle is fitted by an enlarged rectangle,
+                        % which use the long-axis and short-axis of the
+                        % ellipse that covers the original rectangle
                         w = tmp_shape{2}(1);
                         h = tmp_shape{2}(2);
-                        ll_cor = tmp_shape{3}; % lower-left coordinate
+                        
+                        w = sqrt(2)*tmp_shape{2}(1);
+                        h = sqrt(2)*tmp_shape{2}(2);
+                        ll_cor = tmp_shape{3}-1/2*(sqrt(2)-1)*[w;h]; % lower-left coordinate
                         if (xy(1) >= ll_cor(1)-obs_margin) && (xy(2) >= ll_cor(2)-obs_margin) && ...
                                 (xy(1) <= ll_cor(1)+w+obs_margin) && (xy(2) <= ll_cor(2)+h+obs_margin)
                             collision = 1;
@@ -407,7 +441,11 @@ classdef Simple2D < handle
             
             cur_bin = x_comp + y_comp*this.bin_x + this.bin_offset;
             
-            num_nbors = this.bin(cur_bin).last;
+            try
+                num_nbors = this.bin(cur_bin).last;
+            catch
+                display('debug')
+            end
             
             if num_nbors < 20
                 nbors = 1:this.nodes_added;
