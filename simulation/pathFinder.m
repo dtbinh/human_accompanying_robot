@@ -3,7 +3,7 @@ function result = pathFinder(fld,step_intv,max_iter,is_demo,rand_seed,variant)
 %%% Configuration block
 conf = struct;
 conf.delta_goal_point = 1;          % Radius of goal point
-conf.delta_near = 3;%max_step;              % Radius for neighboring nodes % 1.5
+conf.delta_near = 1;%max_step;              % Radius for neighboring nodes % 1.5
 % conf.max_step = max_step;                % Maximum position change when we add a new node to the tree
 conf.step_intv = step_intv;           % speed interval, representing the min and max speed
 conf.bin_size = 7;
@@ -51,9 +51,10 @@ for ind = 1:MAX_ITER-1
     end
     
     if(~problem.collision_checker(new_node, nearest_node_ind))
-        neighbors = problem.neighbors(new_node, nearest_node_ind);
-        min_node_ind = problem.chooseParent(neighbors, nearest_node_ind, new_node);
-        new_node_ind = problem.insert_node(min_node_ind, new_node);
+%         neighbors = problem.neighbors(new_node, nearest_node_ind);
+%         min_node_ind = problem.chooseParent(neighbors, nearest_node_ind, new_node);
+%         new_node_ind = problem.insert_node(min_node_ind, new_node);
+        new_node_ind = problem.insert_node(nearest_node_ind, new_node);
         
         % draw the edge between min_node and new_node
         if is_demo == 1
@@ -62,7 +63,7 @@ for ind = 1:MAX_ITER-1
             problem.handle(edge_pair) = hdl;
             drawnow
         end        
-        problem.rewire(new_node_ind, neighbors, min_node_ind);
+%         problem.rewire(new_node_ind, neighbors, min_node_ind);
         
     end
     

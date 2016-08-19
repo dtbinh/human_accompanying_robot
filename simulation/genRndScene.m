@@ -175,7 +175,8 @@ end
 hold on
 addpath('rrtstar')
 
-spd_intv_set = [2.5 3;1.5 2;0.5 1;2 2.5;1 1.5]; % human speed interval for each section
+% spd_intv_set = [2.5 3;1.5 2;0.5 1;2 2.5;1 1.5]; % human speed interval for each section
+spd_intv_set = [1 1.5;1 1.5;1 1.5;1 1.5;1 1.5];
 dt = 0.5;
 samp_t = 0.05;
 des_pos = [s_pos,tar_pos]; % human destinations, including his starting position and all target positions
@@ -209,7 +210,7 @@ end
 
 % smooth trajectory
 % traj_s = trajSmoothing(traj);
-% traj_mpc = mpcSmoothing(traj,arr_time,dt,samp_t,max_spd_set,tar_pos);
+traj_mpc = mpcSmoothing(traj,arr_time,dt,samp_t,spd_intv_set,tar_pos);
 
 % change the sampling time to be samp_t = 0.05 for original trajectory
 traj_dense = [];
@@ -225,7 +226,7 @@ traj_dense = [traj_dense,traj(:,end)];
 % change the sampling time to be samp_t = 0.05 for smoothed trajectory
 % traj_mpc_dense = [];
 % ratio = dt/samp_t;
-% for ii = 1:size(traj_s,2)-1
+% for ii = 1:size(traj_mpc,2)-1
 %     pt1 = linspace(traj_mpc(1,ii),traj_mpc(1,ii+1),ratio+1);
 %     pt2 = linspace(traj_mpc(2,ii),traj_mpc(2,ii+1),ratio+1);
 %     tmp_traj = [pt1(1:end-1);pt2(1:end-1)];
@@ -235,10 +236,12 @@ traj_dense = [traj_dense,traj(:,end)];
 
 % draw trajectory
 % hold on
-plot(traj(1,:),traj(2,:),'r')
-% plot(traj_s(1,:),traj_s(2,:),'c')
-% plot(traj_mpc(1,:),traj_mpc(2,:),'g')
-% plot(traj_dense(1,:),traj_dense(2,:),'b')
+h1 = plot(traj(1,:),traj(2,:),'r');
+% h2 = plot(traj_s(1,:),traj_s(2,:),'c');
+h3 = plot(traj_mpc(1,:),traj_mpc(2,:),'g');
+% h4 = plot(traj_dense(1,:),traj_dense(2,:),'b');
+v = sqrt(sum((traj(:,2:end)-traj(:,1:end-1)).^2,1))/dt; % the speed at each time
+v3 = sqrt(sum((traj_mpc(:,2:end)-traj_mpc(:,1:end-1)).^2,1))/dt;
 %}
 
 
@@ -368,26 +371,30 @@ function traj_s = trajSmoothing(traj)
     end
 end
 
-function traj_mpc = mpcSmoothing(traj,arr_time,dt,samp_t,max_spd_set,tar_pos)
+function traj_mpc = mpcSmoothing(traj,arr_time,dt,samp_t,spd_intv_set,tar_pos)
     traj_len = size(traj,2);
     traj_mpc = traj;
     cnt = 1;
-    cur_state = [traj(:,1);max_spd_set(cnt);max_spd_set(cnt)];
+    cur_state = [traj(:,1);0;spd_intv_set(cnt,2)];
+%     cur_state = [traj(:,1);max_spd_set(cnt);max_spd_set(cnt)];
     mpc_hor = 10;
     x = sdpvar(4,mpc_hor+1); %[x;y;theta;v]
     u = sdpvar(2,mpc_hor); % [w;a]
+    slack = sdpvar(2,mpc_hor);
 %     x = sdpvar(4,mpc_hor+1); %[x;y;vx;vy]
 %     u = sdpvar(2,mpc_hor); % [ax;ay]
-    a_lb = -2;
-    a_ub = 2;
-    w_lb = -pi;
-    w_ub = pi;
+    a_lb = -1;
+    a_ub = 1;
+    w_lb = -2*pi/3;
+    w_ub = 2*pi/3;
 %     a_lb = -2;
 %     a_ub = 2;
     
     
     for kk = 1:traj_len-mpc_hor
         display(kk)
+        v_ub = spd_intv_set(cnt,2);
+        v_lb = spd_intv_set(cnt,1);
         
         obj = 0;
         
@@ -396,11 +403,11 @@ function traj_mpc = mpcSmoothing(traj,arr_time,dt,samp_t,max_spd_set,tar_pos)
         end
         
         for ii = 1:mpc_hor
-            w = 1;
-            obj = obj+w*sum((x(1:2,ii+1)-traj(:,kk+ii)).^2);            
+            obj = obj+sum((x(1:2,ii+1)-traj(:,kk+ii)).^2)+0.5*u(1,ii)^2+0.1*u(2,ii)^2;            
         end
+        obj = obj++sum(sum(slack.^2));
+        constr = [x(:,1) == cur_state, slack>=0];
         
-        constr = [x(:,1) == cur_state];
         
         for ii = 1:mpc_hor  
             % double integrator model
@@ -409,9 +416,13 @@ function traj_mpc = mpcSmoothing(traj,arr_time,dt,samp_t,max_spd_set,tar_pos)
 %             constr = [constr, a_lb <= u(:,ii) <= a_ub];
             
             % unicycle model
+%             constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(4,ii)*[cos(x(3,ii));sin(x(3,ii))]*dt,...
+%                 x(3,ii+1) == x(3,ii) + u(1,ii)*dt, x(4,ii+1) == x(4,ii)+u(2,ii)*dt,...
+%                 0<=x(4,ii+1)<=max_spd_set(cnt),w_lb<=u(1,ii)<=w_ub,a_lb<=u(2,ii)<=a_ub];
             constr = [constr,x(1:2,ii+1) == x(1:2,ii)+x(4,ii)*[cos(x(3,ii));sin(x(3,ii))]*dt,...
                 x(3,ii+1) == x(3,ii) + u(1,ii)*dt, x(4,ii+1) == x(4,ii)+u(2,ii)*dt,...
-                0<=x(4,ii+1)<=max_spd_set(cnt),w_lb<=u(1,ii)<=w_ub,a_lb<=u(2,ii)<=a_ub];
+                spd_intv_set(cnt,1)-slack(1,ii)<=x(4,ii+1)<=spd_intv_set(cnt,2)+slack(2,ii),...
+                w_lb<=u(1,ii)<=w_ub,a_lb<=u(2,ii)<=a_ub];
         end
         
         opt = sdpsettings('solver','fmincon','verbose',0);
