@@ -3,12 +3,13 @@
 # modified for single target search in early 2016
 # later modified for human companion robot 
 # Chang Liu 6/7/16
+# restart working on 6/28/17
 
 module CarMpcUtils
 
 using MAT
 
-export Robot, Tuning, Field
+export Robot, Obstacle, Tuning, Field
 export simRobotModel, updateEgoState!, unicycleDiscrete
 export rotateFrame, objectToVertices
 
@@ -17,27 +18,7 @@ export rotateFrame, objectToVertices
 ####################
 
 # Vehicle parameters
-type Robot
-  # z::Array{Float64,1}   # state vector: [s, eY, ePsi, V]
-  # l_f::Float64
-  # l_r::Float64
-  # l_w::Float64   # half-width
-  # mass::Float64
-  # g::Float64
-  # Iz::Float64
-  # deltaMin::Float64
-  # deltaMax::Float64
-  # axMin::Float64
-  # axMax::Float64
-  # deltaRateLim::Float64
-  # axRateLim::Float64
-  # Cf::Float64
-  # Cr::Float64
-  # minSpeedTire::Float64
-  # ayMin::Float64
-  # ayMax::Float64  
-  # model::Function   # state update model (discrete-time)
-
+type Robot  
   # function Vehicle(z::Array{Float64,1}; l_f::Float64 = 1.105,
   #                  l_r::Float64 = 1.738, l_w::Float64 = 0.8125,
   #                  mass::Float64 = 1830.0, g::Float64 = 9.81,
@@ -54,7 +35,7 @@ type Robot
 
   ### missing part: conversion of camera FOV boundary from camera coordinate to robot coordinate.
 
-  z::Array{Float64,1}   # state vector: [x,y,V,theta]
+  z::Array{Float64,1}   # state vector: [x,y,theta,V]
   steerMin::Float64
   steerMax::Float64 
   accMin::Float64
@@ -62,12 +43,24 @@ type Robot
   maxV::Float64
   model::Function # state update model (discrete-time)
 
-  function Robot(z::Array{Float64,1}; steerMin::Float64 = -pi/4, 
-                   steerMax::Float64 = pi/4, accMin::Float64 = -1.2,
-                   accMax::Float64 = 1.2, maxV::Float64 = 3.0, model::Function = x->x)
+  function Robot(z::Array{Float64,1}; steerMin::Float64 = -pi/2,
+                   steerMax::Float64 = pi/2, accMin::Float64 = -3.0,
+                   accMax::Float64 = 1.0, maxV::Float64 = 3.0, model::Function = x->x)
     new(z, steerMin, steerMax, accMin, accMax, maxV, model)
   end
 end
+
+# obstacle type
+type Obstacle
+  z::Array{Float64,1} # state vector [x,y,vx,vy]
+  shape::AbstractString # the shape of object
+  size::Float64 # desribes the size of the object, depending the its shape
+
+  function Obstacle(z::Array{Float64,1},shape::AbstractString,size::Float64)
+    new(z,shape,size)
+  end
+end
+
 
 # MPC tuning parameters
 type Tuning
@@ -104,7 +97,7 @@ type Tuning
   cmft_dis::Float64 # comfortable distance
   S::Array{Float64,1}   # slack
 
-  function Tuning(; dt::Float64 = 0.5, N::Int64 = 10, safe_dis::Float64 = 1.0, safe_margin::Float64 = 1.0, cmft_dis::Float64 = 2.4, S::Array{Float64,1} = [0.0])
+  function Tuning(; dt::Float64 = 0.5, N::Int64 = 5, safe_dis::Float64 = 1.0, safe_margin::Float64 = 1.0, cmft_dis::Float64 = 2.4, S::Array{Float64,1} = [0.0])
     new(dt, N, safe_dis, safe_margin, cmft_dis, S)
   end
 end

@@ -6,16 +6,41 @@ J.~Casper and R.~R. Murphy, ``Human-robot interactions during the
   {\em Systems, Man, and Cybernetics, Part B: Cybernetics, IEEE Transactions
   on}, vol.~33, no.~3, pp.~367--385, 2003.
 
-\bibitem{nourbakhsh2005human}
-I.~R. Nourbakhsh, K.~Sycara, M.~Koes, M.~Yong, M.~Lewis, and S.~Burion,
-  ``Human-robot teaming for search and rescue,'' {\em Pervasive Computing,
-  IEEE}, vol.~4, no.~1, pp.~72--79, 2005.
+\bibitem{shen2011autonomous}
+S.~Shen, N.~Michael, and V.~Kumar, ``Autonomous multi-floor indoor navigation
+  with a computationally constrained mav,'' in {\em Robotics and automation
+  (ICRA), 2011 IEEE international conference on}, pp.~20--25, IEEE, 2011.
+
+\bibitem{ryan2013lmi}
+T.~Ryan and H.~J. Kim, ``Lmi-based gain synthesis for simple robust quadrotor
+  control,'' {\em Automation Science and Engineering, IEEE Transactions on},
+  vol.~10, no.~4, pp.~1173--1178, 2013.
+
+\bibitem{govindarajan2016human}
+V.~Govindarajan, S.~Bhattacharya, and V.~Kumar, ``Human-robot collaborative
+  topological exploration for search and rescue applications,'' in {\em
+  Distributed Autonomous Robotic Systems}, pp.~17--32, Springer, 2016.
 
 \bibitem{kruijff2012designing}
 G.-J.~M. Kruijff, F.~Colas, T.~Svoboda, J.~Van~Diggelen, P.~Balmer, F.~Pirri,
   and R.~Worst, ``Designing intelligent robots for human-robot teaming in urban
   search and rescue.,'' in {\em AAAI Spring Symposium: Designing Intelligent
   Robots}, 2012.
+
+\bibitem{rios2015proxemics}
+J.~Rios-Martinez, A.~Spalanzani, and C.~Laugier, ``From proxemics theory to
+  socially-aware navigation: a survey,'' {\em International Journal of Social
+  Robotics}, vol.~7, no.~2, pp.~137--153, 2015.
+
+\bibitem{ferrer2016robot}
+G.~Ferrer, A.~G. Zulueta, F.~H. Cotarelo, and A.~Sanfeliu, ``Robot social-aware
+  navigation framework to accompany people walking side-by-side,'' {\em
+  Autonomous Robots}, pp.~1--19, 2016.
+
+\bibitem{cosgun2013autonomous}
+A.~Cosgun, D.~A. Florencio, and H.~I. Christensen, ``Autonomous person
+  following for telepresence robots,'' in {\em Robotics and Automation (ICRA),
+  2013 IEEE International Conference on}, pp.~4335--4342, IEEE, 2013.
 
 \bibitem{kruse2013human}
 T.~Kruse, A.~K. Pandey, R.~Alami, and A.~Kirsch, ``Human-aware robot
@@ -27,18 +52,9 @@ M.~Svenstrup, T.~Bak, and H.~J. Andersen, ``Trajectory planning for robots in
   dynamic human environments,'' in {\em Intelligent Robots and Systems (IROS),
   2010 IEEE/RSJ International Conference on}, pp.~4293--4298, IEEE, 2010.
 
-\bibitem{hall1968proxemics}
-E.~T. Hall, R.~L. Birdwhistell, B.~Bock, P.~Bohannan, A.~R. Diebold~Jr,
-  M.~Durbin, M.~S. Edmonson, J.~Fischer, D.~Hymes, S.~T. Kimball, {\em et~al.},
-  ``Proxemics [and comments and replies],'' {\em Current anthropology},
-  pp.~83--108, 1968.
-
-\bibitem{barnaud2014proxemics}
-M.-L. Barnaud, N.~Morgado, R.~Palluel-Germain, J.~Diard, and A.~Spalanzani,
-  ``Proxemics models for human-aware navigation in robotics: Grounding
-  interaction and personal space models in experimental data from psychology,''
-  in {\em Proceedings of the 3rd IROS’2014 workshop “Assistance and Service
-  Robotics in a Human Environment”}, 2014.
+\bibitem{aiello1987human}
+J.~R. Aiello, ``Human spatial behavior,'' {\em Handbook of environmental
+  psychology}, vol.~1, no.~1987, pp.~389--504, 1987.
 
 \bibitem{henry2010learning}
 P.~Henry, C.~Vollmer, B.~Ferris, and D.~Fox, ``Learning to navigate through
@@ -46,9 +62,9 @@ P.~Henry, C.~Vollmer, B.~Ferris, and D.~Fox, ``Learning to navigate through
   International Conference on}, pp.~981--986, IEEE, 2010.
 
 \bibitem{koller1994robust}
-D.~Koller, J.~Weber, and J.~Malik, {\em Robust multiple car tracking with
-  occlusion reasoning}.
-\newblock Springer, 1994.
+D.~Koller, J.~Weber, and J.~Malik, ``Robust multiple car tracking with
+  occlusion reasoning,'' in {\em European Conference on Computer Vision},
+  pp.~189--196, Springer, 1994.
 
 \bibitem{rui2001better}
 Y.~Rui and Y.~Chen, ``Better proposal distributions: Object tracking using
@@ -56,16 +72,27 @@ Y.~Rui and Y.~Chen, ``Better proposal distributions: Object tracking using
   2001. CVPR 2001. Proceedings of the 2001 IEEE Computer Society Conference
   on}, vol.~2, pp.~II--786, IEEE, 2001.
 
-\bibitem{bennewitz2005learning}
-M.~Bennewitz, W.~Burgard, G.~Cielniak, and S.~Thrun, ``Learning motion patterns
-  of people for compliant robot motion,'' {\em The International Journal of
-  Robotics Research}, vol.~24, no.~1, pp.~31--48, 2005.
+\bibitem{yi2015single}
+S.~Yi, Z.~He, X.~You, and Y.-M. Cheung, ``Single object tracking via robust
+  combination of particle filter and sparse representation,'' {\em Signal
+  Processing}, vol.~110, pp.~178--187, 2015.
 
 \bibitem{fulgenzi2008probabilistic}
 C.~Fulgenzi, C.~Tay, A.~Spalanzani, and C.~Laugier, ``Probabilistic navigation
   in dynamic environment using rapidly-exploring random trees and gaussian
   processes,'' in {\em Intelligent Robots and Systems, 2008. IROS 2008.
   IEEE/RSJ International Conference on}, pp.~1056--1062, IEEE, 2008.
+
+\bibitem{trautman2015robot}
+P.~Trautman, J.~Ma, R.~M. Murray, and A.~Krause, ``Robot navigation in dense
+  human crowds: Statistical models and experimental studies of human--robot
+  cooperation,'' {\em The International Journal of Robotics Research}, vol.~34,
+  no.~3, pp.~335--356, 2015.
+
+\bibitem{xiao2015unsupervised}
+S.~Xiao, Z.~Wang, and J.~Folkesson, ``Unsupervised robot learning to predict
+  person motion,'' in {\em 2015 IEEE International Conference on Robotics and
+  Automation (ICRA)}, pp.~691--696, IEEE, 2015.
 
 \bibitem{aggarwal1999human}
 J.~K. Aggarwal and Q.~Cai, ``Human motion analysis: A review,'' {\em Computer
@@ -75,6 +102,28 @@ J.~K. Aggarwal and Q.~Cai, ``Human motion analysis: A review,'' {\em Computer
 B.-S. Yaakov, X.~Li, and K.~Thiagalingam, ``Estimation with applications to
   tracking and navigation,'' {\em New York: Johh Wiley and Sons}, vol.~245,
   2001.
+
+\bibitem{lee2015interacting}
+D.~Lee, C.~Liu, and J.~K. Hedrick, ``Interacting multiple model-based human
+  motion prediction for motion planning of companion robots,'' in {\em 2015
+  IEEE International Symposium on Safety, Security, and Rescue Robotics
+  (SSRR)}, pp.~1--7, IEEE, 2015.
+
+\bibitem{garcia1989model}
+C.~E. Garcia, D.~M. Prett, and M.~Morari, ``Model predictive control: theory
+  and practice—a survey,'' {\em Automatica}, vol.~25, no.~3, pp.~335--348,
+  1989.
+
+\bibitem{hall1968proxemics}
+E.~T. Hall, R.~L. Birdwhistell, B.~Bock, P.~Bohannan, A.~R. Diebold~Jr,
+  M.~Durbin, M.~S. Edmonson, J.~Fischer, D.~Hymes, S.~T. Kimball, {\em et~al.},
+  ``Proxemics [and comments and replies],'' {\em Current anthropology},
+  pp.~83--108, 1968.
+
+\bibitem{mead2016autonomous}
+R.~Mead and M.~J. Matari{\'c}, ``Autonomous human--robot proxemics: socially
+  aware navigation based on interaction potential,'' {\em Autonomous Robots},
+  pp.~1--13, 2016.
 
 \bibitem{caveney2004multiple}
 D.~S. Caveney, ``Multiple model techniques in automotive estimation and
@@ -94,5 +143,28 @@ S.~Hong, T.~Smith, F.~Borrelli, and J.~K. Hedrick, ``Vehicle inertial parameter
 S.~J. Julier and J.~K. Uhlmann, ``Unscented filtering and nonlinear
   estimation,'' {\em Proceedings of the IEEE}, vol.~92, no.~3, pp.~401--422,
   2004.
+
+\bibitem{EvaluationAEKF}
+R.~B.~G. Vinay A.~Bavdekar and S.~L. Shah, ``Evaluation of adaptive extended
+  kalman filter algorithms for state estimation in presence of model-plant
+  mismatch,'' in {\em Preprints of the 10th IFAC International Symposium on
+  Dynamics and Control of Process Systems}, pp.~184--189, IFAC, 2013.
+
+\bibitem{wan2000unscented}
+E.~Wan, R.~Van Der~Merwe, {\em et~al.}, ``The unscented kalman filter for
+  nonlinear estimation,'' in {\em Adaptive Systems for Signal Processing,
+  Communications, and Control Symposium 2000. AS-SPCC. The IEEE 2000},
+  pp.~153--158, IEEE, 2000.
+
+\bibitem{jiang2015disturbance}
+Z.~Jiang, Y.~He, and J.~Han, ``Disturbance estimation for ruav using ukf with
+  acceleration measurement,'' in {\em Mechatronics and Automation (ICMA), 2015
+  IEEE International Conference on}, pp.~500--505, IEEE, 2015.
+
+\bibitem{kuffner2000rrt}
+J.~J. Kuffner and S.~M. LaValle, ``Rrt-connect: An efficient approach to
+  single-query path planning,'' in {\em Robotics and Automation, 2000.
+  Proceedings. ICRA'00. IEEE International Conference on}, vol.~2,
+  pp.~995--1001, IEEE, 2000.
 
 \end{thebibliography}
