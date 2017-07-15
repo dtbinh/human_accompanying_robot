@@ -1,0 +1,4 @@
+*.ipynb_checkpoints
+
+## ignore large files
+/paper/T-ASE/figures/*.fig

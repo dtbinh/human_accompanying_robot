@@ -3,6 +3,7 @@
 # modified for single target search in early 2016
 # later modified for human companion robot 
 # Chang Liu 6/7/16
+# restart working on 6/28/17
 
 module CarMpc
 
@@ -19,6 +20,10 @@ export MpcProblem, initializeMPCProblem, updateSolveMpcProblem
 type MpcProblem
   # Vehicle
   robot::Robot
+  # obstacle
+  human::Array{Obstacle} 
+  obs::Array{Obstacle}
+  # field
   field::Field
   # Constraints
   uLB::Array{Float64,1}
@@ -40,7 +45,9 @@ type MpcProblem
 end
 
 ### Set up MPC optimization problem
-function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
+function initializeMPCProblem(robot::Robot, human::Array{Obstacle}, obs::Array{Obstacle}, field::Field, tuning::Tuning)
+  # human states are from ROS message. obs are obstacle in the environment based on prior knowledge
+
   ### Parameters
 
   N = tuning.N
@@ -56,6 +63,17 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
   maxV = robot.maxV
   init_pose = robot.z
 
+  # determine the number of humans and size of z_h
+  numH = size(human,1); 
+  if (numH == 0)
+    zhSize = 0;
+  else
+    zhSize = numH*length(human[1].z);
+  end
+
+  # determine the number of static obstacles
+  numObs = size(obs,1);
+
   ### Optimization problem
 #   model = Model(solver=IpoptSolver(linear_solver="ma27",
 #                                      max_iter=100,
@@ -67,10 +85,11 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
   nu = 2
 
   ### Dummies
-  # (Parameters for optimization problem that can be modified online)
+  # Parameters for optimization problem that can be modified online
   @NLparameter(model, z0[i=1:nz] == init_pose[i]) #z0 = init_pose
   # @NLparameter(model, u0 == zeros(nu)) #u0 = zeros(nu)
-  @NLparameter(model, z_h[i=1:nz,j=1:N+1] == 0) #z_h = zeros(4,N+1)
+
+  @NLparameter(model, z_h[i=1:zhSize,j=1:N+1] == 0) #z_h = zeros(zhSize,N+1)
 
   ### Variables
   @variable(model, z[1:nz,1:N+1])
@@ -112,11 +131,11 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
   # @setNLObjective(model, Min, sum{obj,i=1:N})
 
   # @setNLObjective(model, Min, sum{abs((z[1,j]-ter_pos[1])^2+(z[2,j]-ter_pos[2])^2-ter_r^2),j=1:N})
-  @NLobjective(model, Min, sum{dummy_t[i],i=1:N}) # abs((z[1,k]-z_h[1])^2+(z[2,k]-z_h[2])^2-cmft_dis^2) + 2*(z[4,k]-v_h)^2)
+  @NLobjective(model, Min, sum(dummy_t[i] for i in 1:N)) # abs((z[1,k]-z_h[1])^2+(z[2,k]-z_h[2])^2-cmft_dis^2) + 2*(z[4,k]-v_h)^2)
 
   ### Constraints
   # initial condition
-  @NLconstraint(model, initconstr[i=1:nz], z[i,1] == z0[i])
+  @NLconstraint(model, initconstr[i=1:nz], z[i,1] == z0[i]) # initconstr is the name of constraints z[i.1]==z0[i]
 
   for k=1:N+1
     ### Dynamics
@@ -129,59 +148,40 @@ function initializeMPCProblem(robot::Robot, field::Field, tuning::Tuning)
       end)
     end
 
-    # state and input constraints
+    ### state and input constraints
     @constraint(model, 0 <= z[4,k] <= maxV)
     # stay within the field boundary
     # @constraint(model, zLB[1] <=z[1,k] <= zUB[1])
     # @constraint(model, zLB[2] <=z[2,k] <= zUB[2])  
 
     if k <= N
-    @constraint(model, uLB[1] <=u[1,k] <= uUB[1])
-    @constraint(model, uLB[2] <=u[2,k] <= uUB[2])
+      @constraint(model, uLB[1] <=u[1,k] <= uUB[1])
+      @constraint(model, uLB[2] <=u[2,k] <= uUB[2])
     end
 
-    # # epigraph variable
+    ### epigraph variable for obj
     @NLconstraint(model,dummy_t[k]>=(z[1,k]-z_h[1,k])^2 + (z[2,k]-z_h[2,k])^2 - cmft_dis^2 + 2*(z[4,k]-z_h[3,k])^2)
     @NLconstraint(model,dummy_t[k]>=-((z[1,k]-z_h[1,k])^2 + (z[2,k]-z_h[2,k])^2 - cmft_dis^2) + 2*(z[4,k]-z_h[3,k])^2)
 
     ### collision avoidance    
     # avoid static obstacles
+    for j = 1:numObs
+      if obs[j].shape == "circle" # circle
+        @NLconstraint(model,(obs[j].z[1]-z[1,k])^2+(obs[j].z[2]-z[2,k])^2 >= obs[j].size^2);
+      end
+      if obs[j].shape == "ellips" # ellipsoid
+        # to fill
+      end
+    end
 
     # avoid human
     @NLconstraint(model,(z[1,k] - z_h[1,k])^2 + (z[2,k] - z_h[2,k])^2 >= safe_dis^2)
   end
 
-  # for k=1:N+1
-  #   # Dynamics
-  #   if k==1
-  #   @NLconstraints(model, begin
-  #     z[1,k] == z0[1] + dt*u[1,k]
-  #     z[2,k] == z0[2] + dt*u[2,k]
-  #     end)
-  #   else
-  #   @NLconstraints(model, begin
-  #     z[1,k] == z[1,k-1] + dt*u[1,k]
-  #     z[2,k] == z[2,k-1] + dt*u[2,k] 
-  #     end)
-  #   end
-  #   # state and input constraints
-  #   @NLconstraint(model, u[1,k]^2+u[2,k]^2<=maxV^2)
-  #   @constraint(model, zLB[1] <=z[1,k] <= zUB[1])
-  #   @constraint(model, zLB[2] <=z[2,k] <= zUB[2])   
+  ### Solve dummy problem
+  solve(model)
 
-  #   # epigraph variable
-  #   @NLconstraint(model,dummy_t[k]>=(z[1,k]-ter_pos[1])^2+(z[2,k]-ter_pos[2])^2-ter_r^2)
-  #   @NLconstraint(model,dummy_t[k]>=-((z[1,k]-ter_pos[1])^2+(z[2,k]-ter_pos[2])^2-ter_r^2))
-  #   end
-  # # @addNLConstraint(model,t>=(z[1,N]-ter_pos[1])^2+(z[2,N]-ter_pos[2])^2-ter_r^2)
-  # # @addNLConstraint(model,t>=-((z[1,N]-ter_pos[1])^2+(z[2,N]-ter_pos[2])^2-ter_r^2))
-  
-  # @NLconstraint(model,(z[1,N]-ter_pos[1])^2+(z[2,N]-ter_pos[2])^2 <= ter_r^2)
-
-### Solve dummy problem
-solve(model)
-
-return MpcProblem(robot, field, uLB, uUB, zLB, zUB, nz, nu, tuning, model, z, u, z0, z_h)
+  return MpcProblem(robot, human, obs, field, uLB, uUB, zLB, zUB, nz, nu, tuning, model, z, u, z0, z_h)
 
 end
 

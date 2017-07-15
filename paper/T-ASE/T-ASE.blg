@@ -1,81 +1,89 @@
-This is BibTeX, Version 0.99d (TeX Live 2014)
+This is BibTeX, Version 0.99d (TeX Live 2015)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: T-ASE.aux
 The style file: ieeetr.bst
 Database file #1: references.bib
-Repeated entry---line 157 of file references.bib
+Repeated entry---line 69 of file references.bib
+ : @inproceedings{cosgun2013autonomous
+ :                                    ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 162 of file references.bib
+ : @inproceedings{cosgun2013autonomous
+ :                                    ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 295 of file references.bib
  : @inproceedings{svenstrup2010trajectory
  :                                       ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 184 of file references.bib
+Repeated entry---line 322 of file references.bib
  : @inproceedings{fulgenzi2008probabilistic
  :                                         ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 193 of file references.bib
- : @inproceedings{barnaud2014proxemics
- :                                    ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 227 of file references.bib
+Repeated entry---line 365 of file references.bib
  : @techreport{caveney2004multiple
  :                                ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 233 of file references.bib
+Repeated entry---line 371 of file references.bib
  : @article{yaakov2001estimation
  :                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 241 of file references.bib
+Repeated entry---line 379 of file references.bib
  : @book{haykin2004kalman
  :                       ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 249 of file references.bib
+Repeated entry---line 387 of file references.bib
  : @inproceedings{hong2013vehicle
  :                               ,
 I'm skipping whatever remains of this entry
-I was expecting a `,' or a `}'---line 305 of file references.bib
+I was expecting a `,' or a `}'---line 443 of file references.bib
  : 
  : @article{julier2004unscented,
 (Error may have been on previous line)
 I'm skipping whatever remains of this entry
+Repeated entry---line 493 of file references.bib
+ : @inproceedings{jiang2015disturbance
+ :                                    ,
+I'm skipping whatever remains of this entry
 Warning--empty institution in caveney2004multiple
-You've used 18 entries,
+You've used 32 entries,
             1876 wiz_defined-function locations,
-            584 strings with 7354 characters,
-and the built_in function-call counts, 5485 in all, are:
-= -- 530
-> -- 238
+            667 strings with 10113 characters,
+and the built_in function-call counts, 10558 in all, are:
+= -- 1079
+> -- 364
 < -- 0
-+ -- 86
-- -- 68
-* -- 400
-:= -- 771
-add.period$ -- 20
-call.type$ -- 18
-change.case$ -- 17
++ -- 133
+- -- 101
+* -- 737
+:= -- 1403
+add.period$ -- 33
+call.type$ -- 32
+change.case$ -- 32
 chr.to.int$ -- 0
-cite$ -- 19
-duplicate$ -- 281
-empty$ -- 515
-format.name$ -- 68
-if$ -- 1324
+cite$ -- 33
+duplicate$ -- 561
+empty$ -- 1014
+format.name$ -- 101
+if$ -- 2600
 int.to.chr$ -- 0
-int.to.str$ -- 18
-missing$ -- 19
-newline$ -- 59
-num.names$ -- 18
-pop$ -- 71
+int.to.str$ -- 32
+missing$ -- 32
+newline$ -- 100
+num.names$ -- 32
+pop$ -- 126
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 186
+skip$ -- 410
 stack$ -- 0
-substring$ -- 390
-swap$ -- 113
+substring$ -- 879
+swap$ -- 247
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 1
-while$ -- 54
-width$ -- 20
-write$ -- 180
-(There were 8 error messages)
+while$ -- 116
+width$ -- 34
+write$ -- 325
+(There were 10 error messages)
