@@ -260,7 +260,7 @@ for k = 1:kf
     end
     %% plot trajectories
     % draw under certain conditions
-    if true %(k == 1) || (k >= 300) || ((k >= obs1.s_time) && (k <= obs1.s_time+20)) ||  ((k >= obs2.s_time) && (k <= obs2.s_time+20))
+    if (k == 1) || (k >= 300) || ((k >= obs1.s_time) && (k <= obs1.s_time+20)) ||  ((k >= obs2.s_time) && (k <= obs2.s_time+20))
         % plot specifications
         soil_yellow = [0.87,0.49,0];
         color_agent = {'r','g','k',soil_yellow,'m','m'};
